@@ -2,7 +2,18 @@
 title: "Functional Data Structures"
 author: "Prabhakar Ragde"
 date: "5/3/2020"
-output: pdf_document
+header-includes:
+   - \usepackage{amsmath}
+output:
+  pdf_document:
+    toc: true
+    latex_engine: xelatex
+  html_document:
+    toc: true
+    toc_float: true
+    df_print: paged
+mainfont: STIXTwoText
+mathfont: STIXTwoMath
 ---
 
 ```{r setup, include=FALSE}
