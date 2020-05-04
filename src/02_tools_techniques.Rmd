@@ -11,7 +11,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## 2 Tools and Techniques
+# 2 Tools and Techniques
 
 > "Why stay in college? / Why go to night school? / Gonna be different this time"
 > Talking Heads, "Life During Wartime", Fear of Music, 1979
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 There is some terrific material ahead, but before we get to it, I want to spend more time than usual discussing the vague and confusing way we often talk about algorithm analysis. I hope this won’t put you off the subject. My goal is to inoculate you early, and by sensitizing you to the potential dangers, strengthen you for the more pleasant journey that follows. Familiarity with the notation used and its common abuses is an important part of literacy in the subject, but a certain amount of caution is merited.
 
 
-### 2.1 Order notation and its discontents
+## 2.1 Order notation and its discontents
 
 Order notation is used (and abused) extensively in algorithm analysis. Our examination of the issues surrounding order notation will center on a simple statement often encountered in introductory material:
 
@@ -86,7 +86,7 @@ It is customary at this point to work through some examples of the use of the de
 I am not going to suggest exercises like this here, even though this is done in many conventional treatments. The reason is that this doesn’t seem to me to be relevant to algorithm analysis. We rarely count exactly and then make things more imprecise. Such exercises may help in understanding the formal definition of order notation, but they are unlikely to provide much more insight than the general statement "neglect constants and smaller terms". This type of work really builds skill in proving inequalities. That is a different topic.
 
 
-## 2.1.3 Abuse of notation
+### 2.1.3 Abuse of notation
 
 Understanding order notation is further muddied by common abuse of notation which seems to treat an O-expression as an algebraic object, rather than a logical statement. Here is an example from the slides for the second-term CS course at the University of Waterloo that introduces O-notation:
 
@@ -124,7 +124,7 @@ is the variable, then running time that is $O(n)$ is called "linear time", short
 $O(1)$ is often called "constant time", but this can be misleading. $3$ is not $O(1)$, because $3$ is not a function. The function that maps a variable $n$ to $3$ is $O(1)$, as is the function that maps $n$ to $2$ when $n$ is odd and to $3$ when $n$ is even. "Constant time" is short for "time bounded above by a constant". Having said this, we will sometimes abuse the notation and use $O(1)$ to refer to a constant that we don’t want to take the trouble to work out exactly.
 
 
-## 2.1.4 What is running time?
+### 2.1.4 What is running time?
 
 Now let’s focus on the two words "running time", a deceptively simple phrase that hides a host of complexities. What do we need in order to define this?
 
@@ -530,295 +530,215 @@ OCaml provides special syntax for lists, but also a more general method of const
 
 We have already seen how to define tuples, such as (3, "Three"). This tuple has type int * string. This is a product type (for Cartesian product). The other type constructor we need is for sum types. These are a principled version of C’s tagged unions. The alternatives are separated by a vertical bar, and tagged with a constructor name. The example below, implementing a version of lists, should make this clearer.
 
+```{ocaml}
 type 'a mylist =
-
-  Empty
-
-| Cons of 'a * 'a mylist
-
- 
+    Empty
+  | Cons of 'a * 'a mylist
 
 let example1 = Cons (1, Cons (2, Cons (3, Empty)))
 
- 
-
 let rec length = function
-
   | Empty -> 0
-
   | Cons (_, tl) -> 1 + length tl
 
  
-
 let example2 = length example1
+```
 
-The choice of Cons here dates back to LISP (1959), in which it was the only data constructor. In Scheme and Racket, we still write (cons elt lst) for what would be elt :: lst in OCaml. The word "cons" tends to be used for the list constructor in any functional language, including OCaml.
+The choice of Cons here dates back to LISP (1959), in which it was the only data constructor. In Scheme and Racket, we still write `(cons elt lst)` for what would be `elt :: lst` in OCaml. The word "cons" tends to be used for the list constructor in any functional language, including OCaml.
 
 Constructor names must start with a capital letter (other names cannot), and we can use the same constructor name in several different data types (we might have to annotate uses, though). A constructor is not an OCaml function. When it is used, all of its arguments must be supplied.
-2.2.6 The Sequence abstract data type
+
+
+
+### 2.2.6 The Sequence abstract data type
 
 An abstract data type (ADT) is a description of some type of data using mathematical notations, together with operations on that type. Lists can be thought of as the implementation of a Sequence ADT. Since our list implementations are immutable, so is the ADT, which makes it easier to describe, as mathematics typically works that way.
 
-We usually write a sequence of k
-elements as s0,s1,…sk−1
+We usually write a sequence of $k$ elements as $s_0,s_1, \dots, s_{k−1}$. We can define the Sequence ADT with the following operations.
 
-. We can define the Sequence ADT with the following operations.
+_empty_ is a constant representing the empty sequence.
 
-empty is a constant representing the empty sequence.
+_isEmpty_ is a Boolean function that consumes a sequence and produces true if and only if the sequence is empty.
 
-isEmpty is a Boolean function that consumes a sequence and produces true if and only if the sequence is empty.
+_extend_ consumes an element $e$
+and a sequence $S$, and produces the sequence $e,S$.
 
-extend consumes an element e
-and a sequence S, and produces the sequence e,S
+_first_ consumes a non-empty sequence $s_0,s_1, \dots s_{k−1}$
+(that is, $k \geq 1$), and produces the element $s_0$.
 
-.
+_rest_ consumes a non-empty sequence $s0,s1, \dots, s_{k−1}$
+(that is, $k \geq 1$), and produces the sequence $s_1, \dots, s_{k−1}$.
 
-first consumes a non-empty sequence s0,s1,…sk−1
-(that is, k≥1), and produces the element s0
-
-.
-
-rest consumes a non-empty sequence s0,s1,…sk−1
-(that is, k≥1), and produces the sequence s1,…sk−1
-
-.
-
-index consumes a natural number i
-and a sequence s0,s1,…sk−1 (where i<k), and produces the element si
-
-.
+_index_ consumes a natural number $i$ and a sequence $s_0,s_1,…s_{k−1}$ (where $i \lt k$), and produces the element $s_i$.
 
 The last three of these operations have preconditions on their use. What happens when the conditions are violated? We could raise an error, using OCaml exceptions, which work much as they do in other languages. But the compiler does not enforce the catching of exceptions.
 
-A simpler solution is to use an option type, which puts the type system to work for us. This is a principled alternative to the use of null in languages like Java and C++. The type ’a option has two constructors: None, to indicate a value could not be provided, and Some, wrapping a value of type ’a. This type is predefined, but could be constructed if it weren’t:
+A simpler solution is to use an **option type**, which puts the type system to work for us. This is a principled alternative to the use of null in languages like Java and C++. The type `’a option` has two constructors: `None`, to indicate a value could not be provided, and `Some`, wrapping a value of type `’a`. This type is predefined, but could be constructed if it weren’t:
 
+```{ocaml}
 type 'a option =
-
   | None
-
   | Some of 'a
 
-2.2.7 Using a module to implement an ADT
+```
 
-To implement abstract data types, we will make use of OCaml’s module system, which is quite sophisticated (we will use only part of its full capabilities). The simplest way to create a module is to put some code into a file. When compiled, this defines a module whose name is the name of the file, capitalized (e.g. mylist.ml creates the module Mylist). We can then reference bindings in another file with the syntax Mylist.length (for example) or use open Mylist to import all the bindings without qualification. The same syntax works to access library modules. For example, there is a library module called List, which contains a number of useful functions, such as List.length.
 
-If we wish to hide some bindings in a file, we can create an interface file (with extension .mli) which specifies the bindings that are exported. The interface permits abstraction to further hide some details of exported bindings. Here is a specification for an implementation of the Sequence ADT, which we can put in sequence.mli. In this specification, the type sequence is abstract.
+
+### 2.2.7 Using a module to implement an ADT
+
+To implement abstract data types, we will make use of OCaml’s module system, which is quite sophisticated (we will use only part of its full capabilities). The simplest way to create a module is to put some code into a file. When compiled, this defines a module whose name is the name of the file, capitalized (e.g. `mylist.ml` creates the module `Mylist`). We can then reference bindings in another file with the syntax `Mylist.length` (for example) or use `open Mylist` to import all the bindings without qualification. The same syntax works to access library modules. For example, there is a library module called `List`, which contains a number of useful functions, such as `List.length`.
+
+If we wish to hide some bindings in a file, we can create an interface file (with extension `.mli`) which specifies the bindings that are exported. The interface permits abstraction to further hide some details of exported bindings. Here is a specification for an implementation of the Sequence ADT, which we can put in `sequence.mli`. In this specification, the type sequence is abstract.
+
+```{ocaml}
+(* sequence.mli *)
 
 type 'a sequence
 
- 
-
 val empty : 'a sequence
-
 val is_empty : 'a sequence -> bool
-
 val extend : 'a -> 'a sequence -> 'a sequence
-
 val first : 'a sequence -> 'a option
-
 val rest : 'a sequence -> 'a sequence option
-
 val index : int -> 'a sequence -> 'a option
 
-We can then write sequence.ml as follows:
+```
+
+We can then write `sequence.ml` as follows:
+
+```{ocaml}
+(* sequence.ml *)
 
 type 'a mylist =
-
   Empty
-
 | Cons of 'a * 'a mylist
-
- 
 
 type 'a sequence = 'a mylist
 
- 
-
 let empty = Empty
 
- 
-
 let is_empty = function
-
   | Empty -> true
-
   | _ -> false
-
- 
 
 let extend = fun e l -> Cons (e, l)
 
- 
-
 let first = function
-
   | Empty -> None
-
   | Cons (e, _) -> Some e
 
- 
-
 let rest = function
-
   | Empty -> None
-
   | Cons (_, l) -> Some l
 
- 
-
 let rec index n = function
-
   | Empty -> None
-
   | Cons (e, _) when n = 0 -> Some e
-
   | Cons (_, tl) when n > 0 -> index (n-1) tl
-
   | _ -> None
 
-Although empty has type ’a mylist within this file, it has type ’a sequence when referenced from other files; the implementation is not exposed. Note that the constructor Cons is not a first-class function, so to define extend, we have to create a function by using the fun keyword, Ocaml’s way of constructing a nameless function or lambda.
+```
 
-So far, a module has been one whole file, and an interface another whole file. OCaml permits finer granularity than this. Several modules and several interfaces can be defined within a single source file. The specification of an interface is called a signature. A signature can be created with sig ... end delimiters, and bound to a name using a module type declaration. The implementation of an interface is called a structure (this is just any collection of definitions). A structure can be created with struct ... end delimiters, and bound to a name using a module declaration. Here is how we could implement the Sequence ADT within a file.
 
+Although empty has type `’a mylist` within this file, it has type `’a` sequence when referenced from other files; the implementation is not exposed. Note that the constructor `Cons` is not a first-class function, so to define `extend`, we have to create a function by using the fun keyword, Ocaml’s way of constructing a nameless function or **lambda**.
+
+So far, a module has been one whole file, and an interface another whole file. OCaml permits finer granularity than this. Several modules and several interfaces can be defined within a single source file. The specification of an interface is called a **signature**. A signature can be created with sig ... end delimiters, and bound to a name using a module type declaration. The implementation of an interface is called a **structure** (this is just any collection of definitions). A structure can be created with struct ... end delimiters, and bound to a name using a module declaration. Here is how we could implement the Sequence ADT within a file.
+
+```{ocaml}
 module type Sequence = sig
-
- 
 
   type 'a sequence
 
- 
-
   val empty : 'a sequence
-
   val is_empty : 'a sequence -> bool
-
   val extend : 'a -> 'a sequence -> 'a sequence
-
   val first : 'a sequence -> 'a option
-
   val rest : 'a sequence -> 'a sequence option
-
   val index : int -> 'a sequence -> 'a option
 
- 
-
 end
-
- 
 
 module MySeq : Sequence = struct
 
- 
-
   type 'a mylist =
-
     Empty
-
   | Cons of 'a * 'a mylist
-
- 
 
   type 'a sequence = 'a mylist
 
- 
-
   let empty = Empty
 
- 
-
   let is_empty = function
-
     | Empty -> true
-
     | _ -> false
-
- 
 
   let extend = fun e l -> Cons (e, l)
 
- 
-
   let first = function
-
     | Empty -> None
-
     | Cons (e, l) -> Some e
 
- 
-
   let rest = function
-
     | Empty -> None
-
     | Cons (e, l) -> Some l
 
- 
-
   let rec index n = function
-
     | Empty -> None
-
     | Cons (e, l) when n = 0 -> Some e
-
     | Cons (e, Cons (_, tl)) when n > 0 -> index (n-1) tl
-
     | _ -> None
 
- 
+ end
 
-end
+```
 
-Any value produced by functions in MySeq will print as <abstr>. All interactions with such values have to be through functions provided by the MySeq module. This is the correct behaviour if the abstract data type is to be truly abstract. It is, however, somewhat limiting while developing and testing code.
 
-Under this restriction, the only tests possible are black-box tests, which involve testing the behaviour of combinations of operations (example: first (extend e empty) = e). But we often want to do white-box tests, which check properties of the internal representation. (They should be called "clear-box tests", but that’s not the phrase people use.)
+Any value produced by functions in `MySeq` will print as `<abstr>`. All interactions with such values have to be through functions provided by the MySeq module. This is the correct behaviour if the abstract data type is to be truly abstract. It is, however, somewhat limiting while developing and testing code.
 
-There are a few alternatives available. We could temporarily change the signature of Sequence, to make the type of sequence concrete. This can be done by copying the definitions of mylist and sequence from the MySeq structure. We could also extend the signature of Sequence to provide a toString function which provides a printable form of the representation. Finally, with a bit of advanced OCaml wizardry, it is possible to provide an alternative to the default printer. You will find the first alternative easiest for learning purposes.
+Under this restriction, the only tests possible are **black-box tests**, which involve testing the behaviour of combinations of operations (example: `first (extend e empty) = e)`. But we often want to do **white-box tests**, which check properties of the internal representation. (They should be called "clear-box tests", but that’s not the phrase people use.)
 
-Note that the type of MySeq.empty is MySeq.sequence. To avoid this repetition, it is idiomatic to name the main data type provided by a module just t. In this example, we would replace sequence in the sig bound to Sequence with just t. I mention this because you will see the idiom when using data types provided by library modules. We will also start to use it later on.
+There are a few alternatives available. We could temporarily change the signature of `Sequence`, to make the type of sequence concrete. This can be done by copying the definitions of `mylist` and `sequence` from the `MySeq` structure. We could also extend the signature of Sequence to provide a `toString` function which provides a printable form of the representation. Finally, with a bit of advanced OCaml wizardry, it is possible to provide an alternative to the default printer. You will find the first alternative easiest for learning purposes.
+
+Note that the type of `MySeq.empty` is `MySeq.sequence`. To avoid this repetition, it is idiomatic to name the main data type provided by a module just `t`. In this example, we would replace sequence in the `sig` bound to `Sequence` with just `t`. I mention this because you will see the idiom when using data types provided by library modules. We will also start to use it later on.
 2.2.8 Immutable and mutable ADTs
 
 In older languages where arrays are the primary data structure, it is common to store a sequence in reverse order in an array, and maintain an integer index of the next location in which to store an element. (OCaml has mutable arrays, so we could do this here, if we wanted to.) However, there are several problems with this approach. First of all, it is not an implementation of the immutable Sequence ADT. We need a mutable Sequence ADT definition.
 
 With mutable ADTs, the values of the defined type are each conceptually contained in a state variable. For the ADT definition, we think of one state variable per value, though an implementation may use several variables to represent that value. A postcondition for a mutable ADT includes description of side effects (typically on that state variable, but may also involve I/O). An operation may now be performed only for side effects and not produce a value.
 
-For the mutable Sequence ADT, the definitions of empty, first, and index remain the same as for the immutable Sequence ADT. But the definitions of extend and rest change. In fact, since rest now mutates the provided list, we will call the operation remove instead.
+For the mutable Sequence ADT, the definitions of `empty`, `first`, and `index` remain the same as for the immutable Sequence ADT. But the definitions of `extend` and `rest` change. In fact, since `rest` now mutates the provided list, we will call the operation `remove` instead.
 
-extend: two parameters, an element e
-, and a sequence S=s0,s1,…,sk; no precondition; no value produced; postcondition is that S has value e,s0,s1,…,sk
+**extend**: two parameters, an element $e$, and a sequence $S=s_0,s_1,\dots,s_k$; no precondition; no value produced; postcondition is that $S$ has value $e,s_0,s_1,\dots,s_k$.
 
-.
+**remove**: one parameter, a sequence $S=s_0,s_1,\dots,s_k$; precondition $length \ S \gt 0$; no value produced; postcondition is that $S$ has value $s_1,\dots,s_k$.
 
-remove: one parameter, a sequence S=s0,s1,…,sk
-; precondition length S>0; no value produced; postcondition is that S has value s1,…,sk
-
-.
-
-Arrays have size fixed at creation time. So the implementation must anticipate the maximum length of a sequence, and we must live with the wasted space if a use never comes close to that maximum. Alternately, we can copy into a larger array as needed, but this is an expensive operation. One way of managing it is to make the new array twice as large as the old one. This ensures that the number of cheap operations (no copying) before the next copy is the number of items that had to be moved in the last copy. Thus the average cost of an operation (over a series of operations starting with the empty sequence) is constant. This kind of analysis is known as amortized analysis, and we will explore it in more detail in the next chapter.
+Arrays have size fixed at creation time. So the implementation must anticipate the maximum length of a sequence, and we must live with the wasted space if a use never comes close to that maximum. Alternately, we can copy into a larger array as needed, but this is an expensive operation. One way of managing it is to make the new array twice as large as the old one. This ensures that the number of cheap operations (no copying) before the next copy is the number of items that had to be moved in the last copy. Thus the average cost of an operation (over a series of operations starting with the empty sequence) is constant. This kind of analysis is known as **amortized** analysis, and we will explore it in more detail in the next chapter.
 
 As an aside, some languages offer the ability to "extend" an array by an amount of your choice. This is almost never a constant-time operation, and can be as expensive as linear in the old size of the array. The cost is usually unpredictable (depending on internal details of memory allocation and deallocation) and you usually cannot find out what the cost is, before or after. If you’re going to use such features, assume the worst.
 
-The array-based implementation of the mutable Sequence ADT is ephemeral, in the sense that the two operations above destroy past versions. It is often useful to be able to access past versions. You may have seen examples such as text editors with unlimited undo, software version control systems, and complicated transactions (database or financial) that may need to be rolled back if they go wrong or someone changes their mind. But there are also subtler occurrences, such as recursive code (dealing with a list or tree) not having to worry about recursive applications interfering with provided information.
+The array-based implementation of the mutable Sequence ADT is **ephemeral**, in the sense that the two operations above destroy past versions. It is often useful to be able to access past versions. You may have seen examples such as text editors with unlimited undo, software version control systems, and complicated transactions (database or financial) that may need to be rolled back if they go wrong or someone changes their mind. But there are also subtler occurrences, such as recursive code (dealing with a list or tree) not having to worry about recursive applications interfering with provided information.
 
-Our implementation of the immutable Sequence ADT is persistent, that is, access to all past versions is preserved. We achieved this by avoiding mutation, which tends to destroy past versions. Persistence sounds expensive, as one might make the naive assumption that full copies must be kept. But that is not the case. The values lst and Cons(e,lst) (or e :: lst) are different values, but they share all of lst, so creating the latter value uses only constant additional space. That sharing cannot be detected in the absence of mutation.
+Our implementation of the immutable Sequence ADT is **persistent**, that is, access to all past versions is preserved. We achieved this by avoiding mutation, which tends to destroy past versions. Persistence sounds expensive, as one might make the naive assumption that full copies must be kept. But that is not the case. The values `lst` and `Cons(e, lst) (or e :: lst)` are different values, but they share all of `lst`, so creating the latter value uses only constant additional space. That sharing cannot be detected in the absence of mutation.
 
 Here, we will avoid mutation where possible, but we won’t be dogmatic about it. Mutation complicates reasoning about code (both informal and formal) as well as the code itself, and increases the possibility of bugs. Without mutation, one can do equational reasoning (replacing a subexpression with one of equal value) because every expression always evaluates to the same value and there are no side effects to consider.
 
 Those reasons will become more compelling as we proceed, because the algorithms get more complex and so does the reasoning. But now we have another reason to avoid mutation, which is that we will also try to achieve persistence where possible. Sometimes the judicious use of mutation helps with this goal, as we’ll see. That is, it’s not a direct choice between mutation and persistence.
 
 One further advantage is in the design of large-scale concurrent or parallel applications (single-processor or distributed). Using mutation often means temporarily violating a property of the system and then restoring it. That process cannot be interrupted, and the necessary locking mechanism can be expensive and a sequential bottleneck. Limiting or avoiding mutation can be an effective strategy in such situations.
-2.2.9 Improving the index operation for Sequence
 
-The main advantage of the array implementation is efficiency. All operations take O(1)
-time (at least in our model of computation which ignores factors like caches and virtual memory), and the constants are small, because array operations are usually directly supported by hardware. This is not the case for the list implementations. extend, first, and rest take constant time (again, the constants are small, because pointer operations are also supported by hardware), but index takes time O(min{i,n}), where i is the index and n
 
-the length of the sequence.
+
+### 2.2.9 Improving the index operation for Sequence
+
+The main advantage of the array implementation is efficiency. All operations take $O(1)$ time (at least in our model of computation which ignores factors like caches and virtual memory), and the constants are small, because array operations are usually directly supported by hardware. This is not the case for the list implementations. extend, first, and rest take constant time (again, the constants are small, because pointer operations are also supported by hardware), but index takes time $O(min \{i,n\})$, where $i$ is the index and $n$ the length of the sequence.
 
 Can we do better than the list implementations, while preserving purity and/or persistence? The problem with the list is that it is a linear structure. That suggests that using trees might improve access.
 
-A perfect binary tree of height k
-has 2k leaves, all at depth k, and 2k−1
+A **perfect binary tree** of height $k$ has $2^k$ leaves, all at depth $k$, and $2^k−1$ internal nodes.
 
-internal nodes.
+<!-- perfect-tree.png -->
+[](../assets/perfect-tree.png)
 
 (In a drawing, the depth of a node is the number of edges in a path from the root to that node, and the height of a tree is the maximum depth over all nodes.) If we store values of the sequence at the leaves and use the internal nodes for navigation, we can get to any value in O(k)
 time, which is O(logn) time if n=2k
