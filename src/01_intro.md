@@ -1,24 +1,3 @@
----
-title: "Functional Data Structures"
-author: "Prabhakar Ragde"
-date: "5/3/2020"
-header-includes:
-   - \usepackage{amsmath}
-output:
-  pdf_document:
-    toc: true
-    latex_engine: xelatex
-  html_document:
-    toc: true
-    toc_float: true
-    df_print: paged
-mainfont: STIXTwoText
-mathfont: STIXTwoMath
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 # Introduction
 
@@ -56,3 +35,5 @@ I recommend that you do the exercises; engaging fully with the material is an im
 Please don’t post solutions anywhere publicly accessible, like a GitHub account or blog. Also please don’t repost or copy any material. If you would like to adapt it for your own purposes, please contact me for permission. (A complete rewrite in your own words is fine; this work is itself a synthesis.)
 
 A logistical note: These Web pages use MathJax to render mathematical expressions, which requires the intervention of a third-party server. If the MathJax server is unreachable, you will see the underlying LaTeX code for the expressions instead. This should be readable, though with difficulty that increases with the complexity of the expression.
+
+

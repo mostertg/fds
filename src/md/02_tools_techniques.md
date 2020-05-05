@@ -4,21 +4,8 @@ author: "Prabhakar Ragde"
 date: "5/3/2020"
 header-includes:
    - \usepackage{amsmath}
-output:
-  pdf_document:
-    toc: true
-    latex_engine: xelatex
-  html_document:
-    toc: true
-    toc_float: true
-    df_print: paged
-mainfont: STIXTwoText
-mathfont: STIXTwoMath
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, engine = 'ocaml')
-```
 
 # 2 Tools and Techniques
 
@@ -51,7 +38,7 @@ I will argue that this is still potentially misleading, though after discussing 
 in the above statement. The statement is, and should remain, a general statement about one aspect of the overall behaviour of the algorithm.
 
 
-## 2.1.1 Ambiguities in mathematics
+### 2.1.1 Ambiguities in mathematics
 
 We need to probe exactly what "running time" and $O(n^2)$ mean. But the problems start even earlier, with the expression $n^2$. In mathematics, this expression can mean at least two things. One is that there is some fixed quantity $n$ (perhaps unknown), and the expression represents its square. The other is that $n$ is considered as a variable, and the expression represents the function that maps $n$ to $n^2$. Mathematics is an activity carried out among humans, so we rely on context to distinguish these two uses.
 
@@ -68,7 +55,7 @@ Order notation is a way of describing functions (such as the one representing ru
 There are a lot of imprecise words in that last paragraph: "often" ,"nice-looking" ,"may not", "more widely". Usually these statements can be justified with more work that we’d rather not do. For experts, this is routine. But for learners, this can be a source of frustration, as you don’t necessarily know which manipulations are permitted (in the sense that they preserve the truth of statements like this) and which are not. That comes with experience, and can be difficult to teach.
 
 
-## 2.1.2 A formal definition
+### 2.1.2 A formal definition
 
 Here is the formal definition of order notation, which may be review for you.
 
@@ -95,7 +82,7 @@ It is customary at this point to work through some examples of the use of the de
 I am not going to suggest exercises like this here, even though this is done in many conventional treatments. The reason is that this doesn’t seem to me to be relevant to algorithm analysis. We rarely count exactly and then make things more imprecise. Such exercises may help in understanding the formal definition of order notation, but they are unlikely to provide much more insight than the general statement "neglect constants and smaller terms". This type of work really builds skill in proving inequalities. That is a different topic.
 
 
-## 2.1.3 Abuse of notation
+### 2.1.3 Abuse of notation
 
 Understanding order notation is further muddied by common abuse of notation which seems to treat an O-expression as an algebraic object, rather than a logical statement. Here is an example from the slides for the second-term CS course at the University of Waterloo that introduces O-notation:
 
@@ -133,7 +120,7 @@ is the variable, then running time that is $O(n)$ is called "linear time", short
 $O(1)$ is often called "constant time", but this can be misleading. $3$ is not $O(1)$, because $3$ is not a function. The function that maps a variable $n$ to $3$ is $O(1)$, as is the function that maps $n$ to $2$ when $n$ is odd and to $3$ when $n$ is even. "Constant time" is short for "time bounded above by a constant". Having said this, we will sometimes abuse the notation and use $O(1)$ to refer to a constant that we don’t want to take the trouble to work out exactly.
 
 
-## 2.1.4 What is running time?
+### 2.1.4 What is running time?
 
 Now let’s focus on the two words "running time", a deceptively simple phrase that hides a host of complexities. What do we need in order to define this?
 
@@ -152,7 +139,7 @@ Of course, clock time is what we are actually worried about in the end. But with
 Third, we need to specify the variable on which running time depends. To this end, we distinguish the **problem** being solved (for example, sorting), an **instance** of the problem (for example, a particular sequence of integers), and the **size** of the instance (for example, fifty numbers). The word "size" is used loosely; we may not account for all factors involved in storing the data, just as we don’t account for every instruction executed while solving the problem.
 
 
-## 2.1.5 Precision leads to complications
+### 2.1.5 Precision leads to complications
 
 The running time of an algorithm to solve a problem will be a function of the size of an instance. For insertion sort, this could be the number of items to be sorted. Here we run into a slight problem with the model of computation. A 64-bit machine architecture has a fixed maximum size of addressable memory: at most $2^64$ bytes can be addressed. This is a large but constant number. So the size of an instance cannot grow arbitrarily large. In fact, since the total state of the machine (contents of memory, registers, and all other indicators of state) is an even larger but still constant number, any terminating program must have running time bounded by that larger constant (otherwise it would repeat a total state, and thus cycle forever).
 
@@ -163,7 +150,7 @@ The technical solution generally used (which is only emphasized to rule out argu
 In complexity theory, where we study the relationship between problems by trying to reduce one to the other, we need to be even more precise about problem size. The standard measure is the number of bits needed to encode an instance. This sometimes necessitates more details about efficient encoding and decoding, and may result in extra $O(log{ }n)$ factors creeping into the analysis. Here, we are not going to deal with any of this. We will, as is common practice, make simplifying assumptions and overlook their consequences, trusting everyone to act in good faith. But it’s important to realize that attempts to be more precise lead us into messy situations. That is more motivation to keep things vague.
 
 
-## 2.1.6 Algorithm analysis in practice
+### 2.1.6 Algorithm analysis in practice
 
 The running time may depend not only on the size of the instance to be solved, but on the specific data. For example, insertion sort runs much faster on one hundred numbers already in sorted order than it does on one hundred numbers in reverse sorted order. The most common way of dealing with this (because it is easiest) is **worst-case** analysis. We can define $I_n$ to be the set of all problem instances of size $n$. Given a particular problem instance $I$, we define $R(A,I)$ to be the running time of algorithm $A$ on instance $I$. Then the worst-case running time of $A$ on instances of size $n$ is $max_{I \in I_n}R(A,I)$.
 
@@ -196,7 +183,7 @@ I hope my point is clear. Algorithm analysis is not a tool for making definitive
 
 
 
-## 2.1.7 More useful notation
+### 2.1.7 More useful notation
 
 I would like to briefly introduce some notation related to $O$
 -notation, which will be occasionally useful. Again, this may be review, depending on your past exposure. The definition of $\Omega$-notation looks a lot like the definition of $O$-notation, but with the inequality at the heart reversed:
@@ -217,7 +204,7 @@ If $f(n)$ is $O(g(n))$ and $f(n)$ is $\Omega(g(n))$, we say that $f(n)$ is $\The
 
 ## 2.2 Functional programming and algorithm analysis
 
-## 2.2.1 The OCaml programming language
+### 2.2.1 The OCaml programming language
 
 We will be using OCaml for implementations. The language was first introduced in the late ’80’s, and was developed at INRIA in France. It is a member of the ML family of languages (others include Standard ML and F#). It is under active development, with a good compiler and a growing user community. It has some use in industry, more so in Europe than in North America.
 
@@ -227,7 +214,7 @@ We will rarely need pseudocode (it might show up for algorithms that are more im
 
 
 
-## 2.2.2 Insertion sort
+### 2.2.2 Insertion sort
 
 The idea behind insertion sort is that if we are given an already-sorted list, it is simple to insert an additional element. A list is either empty or it consists of a head element followed by the tail of the list (which is itself a list). This recursive definition of list can be used as a guide to writing code for insertion. Insertion into an empty list gives a one-element list. Insertion into a non-empty list has two subcases: when the head of the list is larger than the element being inserted, and when it is not. This leads to the following code.
 
@@ -319,7 +306,7 @@ I said that insert did not mutate its argument list. This is not just by design;
 
 
 
-## 2.2.3 Analyzing insertion sort
+### 2.2.3 Analyzing insertion sort
 
 We spent a lot of time discussing the statement that insertion sort has running time $O(n^2)$, where $n$ is the number of items to be sorted. Is that true for our purely-functional implementation?
 
@@ -399,7 +386,7 @@ Inductive step: Assume that the theorem is true for $n-1$. Consider the applicat
 
 
 
-## 2.2.4 Mergesort
+### 2.2.4 Mergesort
 
 Sorting is a good source of examples when learning about algorithm analysis because the problem is easy to understand, and there are many different algorithms to solve it. This, combined with the easy availability of library sort routines, might cause it to be overused in practice. A sorting algorithm assumes nothing about its data, but in practice we may have information that can be used to improve efficiency (only a few items may be out of order, for example). Sorting may not be an end in itself, but it might be one way to make some other task easier (such as search), and there might be more efficient ways to directly deal with that other task.
 
@@ -474,7 +461,7 @@ I could have replaced the last four lines of code with
 There is a slight technical problem in analyzing this algorithm. The running time of merge is a function of two variables, namely the size (length) of the two list arguments. But order notation deals with functions of one variable. Fortunately, the generalization is not difficult:
 
 "A function $f(n,m)$
-is $O(g(n,m))$ if there exist constants $c$, $n_0$, and $m_0$ such that for all $n \geq n_0$ and $m \geq m_0$, $f(n,m) \leq c \cdot g(n,m)$."
+is $O(g(n,m))$ if there exist constants $c$, $n_0$, and $m_0$ such that for all $n \geq n_0$ and $m \geq m_0$,, $f(n,m) \leq c \cdot g(n,m)$."
 
 If $T_{merge}(n,m)$ is the running time of merge applied to lists of length $n$, $m$ respectively, then the code yields the following recurrence relation:
 
@@ -508,7 +495,7 @@ $$
 This, however, assumes that when we split a list, we get two equal-sized pieces. This assumption only holds if $n$
 is a power of 2, that is, $n=2^k$ for some natural number $k$. In this case, we can prove by weak induction on $k$ that $T_{msort}(2^k)$ is $O(k2^k)$. In terms of $n$, this is saying that $T_{msort}(n)$ is $O(n\ log \ n)$. Intuitively, if we consider the tree of computations, there are $k$ levels (one node at the top, two nodes just below, four below that, and so on), and we are doing $O(2^k)$ work on each level (the number of nodes doubles when we move down a level, but the instances are halved in size, so the total work remains about the same).
 
-However, when $n$ is not a power of 2, the code still works, but the recurrence is incorrect. If $n$ is odd, then splitting a list of length $n$ does not yield two lists of length $n/2$. We have to round up for one list and round down for the other. We can use the ceiling function ( $\lceil x \rceil$ is the smallest integer greater than or equal to $x$) and the floor function ($\lfloor x \rfloor$ is the largest integer less than or equal to $x$) for this.
+However, when $n$ is not a power of 2, the code still works, but the recurrence is incorrect. If $n$ is odd, then splitting a list of length $n$ does not yield two lists of length $n/2$. We have to round up for one list and round down for the other. We can use the ceiling function ( $\lceil x \rceil$ is the smallest integer greater than or equal to $x$) and the floor function ( $\lfloor x \rfloor$ is the largest integer less than or equal to $x$) for this.
 
 The correct recurrence is:
 
@@ -531,7 +518,7 @@ The Akra-Bazzi method can be used to back up any claims about recurrence solutio
 
 
 
-## 2.2.5 Algebraic data types
+### 2.2.5 Algebraic data types
 
 OCaml provides special syntax for lists, but also a more general method of constructing datatypes that is convenient and expressive. The more recent and more popular programming languages Scala, Swift, and Rust all have this feature. We will demonstrate by pretending lists are not already defined, and defining them using this method.
 
@@ -558,7 +545,7 @@ Constructor names must start with a capital letter (other names cannot), and we 
 
 
 
-## 2.2.6 The Sequence abstract data type
+### 2.2.6 The Sequence abstract data type
 
 An abstract data type (ADT) is a description of some type of data using mathematical notations, together with operations on that type. Lists can be thought of as the implementation of a Sequence ADT. Since our list implementations are immutable, so is the ADT, which makes it easier to describe, as mathematics typically works that way.
 
@@ -575,9 +562,9 @@ _first_ consumes a non-empty sequence $s_0,s_1, \dots s_{k-1}$
 (that is, $k \geq 1$), and produces the element $s_0$.
 
 _rest_ consumes a non-empty sequence $s0,s1, \dots, s_{k-1}$
-(that is, $k \geq 1$), and produces the sequence $s_1, \dots s_{k-1}$.
+(that is, $k \geq 1$), and produces the sequence $s_1, \dots, s_{k-1}$.
 
-_index_ consumes a natural number $i$ and a sequence $s_0,s_1,\dots s_{k-1}$ where $i < k$, and produces the element $s_i$.
+_index_ consumes a natural number $i$ and a sequence $s_0,s_1,/dots s_{k-1}$ (where $i < k$), and produces the element $s_i$.
 
 The last three of these operations have preconditions on their use. What happens when the conditions are violated? We could raise an error, using OCaml exceptions, which work much as they do in other languages. But the compiler does not enforce the catching of exceptions.
 
@@ -592,7 +579,7 @@ type 'a option =
 
 
 
-## 2.2.7 Using a module to implement an ADT
+### 2.2.7 Using a module to implement an ADT
 
 To implement abstract data types, we will make use of OCaml’s module system, which is quite sophisticated (we will use only part of its full capabilities). The simplest way to create a module is to put some code into a file. When compiled, this defines a module whose name is the name of the file, capitalized (e.g. `mylist.ml` creates the module `Mylist`). We can then reference bindings in another file with the syntax `Mylist.length` (for example) or use `open Mylist` to import all the bindings without qualification. The same syntax works to access library modules. For example, there is a library module called `List`, which contains a number of useful functions, such as `List.length`.
 
@@ -736,7 +723,7 @@ One further advantage is in the design of large-scale concurrent or parallel app
 
 
 
-## 2.2.9 Improving the index operation for Sequence
+### 2.2.9 Improving the index operation for Sequence
 
 The main advantage of the array implementation is efficiency. All operations take $O(1)$ time (at least in our model of computation which ignores factors like caches and virtual memory), and the constants are small, because array operations are usually directly supported by hardware. This is not the case for the list implementations. extend, first, and rest take constant time (again, the constants are small, because pointer operations are also supported by hardware), but index takes time $O(min \{i,n\})$, where $i$ is the index and $n$ the length of the sequence.
 
@@ -812,7 +799,7 @@ to be the running time of height on a tree with $n$ constructors, we get a recur
 
 $$
 T_{height}(1)=O(1) \\
-T_{height}(n)=\max_{0<i<n}\{\ T_{height}(i)+T_{height}(n-i-1)\ \}+O(1)
+T_{height}(n)=\max_{0<i<n}\{T_{height}(i)+T_{height}(n-i-1)\}+O(1)
 $$
 
 We have to use max here because we don’t know the number of nodes $i$ in the left subtree, but we are using worst-case analysis. By strong induction on n, we can show that $T_{height}(n)$ is $O(n)$. (The worst case is a tree where each left subtree is a leaf.)
@@ -822,15 +809,15 @@ Although we derived this recurrence for specific code, it is quite general. It w
 Now we can analyze `is_perf.` If $T_{is\_perf}(n)$ is the running time of is_perf on a tree with $n$ constructors, we get this recurrence:
 
 $$
-T_{is\_perf}(1)=O(1) \\
-T_{is\_perf}(n)=\max_{0<i<n}\{\ T_{is\_perf}(i)+T_{is\_perf}(n-i-1)+T_{height}(i)+T_{height}(n-i-1)\ \}+O(1)
+T_{is\_perf}(1)=O(1)
+T_{is\_perf}(n)=\max_{0<i<n} (T_{is\_perf}(i)+T_{is\_perf}(n-i-1)+T_{height}(i)+T_{height}(n-i-1))+O(1)
 $$
 
 Substituting the solution for height, we get:
 
 $$
 T_{is\_perf}(1)=O(1) \\
-T_{is\_perf}(n)=\max_{0<i<n}\{\ T_{is\_perf}(i)+T_{is\_perf}(n-i-1)\ \}+O(n)
+T_{is\_perf}(n)=\max_{0<i<n} (T_{is\_perf}(i)+T_{is\_perf}(n-i-1))+O(n)
 $$
 
 If the max always occurs at $i=1$ (again, when each left subtree is a leaf), then we can see that the solution would be $O(n^2)$. This is in fact the general solution, which can be proved by strong induction on $n$. This recurrence will also show up a lot, but sometimes we can get a better solution, for example, if the tree is perfect. That doesn’t help us this time, because is_perf can be applied to non-perfect trees.
