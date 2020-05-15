@@ -1,7 +1,7 @@
 
 # Introduction
 
-> "This ain’t no party / This ain’t no disco / This ain’t no foolin’ around"
+> "*This ain’t no party* / *This ain’t no disco* / *This ain’t no foolin’ around*"
 > Talking Heads, "Life During Wartime", Fear of Music, 1979
 
 This flânerie is a stroll through intermediate data structures and their associated algorithms, from the point of view of functional programming. In brief: we wish to manipulate data in various ways, to extract information or to store information for later retrieval. We want these operations to be efficient in their use of resources (chiefly time and space). The data may be naturally structured, or we may impose structure on it for the sake of efficiency.
@@ -9,7 +9,7 @@ This flânerie is a stroll through intermediate data structures and their associ
 This treatment is not intended to be comprehensive; it originated as a set of lecture summaries for a particular course in a particular undergraduate program (as described below), and the selection of topics was influenced by the predecessor and successor courses. It is also not intended as a reference into which one can dip at random; it was designed as a continuous development in which later sections often depend on earlier ones. Sustained engagement, including doing many or most of the exercises, is important for gaining full benefit.
 
 
-## 1.1 Required background
+## Required background
 
 This material was used in enriched versions of a required second-year undergraduate course in the Cheriton School of Computer Science at the University of Waterloo (UW), in spring term 2017 and winter term 2018. Admission was voluntary, but required instructor consent.
 
@@ -18,7 +18,7 @@ Students would normally take this course in their fourth term or semester of stu
 You do not need all of this past experience to benefit from this stroll. You should have at least one course or equivalent experience in programming. It can be in an imperative language (such as Java, C++, or Python), though the approach here is different. Some exposure to functional programming (in languages such as Lisp, Scheme, Clojure, Racket, Scala, Haskell, or OCaml) would help, but is not essential, if you do additional practice as needed. When I show you code, it will use OCaml, but I will not provide software installation instructions or cover features in detail, expecting you to fill in gaps with documentation and tutorials available on the Web.
 
 
-## 1.2 Design philosophy
+## Design philosophy
 
 Nearly all computer science programs will have a course on data structures. UW is unusual in also having a third-year required course on algorithms and a fourth-year optional course on advanced algorithms, thus providing coverage of the field in all four years of the program. Most of the subject matter was developed in the period 1965-1980, and the major textbooks were written shortly after that. The approach and content of UW’s conventional second-year data structures course has not changed significantly for decades, and there is considerable overlap with similar courses at other institutions.
 
@@ -33,7 +33,3 @@ To be blunt, working through this material will not help you get a job in the ne
 I recommend that you do the exercises; engaging fully with the material is an important part of the learning process. I chose OCaml for reasons I discuss in Chapter 2, but if you prefer, you can use any other language with good support for functional programming. (I originally programmed many of these data structures in Racket.) Although it was not a design goal, I believe this is a reasonable way of starting to learn OCaml, even if you already know about data structures.
 
 Please don’t post solutions anywhere publicly accessible, like a GitHub account or blog. Also please don’t repost or copy any material. If you would like to adapt it for your own purposes, please contact me for permission. (A complete rewrite in your own words is fine; this work is itself a synthesis.)
-
-A logistical note: These Web pages use MathJax to render mathematical expressions, which requires the intervention of a third-party server. If the MathJax server is unreachable, you will see the underlying LaTeX code for the expressions instead. This should be readable, though with difficulty that increases with the complexity of the expression.
-
-

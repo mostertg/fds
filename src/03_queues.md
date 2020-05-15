@@ -1,11 +1,11 @@
 
-# 3 Queues
+# Queues
 
 > "Transmit the message / To the receiver / Hope for an answer some day"
 >Talking Heads, "Life During Wartime", Fear of Music, 1979
 
 
-## 3.1 Simple queues
+## Simple queues
 
 The word "queue" comes to us from French (it means "tail"). A queue can be viewed as a modification of a sequence where we add only at the end, while still removing from the front. (If we can add and remove at both ends, it is often called a "double-ended queue" or "deque" for short, pronounced "deck".) Queues have immediate application in situations where first-come, first-served processing is appropriate, and for use as buffers between computations that produce/consume information at different rates. They are also a useful component in many algorithms, for example in doing a breadth-first search of an explicit or implicit tree.
 
@@ -25,7 +25,6 @@ end
 
 ```
 
-
 A Deque ADT would add back `extend` and would also add a "remove from end" operation (which one is tempted to call `tser`).
 
 We can adapt our list-based implementation of the Sequence ADT to get a persistent implementation of Queue. But in order to implement _snoc_, we need to append the added element to the end of a list. This takes as much time as appending a whole list to the end of another list, which can be done with the OCaml infix `@` operator, or code like this:
@@ -38,7 +37,6 @@ let rec append lst1 lst2 =
 
 ```
 
-
 It’s not hard to see that this takes time $O(n)$, where $n$ is the length of the first list, and the length of the second list plays no role. append can be used to implement _snoc_ in a list-based implemention of Queue by making the second argument a list containing only the element to be added at the end of the queue. But the time for this operation is unacceptably slow. We can do better.
 
 **Exercise 13**: Write OCaml code to implement the Deque ADT with a pair consisting of a Braun tree and the number of nodes it has, and show that your code achieves $O(log\ n)$
@@ -48,7 +46,7 @@ In contrast, adapting the array-based implementation of Sequence does even bette
 
 
 
-## 3.1.1 Mutation in OCaml
+### Mutation in OCaml
 
 In OCaml, the type `’a ref` (for "reference") is mutable. A value of this type can be dereferenced with the prefix `!` operator. That is, if `r` is of type `’a ref`, then `!r` is of type `’a`. The value can be mutated with the infix assignment operator `:=` (the left side has to have type `’a ref`, and the right side of type `’a`). An expression `r := aval` has value `()`, which is the unique value of type `unit`, and is intended to convey no information. Sequencing of expressions is done with the infix operator single semicolon (`;`). In the expression `e1 ; e2`, `e1` must have type `unit`, and the value of the whole expression is the value of `e2`. The `;` operator is left-associative, so it is easy to sequence several operations, parenthesizing as necessary.
 
@@ -62,7 +60,7 @@ OCaml has `for` and `while` loops, but these lack the `break` and `continue` fea
 
 
 
-## 3.1.2 Using arrays for queues
+### Using arrays for queues
 
 Recall that the array-based implementation of Sequence keeps the sequence in reverse order in an array, with a pointer (integer index) to the next insertion point. Since for a queue, we are adding at the end, we don’t need to use reverse order, and we can keep the queue in regular order in the array. If we are inserting at the end of the queue and removing from the front, we can keep pointers to both front and end, so that the queue consists of a contiguous sequence of elements in the array. This will, in the normal course of operation, creep down towards the end of the array, which we handle by wrapping around to the front again. That is, the queue is a contiguous sequence of elements on the edge of a circle, which is mapped onto the array, so that the last element of the array is followed by the first one.
 
@@ -85,7 +83,6 @@ type queue = ’a list * ’a list
 
 ```
 
-
 The first list will be the front several items of the queue (where "several" varies with time). The second list will be the rest of the items (at the rear of the queue) in reverse order. _first_ and _rest_ operate primarily on the first list, and _snoc_ operates primarily on the second list (where "primarily" has to be carefully defined).
 
 If we are lucky, these operations will take $O(1)$ time. Adding to the rear of the queue is adding to the front of the second list. The problem is when, for example, _first_ is applied to a nonempty queue whose first list is empty. The result is at the end of the second list. We are not going to be able to get to that in constant time.
@@ -102,7 +99,6 @@ let rec rev1 lst = function
 
 ```
 
-
 The above code takes $O(n^2)$ time to reverse a list of length $n$. To do better, we can still process the list in a structurally-recursive fashion, but add an accumulator argument that accumulates the result in reverse order.
 
 ```{ocaml}
@@ -113,7 +109,6 @@ let rev2 lst =
   in revh [] lst
 
 ```
-
 
 When `rev2` is applied to a list of length $n$, there are $n+1$ applications of `revh`, each taking $O(1)$ time, so the total time is $O(n)$.
 
@@ -136,7 +131,7 @@ There is one condition we must impose for the analysis to work on our example: e
 
 
 
-## 3.2 Amortized analysis
+## Amortized analysis
 
 Given a sequence of $n$ operations on a data structure (for arbitrary $n$), where operation $i$ has cost $t_i$, we can assign amortized costs $a_i$ if we can ensure that $$\sum^n_{i=1}t_i \leq \sum^n_{i=1}a_i \ \ .$$
 
@@ -173,7 +168,7 @@ In full generality, lazy evaluation allows one to specify a computation that may
 
 
 
-## 3.3 Lazy evaluation with memoization
+## Lazy evaluation with memoization
 
 The idea of using lazy evaluation with memoization to facilitate amortized analysis of persistent implementations of data structures is due to Chris Okasaki, in work connected to his 1996 PhD thesis. The components were available earlier. Lazy evaluation is inherent in the early work on the lambda calculus from the 1940’s and 50’s, but was first suggested for practical work about 1970. Memoization dates back even further, to the late ’50’s, when dynamic programming was first described, and was combined with streams (described below) around 1976.
 
@@ -192,7 +187,6 @@ end
 
 ```
 
-
 We start the implementation by using an algebraic data type to express the fact that an expression is either delayed (suspended) or has been evaluated.
 
 ```{ocaml}
@@ -201,7 +195,6 @@ type 'a lazy_expr =
 | Evaluated of 'a
 
 ```
-
 
 The code below should be straightforward to understand.
 
@@ -226,7 +219,6 @@ end
 
 ```
 
-
 The built-in implementation is more sophisticated than this, as it has to handle exceptions, and it detects circularity in forcing. But this is the basic idea. It’s clear that the overhead in suspending and forcing is relatively low, so we can afford to do it speculatively.
 
 The expensive case in our two-list implementation occurs when the first list is empty and the second list is long. But to add to the second list, the first list had to have been nonempty, and the eventual empty first list is a tail of that nonempty list. If we are going to move some of the cost of the expensive case, it is going to involve that tail. This suggests a data structure like a list, but where the tail is a suspended computation. This is commonly called a **stream**. (There is a related but definitely different notion of "stream" available in OCaml as an abstraction for iterative processing of a sequence. Please ignore that.)
@@ -238,7 +230,6 @@ type 'a stream = Nil | Cons of 'a * 'a stream Lazy.t
 
 ```
 
-
 Because the tail is suspended, we can use a stream to represent an infinite sequence, even though we will only force evaluation of some finite initial segment. Here is a definition of an infinite stream of ones.
 
 ```{ocaml}
@@ -248,14 +239,12 @@ let ones = makeones ()
 
 ```
 
-
 When these lines are evaluated in OCaml, we see:
 
 ```{ocaml}
 val ones : int stream = Cons (1, <lazy>)
 
 ```
-
 
 We can easily write a function to take a finite initial segment of a stream as a regular list. The function take is a simple adaptation of the similar function that consumes a regular list.
 
@@ -267,7 +256,6 @@ let rec take n = function
 
 ```
 
-
 We can also write stream functions that correspond to list functions, for doing things like append, reverse, map, filter, and so on. But before we get too far into that, I want to point out a potential issue with this definition of streams. It is prone to embarrassing or fatal "off-by-one" errors. Consider the following definitions.
 
 ```{ocaml}
@@ -278,7 +266,6 @@ let sample = take 4 (sixty_div 4)
 
 ```
 
-
 You would expect, when these are evaluated in OCaml, to see:
 
 ```{ocaml}
@@ -286,14 +273,12 @@ val sample : int list = [15; 20; 30; 60]
 
 ```
 
-
 But instead, we get:
 
 ```{ocaml}
 Exception: Division_by_zero.
 
 ```
-
 
 What happened? There is a recursive call of the form `take 0 (Lazy.force tl)`. In the recursive application, that second argument is not used, but it is forced first, and that is the fifth element of the sequence, which is `60/0`. We could try to patch the code of take to avoid this, but there are other problems of this kind with odd streams, and the best thing to do is to fix the definition.
 
@@ -318,7 +303,6 @@ let sample = take 4 (sixtyDiv 4)
 
 ```
 
-
 This works as expected, but the code for `take` is a bit more complicated. At least one textbook author tried writing about even streams, but went back to odd streams, despite their drawbacks, because of the coding and comprehension overhead of even streams. (For further details on the awkwardnesses of working with even streams, see the original paper by Wadler, Taha, and McQueen that pointed out the issue and offered this solution, or the discussion around the Scheme library implementations SRFI-40 and SRFI-41.)
 
 Our queue implementations are not going to involve potentially infinite streams, only finite ones, and they won’t involve code that might throw unexpected exceptions, so we might be able to get away with using odd streams without affecting correctness. However, an "off-by-one" error could result in overevaluation, and invalidate our running time analysis. To be sure, we will use even streams. This is not overcaution: efforts to formally verify these implementations (that is, to verify the resource bounds as well as the correctness) have found this to be necessary.
@@ -329,7 +313,7 @@ The following exercise is important in what follows, so it will be beneficial to
 
 
 
-## 3.3.1 Incremental vs monolithic computation
+### Incremental vs monolithic computation
 
 Some stream computations are "smoother" than others, and those are the ones we should prefer. To understand the issue, let’s look at a version of the take function above that produces a stream, instead of a list.
 
@@ -374,7 +358,7 @@ The stream version of `rev` is called **monolithic**, because all its work has t
 
 
 
-## 3.3.2 Flattening using streams
+### Flattening using streams
 
 Streams, properly coded, can be used for elegant solutions to many problems. As an example, consider the task of writing a function `to_list` that consumes a leaf-labelled binary tree (not necessarily perfect or near-perfect) and produces a list of the leaves in left-to-right order. It’s easy to write a function that does this, but not so easy to write an efficient one.
 
@@ -401,7 +385,7 @@ To get a solution that runs in $O(n)$ time, we can convert `to_list` to produce 
 
 
 
-## 3.3.3 Queues using streams
+### Queues using streams
 
 We will modify the two-list implementation of queues by using two streams instead. That alone will not improve the situation.
 
@@ -433,7 +417,7 @@ That is not a proof. Okasaki’s proof describes a **debt invariant** and precis
 
 
 
-## 3.3.4 Achieving constant time with full persistence
+### Achieving constant time with full persistence
 
 We can work a little more on this implementation and create one that, surprisingly, has $O(1)$ worst-case cost for all operations, even when persistence is important. Since the code is about as simple (if not simpler), that is going to make the implementation we just analyzed of academic interest only. But we are building on what have just learned, so it is not a waste, and it is good to see the progressive development of ideas. Too many data structures textbooks and references present only the final, optimized versions.
 
@@ -467,29 +451,22 @@ There is much more work in this area, extending operations (for example) to dequ
 
 
 
-## 3.4 Priority queues
+## Priority queues
 
 There are many applications where one wants something like queues, but time of insertion is not the ordering criterion. Rather, there is some other factor that gives certain items priority over other items. We model this with a priority queue, where each item comes with a priority. We can think of the priority as a number, but we can generalize this to any ordered domain with a total comparison operation. This generalization lets us forget about the items and focus on the priority values (since we can just pair priority values and items and define the appropriate comparison operation for the pairs). So we view a priority queue as a multiset of elements from an ordered domain.
 
 Confusingly, the convention is to focus on the minimum element, even though, in English, we speak of "higher priority". That is, the item of highest priority has the lowest priority value! We could focus on the maximum element just by flipping all priority comparisons, but we won’t. Some references speak of max-queues and min-queues (both can be useful, sometimes at the same time). We will only deal with min-queues here.
 
-The operations that the Priority Queue ADT supports are empty, is_empty, insert, find_min and delete_min. (Later, we will consider another operation, merge.)
+The operations that the Priority Queue ADT supports are `empty`, `is_empty`, `insert`, `find_min` and `delete_min`. (Later, we will consider another operation, `merge`.)
 
-It’s usually a good idea to try first to use lists for a new ADT. Sometimes they’re good enough (especially for small data), and even if they’re not, we might gain insight into what the issues are. If we use unordered lists, then when the list contains n
-elements, insert takes $O(1)$ time but find_min and delete_min take $O(n)$ time. We can reduce find_min to $O(1)$ time by maintaining the minimum separately (this is possible for any implementation) but there is nothing to be done to improve delete_min. If we keep the lists ordered by nondecreasing priority, the costs of find_min and delete_min drop to $O(1)$, but insert increases to $O(n)$
-
-time.
+It’s usually a good idea to try first to use lists for a new ADT. Sometimes they’re good enough (especially for small data), and even if they’re not, we might gain insight into what the issues are. If we use unordered lists, then when the list contains $n$ elements, insert takes $O(1)$ time but `find_min` and `delete_min` take $O(n)$ time. We can reduce `find_min` to $O(1)$ time by maintaining the minimum separately (this is possible for any implementation) but there is nothing to be done to improve `delete_min`. If we keep the lists ordered by nondecreasing priority, the costs of `find_min` and `delete_min` drop to $O(1)$, but `insert` increases to $O(n)$ time.
 
 Our goal is to get these operations down to $O(log\ n)$
-time, with some of them $O(1)$ time. We can’t expect to get all of them down to $O(1)$ time, even amortized. Given any priority queue implementation, we can sort n elements by inserting them into an initially empty priority queue, then interleaving n find_min and n delete_min operations. But any comparison-based sorting algorithm that sorts n distinct elements must make Ω(nlogn) comparisons. We can see this by viewing such an algorithm as a binary tree with comparisons at the internal nodes and leaves labelled with permutations of the elements. There are n! permutations, and thus the tree must have at least this many leaves. But a binary tree of height h has at most 2h leaves (this is an easy proof by induction on h). This means that a binary tree with at least n! leaves must have height at least log(n!). Since n!≥(⌊n/2⌋)⌊n/2⌋, some permutation forces at least cnlogn comparisons for some constant c
+time, with some of them $O(1)$ time. We can’t expect to get all of them down to $O(1)$ time, even amortized. Given any priority queue implementation, we can sort $n$ elements by inserting them into an initially empty priority queue, then interleaving $n$ `find_min` and $n$ `delete_min` operations. But any comparison-based sorting algorithm that sorts $n$ distinct elements must make $\Omega(n\ log\ n)$ comparisons. We can see this by viewing such an algorithm as a binary tree with comparisons at the internal nodes and leaves labelled with permutations of the elements. There are $n!$ permutations, and thus the tree must have at least this many leaves. But a binary tree of height $h$ has at most $2^h$ leaves (this is an easy proof by induction on $h$). This means that a binary tree with at least $n!$ leaves must have height at least $log(n!)$. Since $n! \geq (\lfloor n/2 \rfloor)_{\lfloor n/2 \rfloor}$, some permutation forces at least $cn\ log\ n$ comparisons for some constant $c$.
 
-.
+This bound does not hold if we do computation on the elements (for example, if we assume they are integers, and compute their digits or bits). But it does suggest a limit to the efficiency of a truly generic priority queue implementation. If all operations take $O(log\ n)$ time, then we contradict the sorting lower bound.
 
-This bound does not hold if we do computation on the elements (for example, if we assume they are integers, and compute their digits or bits). But it does suggest a limit to the efficiency of a truly generic priority queue implementation. If all operations take $O(log\ n)$
-
-time, then we contradict the sorting lower bound.
-
-Before we work on more efficient priority queues, we should discuss implementation in OCaml. Since the priority can be drawn from any ordered domain, we can create a module type that works for any such situation. For the sorting examples in Chapter 2, we just used the overloaded OCaml operator >, which provides the expected results on types such as int and string. For full generality, though, we should include the ability to specify the comparison function.
+Before we work on more efficient priority queues, we should discuss implementation in OCaml. Since the priority can be drawn from any ordered domain, we can create a module type that works for any such situation. For the sorting examples in Chapter 2, we just used the overloaded OCaml operator `>`, which provides the expected results on types such as `int` and `string`. For full generality, though, we should include the ability to specify the comparison function.
 
 
 ```{ocaml}
@@ -500,7 +477,7 @@ end
 
 ```
 
-Here the type t is abstract, and the operation compare will consume two elements of type t and produce an integer. The integer will be negative if the first argument is smaller, positive if the first argument is greater, and 0 if the two arguments are equal. This is a somewhat awkward convention. It would be better to use a sum type; Haskell provides the equivalent of the following.
+Here the type `t` is abstract, and the operation `compare` will consume two elements of type `t` and produce an integer. The integer will be negative if the first argument is smaller, positive if the first argument is greater, and 0 if the two arguments are equal. This is a somewhat awkward convention. It would be better to use a sum type; Haskell provides the equivalent of the following.
 
 
 ```{ocaml}
@@ -508,7 +485,7 @@ type Ordering = LT | EQ | GT
 
 ```
 
-But the integer convention is now standard in OCaml (it comes from a similar convention in C, used for example by the strcmp function) and is used in some OCaml library modules, so we will adopt it. Here’s an example of a module of this type.
+But the integer convention is now standard in OCaml (it comes from a similar convention in C, used for example by the `strcmp` function) and is used in some OCaml library modules, so we will adopt it. Here’s an example of a module of this type.
 
 
 ```{ocaml}
@@ -522,15 +499,13 @@ module OrderedInt : OrderedType =
 
 ```
 
-In this example, two elements (integers) can be compared in $O(1)$
-
-time. We will assume this in our analyses. If in some particular instance this assumption is not true, the running times we derive have to be multiplied by the cost of a comparison.
+In this example, two elements (integers) can be compared in $O(1)$ time. We will assume this in our analyses. If in some particular instance this assumption is not true, the running times we derive have to be multiplied by the cost of a comparison.
 
 
 
-## 3.4.1 Functors (parameterized modules)
+### Functors (parameterized modules)
 
-We’d like to write our implementation of priority queues (say, using unordered lists) so that it can use an arbitrary implementation of OrderedType. We can do this by using a functor, which can be thought of as a parameterized module, or as a sort of function from a structure to a structure. Here’s the way we might describe the type of such a functor.
+We’d like to write our implementation of priority queues (say, using unordered lists) so that it can use an arbitrary implementation of `OrderedType`. We can do this by using a **functor**, which can be thought of as a parameterized module, or as a sort of function from a structure to a structure. Here’s the way we might describe the type of such a functor.
 
 
 ```{ocaml}
@@ -549,7 +524,7 @@ module type PQFunctor =
 
 ```
 
-The functor syntax is intended to be analogous to the fun syntax for creating an anonymous function. In this case, because we are defining the type of a functor, a signature appears to the right of the arrow. When we actually write the implementation, a structure will appear to the right of the arrow, like this:
+The `functor` syntax is intended to be analogous to the fun syntax for creating an anonymous function. In this case, because we are defining the type of a functor, a signature appears to the right of the arrow. When we actually write the implementation, a structure will appear to the right of the arrow, like this:
 
 
 ```{ocaml}
@@ -577,7 +552,7 @@ module UListPQ : PQFunctor =
 
 ```
 
-Just as let id x = x is syntactic sugar for let id = fun x -> x, OCaml provides syntactic sugar for writing functors so that they look more like parameterized modules. We could replace the header above with:
+Just as `let id x = x` is syntactic sugar for `let id = fun x -> x`, OCaml provides syntactic sugar for writing functors so that they look more like parameterized modules. We could replace the header above with:
 
 
 ```{ocaml}
@@ -586,7 +561,7 @@ module UListPQ (Elem : OrderedType) =
 
 ```
 
-We can’t put the annotation : PQFunctor before the = because the functor produces a structure, and we would need to use a named type which matches that. If we’re worried that we haven’t created something of type PQFunctor, we can do a coercion:
+We can’t put the annotation `: PQFunctor` before the `=` because the functor produces a structure, and we would need to use a named type which matches that. If we’re worried that we haven’t created something of type `PQFunctor`, we can do a coercion:
 
 
 ```{ocaml}
@@ -604,7 +579,7 @@ let test1 = IntPQ.find_min (IntPQ.insert 1 (IntPQ.empty))
 
 ```
 
-To specify the generic type produced by PQFunctor, we can write a description like this.
+To specify the generic type produced by `PQFunctor`, we can write a description like this.
 
 
 ```{ocaml}
@@ -637,12 +612,12 @@ OCaml is fine with this, but when we try to instantiate and use an integer prior
 
 
 ```{ocaml}
-Error: This expression has type int but an expression 
+Error: This expression has type int but an expression
         was expected of type IntPQ.Elem.t
 
 ```
 
-The type Elem.t in the definition of PQ has remained abstract. We want to instantiate it with int in this case. The connection should be made in the definition of module type PQFunctor. We need a way of saying that the E that parameterizes the result of the functor (for which we later supply the argument OrderedInt when creating IntPQ) should be the same as the abstract Elem mentioned in the definition of PQ. The syntax provided by OCaml for this is called a sharing constraint, and we can write it like this:
+The type `Elem.t` in the definition of `PQ` has remained abstract. We want to instantiate it with `int` in this case. The connection should be made in the definition of module type `PQFunctor`. We need a way of saying that the `E` that parameterizes the result of the functor (for which we later supply the argument `OrderedInt` when creating `IntPQ`) should be the same as the abstract `Elem` mentioned in the definition of `PQ`. The syntax provided by OCaml for this is called a **sharing constraint**, and we can write it like this:
 
 
 ```{ocaml}
@@ -654,21 +629,21 @@ module type PQFunctor =
 This does not entirely fix the error; it becomes:
 
 ```{ocaml}
-Error: This expression has type int but an expression 
+Error: This expression has type int but an expression
         was expected of type IntPQ.Elem.t = OrderedInt.t
 
 ```
 
-So we have a similar problem with OrderedInt. If we change its type in a similar fashion:
+So we have a similar problem with `OrderedInt`. If we change its type in a similar fashion:
 
 ```{ocaml}
 module OrderedInt : (OrderedType with type t = int) = ...
 
 ```
 
-the example compiles and runs properly. (We can also remove the type annotation on OrderedInt.)
+the example compiles and runs properly. (We can also remove the type annotation on `OrderedInt`.)
 
-Using the syntactic sugar for parameterized modules, we can write the header for UListPQ like this:
+Using the syntactic sugar for parameterized modules, we can write the header for `UListPQ` like this:
 
 ```{ocaml}
 module UListPQ (E : OrderedType) : (PQ with module Elem = E) =
@@ -684,7 +659,7 @@ module UListPQ (E : OrderedType) : (PQ with module Elem = E) =
 
 
 
-## 3.4.2 Priority queues using Braun heaps
+### Priority queues using Braun heaps
 
 Now that we know how to code our priority queue ideas in OCaml, we return to the question of efficiency.
 
@@ -719,15 +694,13 @@ and the discussion in the previous paragraph (plus Akra-Bazzi) shows this has so
 
 
 
-## 3.4.3 LJNP trees revisited
+### LJNP trees revisited
 
 Our original use of Braun trees to improve the index operation for sequences was reminiscent of arrays. We can reverse the thinking and try to use an array to store a binary tree. If we use the Braun tree numbering, it’s a bit awkward to navigate. To compute the children of the element at index $i$, we have to add the digits 1 and 2 to the left of the bijective binary representation of $i$. But the numbering we first used (with contiguous numbers as we move across a level, using a left-justified near-perfect or LJNP binary tree) adds the digits at the right, which is easier to compute. The children of the element at index $i$ are at indices $2i+1$ and $2i+2$, and the parent is at index $\lfloor (n−1)/2 \rfloor$ . We also maintain the size of the heap in a separate mutable variable.
 
 Of course, we cannot easily swap subtrees in the array representation, so the algorithms look different (and tend to be expressed in terms of loops, rather than recursion). Insertion into an array-based heap is done by storing the new element in the first unused position in the array and then restoring the heap property by repeatedly comparing with its parent and swapping them if necessary. Deletion of the minimum is done by swapping the element of index 0 with the element of size $n−1$ (where $n$ is the size before deletion) and then restoring the heap property by repeatedly comparing it with its children and swapping with the smaller one. If the minimum is repeatedly deleted in this fashion (decrementing the maintained size of the heap each time), then the removed elements accumulate in nonincreasing order in the portion of the array unused by the heap. When the heap reaches size zero, the array is sorted. This is known as `heapsort` (Williams 1964). It is an in-place $O(n\ log\ n)$ array-based sort that requires only constant additional storage, and no recursion (despite this, `mergesort` is often preferable).
 
-The "swapping down" process described in the last paragraph can also be used to `heapify` $n$ elements by putting them in an arbitrary order in the array and then applying the process on each element from index $n−1$ down to 0. This idea is due to Robert Floyd, from 1964. For the same reason as with Braun heaps, the cost is $O(n)$
-
-.
+The "swapping down" process described in the last paragraph can also be used to `heapify` $n$ elements by putting them in an arbitrary order in the array and then applying the process on each element from index $n−1$ down to 0. This idea is due to Robert Floyd, from 1964. For the same reason as with Braun heaps, the cost is $O(n)$.
 
 **Exercise 28**: Write code for array-based heap operations, `heapsort`, and `heapify` in your favourite imperative language, or try it in OCaml. $\blacksquare$
 
@@ -735,7 +708,7 @@ Array-based heaps have the same drawbacks that we’ve seen for other uses of ar
 
 
 
-## 3.4.4 Merging heaps
+### Merging heaps
 
 Both of the efficient heap implementations we have seen (Braun-tree-based and array-based) seem ill-suited to the `merge` operation. It is somewhat more difficult to see the utility of this operation, but it proves useful in some algorithms, notably shortest-path computation (Dijkstra’s algorithm). From a set point of view, this is the union operation for multisets, though we will not consider the intersection operation. Okasaki points out that other operations can be expressed in terms of `merge`. `insert` is the merge of a singleton heap with a possibly larger one. `deleteMin` is the merge of the two subtrees of the root.
 
@@ -755,7 +728,6 @@ module UListMPQ (E : OrderedType) : (PQ with module Elem = E) =
   end
 
 ```
-
 
 The merge operation in `UListMPQ` takes $O(m)$ time when merging priority queues of size $m$ and $n$ . It’s not easy to adapt the implementations we have to do much better. We need some new ideas.
 

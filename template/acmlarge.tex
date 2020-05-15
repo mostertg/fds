@@ -1,174 +1,139 @@
-\documentclass[acmlarge, screen, nonacm]{acmart}
+\documentclass[acmsmall, nonacm, acmthm=false]{acmart}
 
 \usepackage{booktabs} % For formal tables
+\usepackage{amssymb}
+\usepackage{amsthm}
+% \usepackage{libertine}
+% \usepackage[libertine]{newtxmath}
 
+\def\tightlist{}
+
+\newtheorem*{sum_th}{Sum Theorem}
+\newtheorem*{lead_const_th}{Leading Constant Theorem}
+\newtheorem*{small_stuff_th}{Small Stuff Theorem}
+\newtheorem*{seq_th}{Sequential Theorem}
+\newtheorem*{prod_th}{Product Theorem}
+
+% \mathversion{bold}
+
+% fix incorrect image scaling
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 
 % Copyright
-%\setcopyright{none}
+\setcopyright{none}
 %\setcopyright{acmcopyright}
 %\setcopyright{acmlicensed}
 %\setcopyright{rightsretained}
 %\setcopyright{usgov}
 %\setcopyright{usgovmixed}
 %\setcopyright{cagov}
-\setcopyright{licensedcagov}
+% \setcopyright{licensedcagov}
 %\setcopyright{cagovmixed}
 %\setcopyright{licensedothergov}
 
 % DOI
-\acmDOI{10.475/123_4}
+% \acmDOI{10.475/123_4}
 
 % ISBN
-\acmISBN{123-4567-24-567/08/06}
+% \acmISBN{123-4567-24-567/08/06}
 
 %Conference
-\acmConference[WOODSTOCK'97]{ACM Woodstock conference}{July 1997}{El
-  Paso, Texas USA}
-\acmYear{1997}
-\copyrightyear{2016}
+% \acmConference[WOODSTOCK'97]{ACM Woodstock conference}{July 1997}{El
+  % Paso, Texas USA}
+% \acmYear{1997}
+% \copyrightyear{2016}
 
-\acmPrice{15.00}
+% \acmPrice{15.00}
+
+
+% \makeatletter
+% \setcounter{tocdepth}{3}
+% \def\contentsname{Contents}
+% \def\tableofcontents{%
+    % \section*{\MakeUppercase{\contentsname}}%
+    % \@starttoc{toc}%
+    % }
+% \makeatother
 
 
 \begin{document}
 \title{$title$}
-\titlenote{Produces the permission block, and
-  copyright information}
-\subtitle{Extended Abstract}
-\subtitlenote{The full version of the author's guide is available as
-  \texttt{acmart.pdf} document}
+% \titlenote{Produces the permission block, and
+  % copyright information}
+\subtitle{A modern reimagining of data structures focussing on immutability and persistence, based on my offerings of the course CS 240E, and aimed at those who have done some programming in imperative or functional language. Programming examples and exercises use the OCaml language.}
+% \subtitlenote{The full version of the author's guide is available as
+  % \texttt{acmart.pdf} document}
 
-\author{Ben Trovato}
-\authornote{Dr.~Trovato insisted his name be first.}
-\orcid{1234-5678-9012}
+\author{$author$}
+% \authornote{Dr.~Trovato insisted his name be first.}
+% \orcid{1234-5678-9012}
 \affiliation{%
-  \institution{Institute for Clarity in Documentation}
-  \streetaddress{P.O. Box 1212}
-  \city{Dublin}
-  \state{Ohio}
-  \postcode{43017-6221}
+  \institution{Cheriton School of Computer Science, University of Waterloo}
+  % \streetaddress{P.O. Box 1212}
+  % \city{Waterloo}
+  % \state{Ontario, Canada N2L 3G1}
+  % \postcode{43017-6221}
 }
-\email{trovato@corporation.com}
-
-\author{G.K.M. Tobin}
-\authornote{The secretary disavows any knowledge of this author's actions.}
-\affiliation{%
-  \institution{Institute for Clarity in Documentation}
-  \streetaddress{P.O. Box 1212}
-  \city{Dublin}
-  \state{Ohio}
-  \postcode{43017-6221}
-}
-\email{webmaster@marysville-ohio.com}
-
-\author{Lars Th{\o}rv{\"a}ld}
-\authornote{This author is the
-  one who did all the really hard work.}
-\affiliation{%
-  \institution{The Th{\o}rv{\"a}ld Group}
-  \streetaddress{1 Th{\o}rv{\"a}ld Circle}
-  \city{Hekla}
-  \country{Iceland}}
-\email{larst@affiliation.org}
-
-\author{Valerie B\'eranger}
-\affiliation{%
-  \institution{Inria Paris-Rocquencourt}
-  \city{Rocquencourt}
-  \country{France}
-}
-\author{Aparna Patel}
-\affiliation{%
- \institution{Rajiv Gandhi University}
- \streetaddress{Rono-Hills}
- \city{Doimukh}
- \state{Arunachal Pradesh}
- \country{India}}
-\author{Huifen Chan}
-\affiliation{%
-  \institution{Tsinghua University}
-  \streetaddress{30 Shuangqing Rd}
-  \city{Haidian Qu}
-  \state{Beijing Shi}
-  \country{China}}
-
-\author{Charles Palmer}
-\affiliation{%
-  \institution{Palmer Research Laboratories}
-  \streetaddress{8600 Datapoint Drive}
-  \city{San Antonio}
-  \state{Texas}
-  \postcode{78229}}
-\email{cpalmer@prl.com}
-
-\author{John Smith}
-\affiliation{\institution{The Th{\o}rv{\"a}ld Group}}
-\email{jsmith@affiliation.org}
-
-\author{Julius P.~Kumquat}
-\affiliation{\institution{The Kumquat Consortium}}
-\email{jpkumquat@consortium.net}
+\email{plragde@uwaterloo.ca}
 
 % The default list of authors is too long for headers.
-\renewcommand{\shortauthors}{B. Trovato et al.}
+% \renewcommand{\shortauthors}{B. Trovato et al.}
 
 
 \begin{abstract}
-This paper provides a sample of a \LaTeX\ document which conforms,
-somewhat loosely, to the formatting guidelines for
-ACM SIG Proceedings.
+    $abstract$
 \end{abstract}
 
+\tableofcontents
 %
 % The code below should be generated by the tool at
 % http://dl.acm.org/ccs.cfm
 % Please copy and paste the code instead of the example below.
 %
-\begin{CCSXML}
-<ccs2012>
- <concept>
-  <concept_id>10010520.10010553.10010562</concept_id>
-  <concept_desc>Computer systems organization~Embedded systems</concept_desc>
-  <concept_significance>500</concept_significance>
- </concept>
- <concept>
-  <concept_id>10010520.10010575.10010755</concept_id>
-  <concept_desc>Computer systems organization~Redundancy</concept_desc>
-  <concept_significance>300</concept_significance>
- </concept>
- <concept>
-  <concept_id>10010520.10010553.10010554</concept_id>
-  <concept_desc>Computer systems organization~Robotics</concept_desc>
-  <concept_significance>100</concept_significance>
- </concept>
- <concept>
-  <concept_id>10003033.10003083.10003095</concept_id>
-  <concept_desc>Networks~Network reliability</concept_desc>
-  <concept_significance>100</concept_significance>
- </concept>
-</ccs2012>
-\end{CCSXML}
+% \begin{CCSXML}
+% <ccs2012>
+ % <concept>
+  % <concept_id>10010520.10010553.10010562</concept_id>
+  % <concept_desc>Computer systems organization~Embedded systems</concept_desc>
+  % <concept_significance>500</concept_significance>
+ % </concept>
+ % <concept>
+  % <concept_id>10010520.10010575.10010755</concept_id>
+  % <concept_desc>Computer systems organization~Redundancy</concept_desc>
+  % <concept_significance>300</concept_significance>
+ % </concept>
+ % <concept>
+  % <concept_id>10010520.10010553.10010554</concept_id>
+  % <concept_desc>Computer systems organization~Robotics</concept_desc>
+  % <concept_significance>100</concept_significance>
+ % </concept>
+ % <concept>
+  % <concept_id>10003033.10003083.10003095</concept_id>
+  % <concept_desc>Networks~Network reliability</concept_desc>
+  % <concept_significance>100</concept_significance>
+ % </concept>
+% </ccs2012>
+% \end{CCSXML}
 
-\ccsdesc[500]{Computer systems organization~Embedded systems}
-\ccsdesc[300]{Computer systems organization~Redundancy}
-\ccsdesc{Computer systems organization~Robotics}
-\ccsdesc[100]{Networks~Network reliability}
+% \ccsdesc[500]{Computer systems organization~Embedded systems}
+% \ccsdesc[300]{Computer systems organization~Redundancy}
+% \ccsdesc{Computer systems organization~Robotics}
+% \ccsdesc[100]{Networks~Network reliability}
 
-
-\keywords{ACM proceedings, \LaTeX, text tagging}
-
-\begin{teaserfigure}
-  \includegraphics[width=\textwidth]{sampleteaser}
-  \caption{This is a teaser}
-  \label{fig:teaser}
-\end{teaserfigure}
-
+% \keywords{ACM proceedings, \LaTeX, text tagging}
 
 \maketitle
 
-\input{samplebody-conf}
+$body$
 
 \bibliographystyle{ACM-Reference-Format}
-\bibliography{sample-bibliography}
+\bibliography{$bibliography$}
 
 \end{document}
