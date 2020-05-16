@@ -3,6 +3,7 @@
 
 
 > ""*Why stay in college?* / *Why go to night school?* / *Gonna be different this time*"
+>
 > Talking Heads, "Life During Wartime", Fear of Music, 1979
 
 There is some terrific material ahead, but before we get to it, I want to spend more time than usual discussing the vague and confusing way we often talk about algorithm analysis. I hope this won’t put you off the subject. My goal is to inoculate you early, and by sensitizing you to the potential dangers, strengthen you for the more pleasant journey that follows. Familiarity with the notation used and its common abuses is an important part of literacy in the subject, but a certain amount of caution is merited.
@@ -83,10 +84,12 @@ To be fair, this example is brought up to point out the abuse of notation, but t
 
 It’s not hard to figure out the correct formalism in this case. The term $O(n)$ as used in this particular informal statement really means "$f(n)$, where $f$ is a function that is $O(n)$". We know what it means to add two functions (pointwise addition), and the following theorem (whose proof is not difficult) can be used to give a formal meaning to the informal expression $O(1)+O(n)$ (for example).
 
-\begin{sum_th}
-If $T_1(n)$ is $O(f(n))$ and $T_2(n)$ is $O(g(n))$, \\
-then $T(n)=T_1(n)+T_2(n)$ is $O(\max \{f(n),g(n) \})$.
-\end{sum_th}
+<!-- \begin{sum_th} -->
+<!-- \begin{theorem}[Sum Theorem] -->
+> **Sum Theorem**
+> If $T_1(n)$ is $O(f(n))$ and $T_2(n)$ is $O(g(n))$, then $T(n)=T_1(n)+T_2(n)$ is $O(\max \{f(n),g(n) \})$.
+<!-- \end{sum_th} -->
+<!-- \end{theorem} -->
 
 Note that the last expression applies max to two functions; as with addition, this is done pointwise. The conclusion of the informal statement can be justified by two applications of this theorem.
 
@@ -94,17 +97,22 @@ Why didn’t we just say $T(n)=O(1+2n+3n^2)$? This statement is technically corr
 
 By convention, we don’t write leading constants inside $O()$ brackets. We don’t write $O(3n^2)$, we write $O(n^2)$. This is justified by the following theorem.
 
-\begin{lead_const_th}
-For all constants $k$, if $T(n)$ is $O(k f(n))$, \\
-then $T(n)$ is $O(f(n))$.
-\end{lead_const_th}
+<!-- \begin{lead_const_th} -->
+<!-- \begin{theorem}[Leading Constant Theorem] -->
+> **Leading Constant Theorem** 
+> For all constants $k$, if $T(n)$ is $O(k f(n))$, \\
+> then $T(n)$ is $O(f(n))$.
+<!-- \end{lead_const_th} -->
+<!-- \end{theorem} -->
 
-Also, by convention, we don’t write "small" terms inside $O()$ brackets. We don’t write $O(n^2+2n)$, we write $O(n2)$. The definition of "small", and the justification for this, is provided by the following theorem:
+Also, by convention, we don’t write "small" terms inside $O()$ brackets. We don’t write $O(n^2+2n)$, we write $O(n^2)$. The definition of "small", and the justification for this, is provided by the following theorem:
 
-\begin{small_stuff_th}
-If $\lim\limits_{n \to \infty}\frac{f(n)}{g(n)}=0$ and $h(n)$ is $O(f(n)+g(n))$, \\
-then $h(n)$ is $O(g(n))$.
-\end{small_stuff_th}
+<!-- \begin{small_stuff_th} -->
+<!-- \begin{theorem}[Small Stuff Theorem] -->
+> **Small Stuff Theorem**
+> If $\lim\limits_{n \to \infty}\frac{f(n)}{g(n)}=0$ and $h(n)$ is $O(f(n)+g(n))$, then $h(n)$ is $O(g(n))$.
+<!-- \end{small_stuff_th} -->
+<!-- \end{theorem} -->
 
 Again, the proofs of these two theorems are relatively simple, provided you remember the definition of limit (which, conveniently, is similar to the definition of order notation). Limit notation makes it more clear that we are interested in what happens as $n$ gets large. We sometimes use the phrases "asymptotic behaviour" or "asymptotic analysis" to emphasize this.
 
@@ -159,17 +167,23 @@ The running time of algorithm $A$ is $O(f(n))$ if and only if there exist consta
 
 It’s good to keep this definition in mind, but we don’t invoke it directly in doing algorithm analysis. Instead, we view imperative pseudocode as being composed of blocks of statements which are combined sequentially, or repeated using loops. Sequential execution can be dealt with by the following generalization of the sum theorem:
 
-\begin{seq_th}
-If block $B_1$ has running time $O(f(n))$, and block $B_2$ has running time $O(g(n))$, then the program consisting of block $B_1$ followed by block $B_2$ has running time $O(\max{f(n),g(n)})$.
-\end{seq_th}
+<!-- \begin{seq_th} -->
+<!-- \begin{theorem}[Sequential Theorem] -->
+> ** Sequential Theorem**
+> If block $B_1$ has running time $O(f(n))$, and block $B_2$ has running time $O(g(n))$, then the program consisting of block $B_1$ followed by block $B_2$ has running time $O(\max{f(n),g(n)})$.
+<!-- \end{seq_th} -->
+<!-- \end{theorem} -->
 
 The proof of this theorem is not difficult.
 
 What about loops? We can usually make do with the following:
 
-\begin{prod_th}
-If block $B$ has running time $O(f(n))$, then the program consisting of a loop with body $B$ has running time $O(f(n)g(n))$, where the loop is executed $O(g(n))$ times.
-\end{prod_th}
+<!-- \begin{prod_th} -->
+<!-- \begin{theorem}[Product Theorem] -->
+> **Product Theorem**
+> If block $B$ has running time $O(f(n))$, then the program consisting of a loop with body $B$ has running time $O(f(n)g(n))$, where the loop is executed $O(g(n))$ times.
+<!-- \end{prod_th} -->
+<!-- \end{theorem} -->
 
 In some cases this overestimates the running time. For example, the loop may have only one expensive iteration and many cheap ones. In this case, we might want to be a little more careful about the analysis, expressing it in terms of adding up the cost of each iteration rather than multiplying the most expensive cost. Stating a general theorem to cover this case can be tricky because of the ordering of logical quantifiers. For example, the theorem above ensures a single constant $c$ in the expansion of $O(f(n))$ for every iteration of the loop; we need something similar in the more general theorem. To avoid this awkwardness, we will avoid trying to state such a theorem, and instead (when such addition is needed) try to add things up carefully so as to not arrive at invalid conclusions.
 

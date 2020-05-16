@@ -2,6 +2,7 @@
 # Introduction
 
 > "*This ain’t no party* / *This ain’t no disco* / *This ain’t no foolin’ around*"
+>
 > Talking Heads, "Life During Wartime", Fear of Music, 1979
 
 This flânerie is a stroll through intermediate data structures and their associated algorithms, from the point of view of functional programming. In brief: we wish to manipulate data in various ways, to extract information or to store information for later retrieval. We want these operations to be efficient in their use of resources (chiefly time and space). The data may be naturally structured, or we may impose structure on it for the sake of efficiency.

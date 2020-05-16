@@ -1,9 +1,9 @@
 ---
 title: "Functional Data Structures"
 author: "Prabhakar Ragde"
-date: "5/3/2020"
+book: true
 output:
   pdf_document:
-    latex_engine: xelatex
+  template: eisvogel.tex
 ---
 

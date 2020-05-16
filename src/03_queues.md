@@ -2,7 +2,8 @@
 # Queues
 
 > "Transmit the message / To the receiver / Hope for an answer some day"
->Talking Heads, "Life During Wartime", Fear of Music, 1979
+>
+> Talking Heads, "Life During Wartime", Fear of Music, 1979
 
 
 ## Simple queues
