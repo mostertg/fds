@@ -13,36 +13,36 @@ There is some terrific material ahead, but before we get to it, I want to spend 
 
 Order notation is used (and abused) extensively in algorithm analysis. Our examination of the issues surrounding order notation will center on a simple statement often encountered in introductory material:
 
-> *The running time of insertion sort is $O(n^2)$.*
+> *The running time of insertion sort is $\mathcal{O}(n^2)$.*
 
-If you don’t understand this statement, don’t panic. Briefly: Sorting is the process of rearranging a sequence of items (for example, integers) so that they are in order (say, non-decreasing). The time it takes to sort varies with the number of items. Insertion sort is an algorithm for this task. (We will see code for insertion sort shortly.) "$O(n^2)$" is an example of order notation, and is read "order $n$ squared", "big-oh of $n$ squared", or just "oh of $n$ squared".
+If you don’t understand this statement, don’t panic. Briefly: Sorting is the process of rearranging a sequence of items (for example, integers) so that they are in order (say, non-decreasing). The time it takes to sort varies with the number of items. Insertion sort is an algorithm for this task. (We will see code for insertion sort shortly.) "$\mathcal{O}(n^2)$" is an example of order notation, and is read "order $n$ squared", "big-oh of $n$ squared", or just "oh of $n$ squared".
 
 The statement is saying, intuitively, that the time it takes to apply the insertion sort algorithm is, in the worst case, at most roughly proportional to the square of the number of items being sorted. I would like to do a close reading of this statement, and in the process, expose a number of issues to keep in mind. What I hope will be clear to you shortly is that the statement contains a number of imprecisions, some forced on us by the situation, some deliberately chosen. The result is convenient for the expert, but hides many traps for the beginner. Hopefully, we can avoid those traps.
 
 To start with, what is the meaning of the $n$ that is mentioned only once? From the intuitive interpretation I gave, one can deduce that $n$ refers to the number of items being sorted. Can the name of the quantity be arbitrarily chosen? Could we instead say:
 
-> *The running time of insertion sort is $O(x^2)$.*?
+> *The running time of insertion sort is $\mathcal{O}(x^2)$.*?
 
 Technically, the second statement is just as valid as the first statement, but the number of people who would misunderstand the second statement is larger. The variable $n$ tends to be overused in algorithm analysis, and this can be a problem when the analysis is broken into parts that are later combined, or when several different algorithms are used to solve a problem. For example, suppose we have a large amount of data, and as part of a big computation, we want to sort a small sample of the data. If we use $n$ to refer to both the full data and the sample, we are going to run into trouble.
 
 Should we instead say:
 
-> *The running time of insertion sort is $O(n^2)$, where $n$ is the number of items being sorted.*?
+> *The running time of insertion sort is $\mathcal{O}(n^2)$, where $n$ is the number of items being sorted.*?
 
 I will argue that this is still potentially misleading, though after discussing the subtle nuances, I will continue to use language like this, trusting you to remember the right interpretation and the limitations of the statement. For example, if we have fifty items to sort, it is not helpful to substitute 50 for $n$ in the above statement. The statement is, and should remain, a general statement about one aspect of the overall behaviour of the algorithm.
 
 
 ### Ambiguities in mathematics
 
-We need to probe exactly what "running time" and $O(n^2)$ mean. But the problems start even earlier, with the expression $n^2$. In mathematics, this expression can mean at least two things. One is that there is some fixed quantity $n$ (perhaps unknown), and the expression represents its square. The other is that $n$ is considered as a variable, and the expression represents the function that maps $n$ to $n^2$. Mathematics is an activity carried out among humans, so we rely on context to distinguish these two uses.
+We need to probe exactly what "running time" and $\mathcal{O}(n^2)$ mean. But the problems start even earlier, with the expression $n^2$. In mathematics, this expression can mean at least two things. One is that there is some fixed quantity $n$ (perhaps unknown), and the expression represents its square. The other is that $n$ is considered as a variable, and the expression represents the function that maps $n$ to $n^2$. Mathematics is an activity carried out among humans, so we rely on context to distinguish these two uses.
 
 The second interpretation is clearly the one meant in our insertion sort statement, since the number of elements being sorted can vary. A colleague of mine (Shriram Krishnamurthi, at Brown University) replaces this use of $n^2$ with $[n \mapsto n^2]$ to make this point. We could also use the older and more widely-understood notation $\lambda n.n^2$ to refer to this nameless or anonymous squaring function. The advantages of these notations is that it is clear that $[n \mapsto n^2]$, $[m \mapsto m^2]$, $\lambda n.n^2$, and $\lambda m.m^2$ all refer to the same function. However, we will continue to use just $n^2$, to match the most common usage, and trust you to be able to disambiguate.
 
 If the function has a name, like $f$, then in mathematics, we sometimes write $f(n)$ to indicate that $n$ is a variable upon which the value of $f$ depends. For example, we do this in the definition $f(n)=1+2n+3n^2$. But here again there is an ambiguity, as $f(n)$ is also the notation for function application, applying the function $f$ to the value named $n$. We can, for example, write $f(3)$ or $f(m+n)$ (these uses are not ambiguous like $f(n)$ is; they clearly refer to function application). Once again, we will continue to use this $f(n)$ notation (trusting you to disambiguate), because it is common. But please think carefully about the meaning of such expressions when you see them.
 
-Now we expand the scope of our focus a little, and look at the expression $O(n^2)$, which is an example of the use of **order notation** (informally called "Big-Oh" notation, because of the capital letter $O$ used). There is a formal definition, which I will discuss shortly. But the informal meaning should be clear to you, either from your early exposure to algorithm analysis, or from the intuitive meaning I provided for the full statement.
+Now we expand the scope of our focus a little, and look at the expression $\mathcal{O}(n^2)$, which is an example of the use of **order notation** (informally called "Big-Oh" notation, because of the capital letter $O$ used). There is a formal definition, which I will discuss shortly. But the informal meaning should be clear to you, either from your early exposure to algorithm analysis, or from the intuitive meaning I provided for the full statement.
 
-$O(n^2)$ means that whatever is being discussed (in this case the running time, but the notation is more general) has growth rate bounded by the square of $n$ (whatever $n$ is), where "growth rate" means that we neglect leading (multiplicative) constants and additive terms that become insignificant as $n$ grows.
+$\mathcal{O}(n^2)$ means that whatever is being discussed (in this case the running time, but the notation is more general) has growth rate bounded by the square of $n$ (whatever $n$ is), where "growth rate" means that we neglect leading (multiplicative) constants and additive terms that become insignificant as $n$ grows.
 
 Order notation is a way of describing functions (such as the one representing running time) imprecisely. There are several reasons for this imprecision. First of all, it means we don’t have to count exactly, which is often difficult or even impossible (if we want a nice-looking expression that we can deal with). This makes analysis a lot easier. Another reason is that this imprecision means that our analysis may not change if we slightly change the definition of what we are analyzing (for example, changing to a slightly different computer). This robustness makes the analysis more widely applicable. It is also valuable when we are vague about the model of computation, which tends to happen.
 
@@ -53,9 +53,9 @@ There are a lot of imprecise words in that last paragraph: "often" ,"nice-lookin
 
 Here is the formal definition of order notation, which may be review for you.
 
-> *A function $f(n)$ is $O(g(n))$ if there exist constants $c$ and $n_0$ such that for all $n \leq n_0$, $f(n) \leq c \cdot g(n)$.*
+> *A function $f(n)$ is $\mathcal{O}(g(n))$ if there exist constants $c$ and $n_0$ such that for all $n \leq n_0$, $f(n) \leq c \cdot g(n)$.*
 
-There is a lot going on in this definition. It is describing the relationship between two functions $f$ and $g$. The first two uses of $n$ (in $f(n)$ and $g(n)$) are somewhat gratuitous, as they really just indicate that $f$ and $g$ are functions of one variable. We could probably leave the ($n$) off, and say "A function $f$ is $O(g)$ if ...", since the use of $f$ and $g$ later in the statement make it clear that they are functions of one variable. But this is typically not done, so we won’t do it here.
+There is a lot going on in this definition. It is describing the relationship between two functions $f$ and $g$. The first two uses of $n$ (in $f(n)$ and $g(n)$) are somewhat gratuitous, as they really just indicate that $f$ and $g$ are functions of one variable. We could probably leave the ($n$) off, and say "A function $f$ is $\mathcal{O}(g)$ if ...", since the use of $f$ and $g$ later in the statement make it clear that they are functions of one variable. But this is typically not done, so we won’t do it here.
 
 What follows is a logical statement about this relationship between functions. It uses the logical quantifiers "for all" and "there exists", which you may have encountered if you have been exposed to logic. In a statement of the form "for all $x$, something about $x$", again, the name $x$ is not important, just as the name we give to the variable a function depends on is not important. We could systematically replace uses of $x$ with $y$, to obtain the equivalent statement "for all $y$, something about $y$". Furthermore, $y$ in this last statement only has meaning in the "something" part, not outside it.
 
@@ -63,13 +63,13 @@ Consequently, the later uses of $n$ in the definition of $O$-notation really hav
 
 You may think that the things I am saying are obvious, or not worth this much attention. But they are often overlooked when working informally. Informal reasoning succeeds mostly when it is shorthand for formal reasoning, that is, when it can be expanded to correct formal reasoning. We can now see why our statement about insertion sort can be misleading. Here it is again.
 
-> *The running time of insertion sort is $O(n^2)$, where $n$ is the number of items being sorted.*
+> *The running time of insertion sort is $\mathcal{O}(n^2)$, where $n$ is the number of items being sorted.*
 
 We now see that the last part of the statement asks us to consider the running time as a function of the number of items, and the use of order notation gives information about the running time in terms of another function, namely the function that squares its argument. The name $n$ is a local notational convenience to indicate that these are functions of the same variable.
 
 Since the argument of such functions, in this particular application, are positive integers (though we sometimes cheat and allow zero for convenience), and the results are positive rational numbers, there is an alternate definition of $O$-notation which omits the constant $n_0$ (one just has to choose a possibly larger constant $c$ to cover the finite number of additional cases). I mention this just in case you encounter it elsewhere. The simpler definition is more work to use in practice, because one can’t neglect those additional cases.
 
-It is customary at this point to work through some examples of the use of the definition of order notation, for example, proving that $1+2n+3n^2$ is $O(n^2)$. At first glance, this is not difficult. One has to expand the definition of order notation, resulting in a "there exist constants $c$ and $n_0$ such that for all $n \geq n0$, $1+2n+3n^2 \leq c \cdot n^2$". The way to prove such a statement is to give specific values for the constants $c$ and $n_0$, and then show that the inequality holds for all $n \leq n_0$. For this example, we can use $c=4$ and $n_0=3$. But in general, it is not so simple to find appropriate constants, and one has to work with the inequality in order to make plausible guesses. Working with inequalities is an art around which a whole course could be built. There are many books on the subject.
+It is customary at this point to work through some examples of the use of the definition of order notation, for example, proving that $1+2n+3n^2$ is $\mathcal{O}(n^2)$. At first glance, this is not difficult. One has to expand the definition of order notation, resulting in a "there exist constants $c$ and $n_0$ such that for all $n \geq n0$, $1+2n+3n^2 \leq c \cdot n^2$". The way to prove such a statement is to give specific values for the constants $c$ and $n_0$, and then show that the inequality holds for all $n \leq n_0$. For this example, we can use $c=4$ and $n_0=3$. But in general, it is not so simple to find appropriate constants, and one has to work with the inequality in order to make plausible guesses. Working with inequalities is an art around which a whole course could be built. There are many books on the subject.
 
 I am not going to suggest exercises like this here, even though this is done in many conventional treatments. The reason is that this doesn’t seem to me to be relevant to algorithm analysis. We rarely count exactly and then make things more imprecise. Such exercises may help in understanding the formal definition of order notation, but they are unlikely to provide much more insight than the general statement "neglect constants and smaller terms". This type of work really builds skill in proving inequalities. That is a different topic.
 
@@ -78,39 +78,39 @@ I am not going to suggest exercises like this here, even though this is done in 
 
 Understanding order notation is further muddied by common abuse of notation which seems to treat an $O$-expression as an algebraic object, rather than a logical statement. Here is an example from the slides for the second-term CS course at the University of Waterloo that introduces $O$-notation:
 
-> $$T(n)=1+2n+3n^2=O(1)+O(n)+O(n^2)=O(n^2)$$
+> $$T(n)=1+2n+3n^2=\mathcal{O}(1)+\mathcal{O}(n)+\mathcal{O}(n^2)=\mathcal{O}(n^2)$$
 
 To be fair, this example is brought up to point out the abuse of notation, but the slides immediately go on to accept it and use it in what follows.
 
-It’s not hard to figure out the correct formalism in this case. The term $O(n)$ as used in this particular informal statement really means "$f(n)$, where $f$ is a function that is $O(n)$". We know what it means to add two functions (pointwise addition), and the following theorem (whose proof is not difficult) can be used to give a formal meaning to the informal expression $O(1)+O(n)$ (for example).
+It’s not hard to figure out the correct formalism in this case. The term $\mathcal{O}(n)$ as used in this particular informal statement really means "$f(n)$, where $f$ is a function that is $\mathcal{O}(n)$". We know what it means to add two functions (pointwise addition), and the following theorem (whose proof is not difficult) can be used to give a formal meaning to the informal expression $\mathcal{O}(1)+\mathcal{O}(n)$ (for example).
 
 <!-- \begin{sum_th} -->
 <!-- \begin{theorem}[Sum Theorem] -->
 > **Sum Theorem**
-> If $T_1(n)$ is $O(f(n))$ and $T_2(n)$ is $O(g(n))$, then $T(n)=T_1(n)+T_2(n)$ is $O(\max \{f(n),g(n) \})$.
+> If $\mathbb{T}_1(n)$ is $\mathcal{O}(f(n))$ and $\mathbb{T}_2(n)$ is $\mathcal{O}(g(n))$, then $T(n)=\mathbb{T}_1(n)+\mathbb{T}_2(n)$ is $\mathcal{O}(\max \{f(n),g(n) \})$.
 <!-- \end{sum_th} -->
 <!-- \end{theorem} -->
 
 Note that the last expression applies max to two functions; as with addition, this is done pointwise. The conclusion of the informal statement can be justified by two applications of this theorem.
 
-Why didn’t we just say $T(n)=O(1+2n+3n^2)$? This statement is technically correct, but by convention, we don’t write this. We have many such conventions in mathematics. We don’t put leading zeroes on numbers: never 000123, always 123. We don’t write $x^23$, we write $3x^2$. We might write $1+2n+3n^2$ or $3n^2+2n+1$, but we rarely if ever write $1+3n^2+2n$.
+Why didn’t we just say $T(n)=\mathcal{O}(1+2n+3n^2)$? This statement is technically correct, but by convention, we don’t write this. We have many such conventions in mathematics. We don’t put leading zeroes on numbers: never 000123, always 123. We don’t write $x^23$, we write $3x^2$. We might write $1+2n+3n^2$ or $3n^2+2n+1$, but we rarely if ever write $1+3n^2+2n$.
 
-By convention, we don’t write leading constants inside $O()$ brackets. We don’t write $O(3n^2)$, we write $O(n^2)$. This is justified by the following theorem.
+By convention, we don’t write leading constants inside $\mathcal{O}()$ brackets. We don’t write $\mathcal{O}(3n^2)$, we write $\mathcal{O}(n^2)$. This is justified by the following theorem.
 
 <!-- \begin{lead_const_th} -->
 <!-- \begin{theorem}[Leading Constant Theorem] -->
 > **Leading Constant Theorem** 
-> For all constants $k$, if $T(n)$ is $O(k f(n))$, \\
-> then $T(n)$ is $O(f(n))$.
+> For all constants $k$, if $T(n)$ is $\mathcal{O}(k f(n))$, \\
+> then $T(n)$ is $\mathcal{O}(f(n))$.
 <!-- \end{lead_const_th} -->
 <!-- \end{theorem} -->
 
-Also, by convention, we don’t write "small" terms inside $O()$ brackets. We don’t write $O(n^2+2n)$, we write $O(n^2)$. The definition of "small", and the justification for this, is provided by the following theorem:
+Also, by convention, we don’t write "small" terms inside $\mathcal{O}()$ brackets. We don’t write $\mathcal{O}(n^2+2n)$, we write $\mathcal{O}(n^2)$. The definition of "small", and the justification for this, is provided by the following theorem:
 
 <!-- \begin{small_stuff_th} -->
 <!-- \begin{theorem}[Small Stuff Theorem] -->
 > **Small Stuff Theorem**
-> If $\lim\limits_{n \to \infty}\frac{f(n)}{g(n)}=0$ and $h(n)$ is $O(f(n)+g(n))$, then $h(n)$ is $O(g(n))$.
+> If $\lim\limits_{n \to \infty}\frac{f(n)}{g(n)}=0$ and $h(n)$ is $\mathcal{O}(f(n)+g(n))$, then $h(n)$ is $\mathcal{O}(g(n))$.
 <!-- \end{small_stuff_th} -->
 <!-- \end{theorem} -->
 
@@ -118,11 +118,11 @@ Again, the proofs of these two theorems are relatively simple, provided you reme
 
 Order notation was originally used in analytic number theory in the early twentieth century. Its use in computer science was championed by Donald Knuth, who also proved many early results in data structures and algorithms in the 1960’s. The notational abuse of the equal sign and plus sign, originally used by experts to communicate with other experts, became common among non-experts also.
 
-Inthe ’70’s and ’80’s, some computer scientists proposed a better alternative, namely to use set notation. Instead of $T(n)=O(n^2)$, they suggested writing $T(n) \in O(n^2)$, making $O(n^2)$ the set of all functions that satisfy a certain property (the one spelled out in the definition of order notation). This notation is still used by some sources, but it is not widely adopted, partly because it sometimes results in more awkward phrasing, and partly because it is hard to change an established use of notation.
+Inthe ’70’s and ’80’s, some computer scientists proposed a better alternative, namely to use set notation. Instead of $T(n)=\mathcal{O}(n^2)$, they suggested writing $T(n) \in \mathcal{O}(n^2)$, making $\mathcal{O}(n^2)$ the set of all functions that satisfy a certain property (the one spelled out in the definition of order notation). This notation is still used by some sources, but it is not widely adopted, partly because it sometimes results in more awkward phrasing, and partly because it is hard to change an established use of notation.
 
-Some order-notation descriptions have names that sound better in English sentences. If $n$ is the variable, then running time that is $O(n)$ is called "linear time", short for "time bounded above by a linear function of $n$". Similarly, $O(n^2)$ is "quadratic time", and $O(\log n)$ is "logarithmic time". 2 is the default base for a logarithm in computer science. But $O(log_{2}{}n)$ and $O(log_{e}{}n)$ specify the same functions, since $log_{2}{}n=\frac{log_{e}{}n}{log_{e}{}2}$, and we can just adjust the hidden constant in the $O$-notation.
+Some order-notation descriptions have names that sound better in English sentences. If $n$ is the variable, then running time that is $\mathcal{O}(n)$ is called "linear time", short for "time bounded above by a linear function of $n$". Similarly, $\mathcal{O}(n^2)$ is "quadratic time", and $\mathcal{O}(\log n)$ is "logarithmic time". 2 is the default base for a logarithm in computer science. But $\mathcal{O}(log_{2}{}n)$ and $\mathcal{O}(log_{e}{}n)$ specify the same functions, since $log_{2}{}n=\frac{log_{e}{}n}{log_{e}{}2}$, and we can just adjust the hidden constant in the $O$-notation.
 
-$O(1)$ is often called "constant time", but this can be misleading. $3$ is not $O(1)$, because $3$ is not a function. The function that maps a variable $n$ to $3$ is $O(1)$, as is the function that maps $n$ to $2$ when $n$ is odd and to $3$ when $n$ is even. "Constant time" is short for "time bounded above by a constant". Having said this, we will sometimes abuse the notation and use $O(1)$ to refer to a constant that we don’t want to take the trouble to work out exactly.
+$\mathcal{O}(1)$ is often called "constant time", but this can be misleading. $3$ is not $\mathcal{O}(1)$, because $3$ is not a function. The function that maps a variable $n$ to $3$ is $\mathcal{O}(1)$, as is the function that maps $n$ to $2$ when $n$ is odd and to $3$ when $n$ is even. "Constant time" is short for "time bounded above by a constant". Having said this, we will sometimes abuse the notation and use $\mathcal{O}(1)$ to refer to a constant that we don’t want to take the trouble to work out exactly.
 
 
 ### What is running time?
@@ -152,7 +152,7 @@ In practice, we don’t really mean "as the size goes to infinity", but rather "
 
 The technical solution generally used (which is only emphasized to rule out arguments like the one above) is to let the word size vary with the problem size. If the problem size is $n$, we allow polynomially more memory, that is, memory size $n^k$ for some $k$, and such a memory can be addressed by a word size of $k \log n$. This permits analysis of algorithms we intend to implement without additional complications, and makes it hard to "cheat" by proposing algorithms that are technically correct within the model but make no practical sense.
 
-In complexity theory, where we study the relationship between problems by trying to reduce one to the other, we need to be even more precise about problem size. The standard measure is the number of bits needed to encode an instance. This sometimes necessitates more details about efficient encoding and decoding, and may result in extra $O(\log n)$ factors creeping into the analysis. Here, we are not going to deal with any of this. We will, as is common practice, make simplifying assumptions and overlook their consequences, trusting everyone to act in good faith. But it’s important to realize that attempts to be more precise lead us into messy situations. That is more motivation to keep things vague.
+In complexity theory, where we study the relationship between problems by trying to reduce one to the other, we need to be even more precise about problem size. The standard measure is the number of bits needed to encode an instance. This sometimes necessitates more details about efficient encoding and decoding, and may result in extra $\mathcal{O}(\log n)$ factors creeping into the analysis. Here, we are not going to deal with any of this. We will, as is common practice, make simplifying assumptions and overlook their consequences, trusting everyone to act in good faith. But it’s important to realize that attempts to be more precise lead us into messy situations. That is more motivation to keep things vague.
 
 
 ### Algorithm analysis in practice
@@ -163,14 +163,14 @@ There are other choices we could make: best-case (suitable for marketing) or ave
 
 The **max** function does not have nice algebraic properties. We can use the inequality $\max_{I \in I_n} R(A,I) \leq m$ if and only if for all $I \in I_n,R(A,I) \leq m$ to fashion a more convenient logical statement about the running time of an algorithm expressed in order notation:
 
-The running time of algorithm $A$ is $O(f(n))$ if and only if there exist constants $c$,$n_0$ such that for all $n \geq n_0$ and for all $I \in I_n, R(A,I) \leq c \cdot f(n)$.
+The running time of algorithm $A$ is $\mathcal{O}(f(n))$ if and only if there exist constants $c$,$n_0$ such that for all $n \geq n_0$ and for all $I \in I_n, R(A,I) \leq c \cdot f(n)$.
 
 It’s good to keep this definition in mind, but we don’t invoke it directly in doing algorithm analysis. Instead, we view imperative pseudocode as being composed of blocks of statements which are combined sequentially, or repeated using loops. Sequential execution can be dealt with by the following generalization of the sum theorem:
 
 <!-- \begin{seq_th} -->
 <!-- \begin{theorem}[Sequential Theorem] -->
 > ** Sequential Theorem**
-> If block $B_1$ has running time $O(f(n))$, and block $B_2$ has running time $O(g(n))$, then the program consisting of block $B_1$ followed by block $B_2$ has running time $O(\max{f(n),g(n)})$.
+> If block $B_1$ has running time $\mathcal{O}(f(n))$, and block $B_2$ has running time $\mathcal{O}(g(n))$, then the program consisting of block $B_1$ followed by block $B_2$ has running time $\mathcal{O}(\max{f(n),g(n)})$.
 <!-- \end{seq_th} -->
 <!-- \end{theorem} -->
 
@@ -181,13 +181,13 @@ What about loops? We can usually make do with the following:
 <!-- \begin{prod_th} -->
 <!-- \begin{theorem}[Product Theorem] -->
 > **Product Theorem**
-> If block $B$ has running time $O(f(n))$, then the program consisting of a loop with body $B$ has running time $O(f(n)g(n))$, where the loop is executed $O(g(n))$ times.
+> If block $B$ has running time $\mathcal{O}(f(n))$, then the program consisting of a loop with body $B$ has running time $\mathcal{O}(f(n)g(n))$, where the loop is executed $\mathcal{O}(g(n))$ times.
 <!-- \end{prod_th} -->
 <!-- \end{theorem} -->
 
-In some cases this overestimates the running time. For example, the loop may have only one expensive iteration and many cheap ones. In this case, we might want to be a little more careful about the analysis, expressing it in terms of adding up the cost of each iteration rather than multiplying the most expensive cost. Stating a general theorem to cover this case can be tricky because of the ordering of logical quantifiers. For example, the theorem above ensures a single constant $c$ in the expansion of $O(f(n))$ for every iteration of the loop; we need something similar in the more general theorem. To avoid this awkwardness, we will avoid trying to state such a theorem, and instead (when such addition is needed) try to add things up carefully so as to not arrive at invalid conclusions.
+In some cases this overestimates the running time. For example, the loop may have only one expensive iteration and many cheap ones. In this case, we might want to be a little more careful about the analysis, expressing it in terms of adding up the cost of each iteration rather than multiplying the most expensive cost. Stating a general theorem to cover this case can be tricky because of the ordering of logical quantifiers. For example, the theorem above ensures a single constant $c$ in the expansion of $\mathcal{O}(f(n))$ for every iteration of the loop; we need something similar in the more general theorem. To avoid this awkwardness, we will avoid trying to state such a theorem, and instead (when such addition is needed) try to add things up carefully so as to not arrive at invalid conclusions.
 
-With a pseudocode implementation of insertion sort in hand, we can now understand and justify the statement we started with, "The running time of insertion sort is $O(n^2)$." In making such statements, we will sometimes clarify by adding things like "where $n$ is the number of items being sorted", even though we really mean "where our measure of size is the number of items being sorted". Having clarified and justified this statement, what do we do next?
+With a pseudocode implementation of insertion sort in hand, we can now understand and justify the statement we started with, "The running time of insertion sort is $\mathcal{O}(n^2)$." In making such statements, we will sometimes clarify by adding things like "where $n$ is the number of items being sorted", even though we really mean "where our measure of size is the number of items being sorted". Having clarified and justified this statement, what do we do next?
 
 Probably what we do next is implement insertion sort in a real programming language, hopefully not using any features that change the complexity. We compile the program, meaning that it is run through multiple stages of transformation and optimization, giving us a machine-language program with the same semantics (if we have avoided any compiler bugs). We run the program on some data that may not be the worst case. The machine-language instructions are executed on a processor with pipelining, speculative execution, pre-fetching, caches, and other hardware features we rarely think about, let alone fully understand. The execution of our program competes with other threads and tasks, and perhaps garbage collection. Or the program and its data may be shipped over the Internet and run on one or more remote servers, with results shipped back.
 
@@ -207,9 +207,9 @@ The running time of algorithm $A$ is $\Omega(f(n))$ if and only if there exist c
 
 Because of the use of worst-case analysis, there is an asymmetry between these two notations. To prove an upper bound on running time, we have to prove it for all instances. To prove a lower bound, we only have to show one "bad" instance for each size. (Some sources even relax "each" to "infinitely often".)
 
-We can extend these notations to problems for which there might be many algorithms. A problem has $O(f(n))$ running time if there is an algorithm for it with $O(f(n))$ running time. A problem has $\Omega(f(n))$ running time if every algorithm for it has $\Omega(f(n))$ running time. Statements of the latter form are much harder to prove, but we will see at least one later on.
+We can extend these notations to problems for which there might be many algorithms. A problem has $\mathcal{O}(f(n))$ running time if there is an algorithm for it with $\mathcal{O}(f(n))$ running time. A problem has $\Omega(f(n))$ running time if every algorithm for it has $\Omega(f(n))$ running time. Statements of the latter form are much harder to prove, but we will see at least one later on.
 
-If $f(n)$ is $O(g(n))$ and $f(n)$ is $\Omega(g(n))$, we say that $f(n)$ is $\Theta(g(n))$. Informally, $f$ and $g$ grow at the same rate, neglecting constants and small terms. It’s also useful to have concise notation for the notion of "small", as made explicit in the Small Stuff Theorem above. We say that $f(n)$ is $o(g(n))$ (pronounced "little-oh") if $\lim\limits_{n \to \infty}\frac{f(n)}{g(n)}=0$. In the same circumstance, we can also say that $g(n)$ is $\omega(f(n))$ (pronounced "little-omega"). These three notations also extend to algorithms and problems in a similar fashion.
+If $f(n)$ is $\mathcal{O}(g(n))$ and $f(n)$ is $\Omega(g(n))$, we say that $f(n)$ is $\Theta(g(n))$. Informally, $f$ and $g$ grow at the same rate, neglecting constants and small terms. It’s also useful to have concise notation for the notion of "small", as made explicit in the Small Stuff Theorem above. We say that $f(n)$ is $\mathcal{O}(g(n))$ (pronounced "little-oh") if $\lim\limits_{n \to \infty}\frac{f(n)}{g(n)}=0$. In the same circumstance, we can also say that $g(n)$ is $\omega(f(n))$ (pronounced "little-omega"). These three notations also extend to algorithms and problems in a similar fashion.
 
 
 
@@ -319,7 +319,7 @@ I said that insert did not mutate its argument list. This is not just by design;
 
 ### Analyzing insertion sort
 
-We spent a lot of time discussing the statement that insertion sort has running time $O(n^2)$, where $n$ is the number of items to be sorted. Is that true for our purely-functional implementation?
+We spent a lot of time discussing the statement that insertion sort has running time $\mathcal{O}(n^2)$, where $n$ is the number of items to be sorted. Is that true for our purely-functional implementation?
 
 There are no assignment statements and no loops in our OCaml code, so we can’t use the techniques suggested earlier. CS and Math students at the University of Waterloo take a first course in computer science that uses a purely-functional Racket-based teaching language. We give them a concise model of computation for that language. (This is usually not done for imperative languages; instead, the effect of a programming construct is conveyed by means of examples.) That model of functional computation can be useful in constructing code and analyzing it. I will not go into as much detail as we do in that first course, but I will sketch the basic ideas.
 
@@ -343,58 +343,58 @@ Counting steps in this model (imprecisely, using order notation) is a reasonable
 
 Now consider the expression `insert 4 [1; 2; 3]`. This is matched by the second pattern; the test in the `if` expression fails, and we arrive at the expression `1 :: insert 4 [2; 3]` in a constant number of steps. This would have been the case regardless of how long the list being inserted into was.
 
-We now have enough information to construct a recurrence relation describing the running time. If $T_{insert}(n)$ is the running time for inserting into a list of length $n$, then:
+We now have enough information to construct a recurrence relation describing the running time. If $\mathbb{T}_{insert}(n)$ is the running time for inserting into a list of length $n$, then:
 
 
 \begin{align*}
-T_{insert}(0)&= c_0 \\
-T_{insert}(n)&= T_{insert}(n-1)+c_1
+\mathbb{T}_{insert}(0)&= c_0 \\
+\mathbb{T}_{insert}(n)&= \mathbb{T}_{insert}(n-1)+c_1
 \end{align*}
 
 
-where $c_0$ and $c_1$ are the constants we discovered in the above reasoning (their exact value depends on the exact rewriting rules). Although there is a case where insert does not do a recursive application even though the second argument is nonempty, we pessimistically ("worst-case") assume that does not happen; this only increases $T_{insert}$.
+where $c_0$ and $c_1$ are the constants we discovered in the above reasoning (their exact value depends on the exact rewriting rules). Although there is a case where insert does not do a recursive application even though the second argument is nonempty, we pessimistically ("worst-case") assume that does not happen; this only increases $\mathbb{T}_{insert}$.
 
-It’s not hard to see that this recurrence has the solution $T_{insert}(n)=c_{1}n+c_0$, and to prove it by induction on $n$ if anyone doubts it. Consequently, $T_{ insert }(n)=O(n)$.
+It’s not hard to see that this recurrence has the solution $\mathbb{T}_{insert}(n)=c_{1}n+c_0$, and to prove it by induction on $n$ if anyone doubts it. Consequently, $\mathbb{T}_{insert}(n)=\mathcal{O}(n)$.
 
 There’s no need to name the constants and solve the recurrence only to bury the constants in order notation. We will instead, in further abuse of notation, write the recurrence this way:
 
 \begin{align*}
-T_{insert}(0)&=O(1) \\
-T_{insert}(n)&=T_{insert}(n-1)+O(1)
+\mathbb{T}_{insert}(0)&=\mathcal{O}(1) \\
+\mathbb{T}_{insert}(n)&=\mathbb{T}_{insert}(n-1)+\mathcal{O}(1)
 \end{align*}
 
-and assert the "solution" $T_{insert}(n)=O(n)$. As with the vagueness surrounding analysis of imperative code, we can fill in all the details if we need to.
+and assert the "solution" $\mathbb{T}_{insert}(n)=\mathcal{O}(n)$. As with the vagueness surrounding analysis of imperative code, we can fill in all the details if we need to.
 
-I na similar fashion, we can define $T_{isort}(n)$ as the running time for sorting a list of length $n$, and get this recurrence:
+I na similar fashion, we can define $\mathbb{T}_{isort}(n)$ as the running time for sorting a list of length $n$, and get this recurrence:
 
 \begin{align*}
-T_{isort}(0)&=O(1) \\
-T_{isort}(n)&=T_{isort}(n-1)+T_{insert}(n-1)
+\mathbb{T}_{isort}(0)&=\mathcal{O}(1) \\
+\mathbb{T}_{isort}(n)&=\mathbb{T}_{isort}(n-1)+\mathbb{T}_{insert}(n-1)
 \end{align*}
 
-Since we know $T_{insert}(n)=O(n)$, the following also holds:
+Since we know $\mathbb{T}_{insert}(n)=\mathcal{O}(n)$, the following also holds:
 
 \begin{align*}
-T_{isort}(0)&=O(1) \\
-T_{isort}(n)&=T_{isort}(n-1)+O(n)
+\mathbb{T}_{isort}(0)&=\mathcal{O}(1) \\
+\mathbb{T}_{isort}(n)&=\mathbb{T}_{isort}(n-1)+\mathcal{O}(n)
 \end{align*}
 
-The solution to this recurrence is $T_{isort}(n)=O(n^2)$. This can be proved by induction on $n$ once the order notation has been replaced by explicit constants, as we saw with insert.
+The solution to this recurrence is $\mathbb{T}_{isort}(n)=\mathcal{O}(n^2)$. This can be proved by induction on $n$ once the order notation has been replaced by explicit constants, as we saw with insert.
 
-Since there is an inequality at the heart of order notation, the statement "Insertion sort has running time $O(n^3)$" is technically correct, though obviously misleading. It’s easy to see that the worst case for insert is when the element being inserted is greater than every element in the sorted list, and so the running time of insert is $\Omega(n)$ and therefore $\Theta(n)$. It’s not always as easy to prove an assertion about the worst case, but we don’t need the absolute worst case; we just need a bad enough case.
+Since there is an inequality at the heart of order notation, the statement "Insertion sort has running time $\mathcal{O}(n^3)$" is technically correct, though obviously misleading. It’s easy to see that the worst case for insert is when the element being inserted is greater than every element in the sorted list, and so the running time of insert is $\Omega(n)$ and therefore $\Theta(n)$. It’s not always as easy to prove an assertion about the worst case, but we don’t need the absolute worst case; we just need a bad enough case.
 
 Similarly, giving isort an argument that is in reverse sorted order (with the largest element at the head of the list) hits the worst case of insert on every application, thus showing that isort has running time $\Omega(n^2)$
 and therefore $\Theta(n^2)$. I will only occasionally give $\Omega$ and $\Theta$ statements in what follows, but usually it will be straightforward to work them out yourself.
 
 **Exercise 0**: The following theorem is false, and the proof below it is incorrect. Explain precisely why the proof is incorrect.
 
-(Not a) _Theorem_: Insertion sort has running time $O(n)$, where $n$ is the length of the list.
+(Not a) _Theorem_: Insertion sort has running time $\mathcal{O}(n)$, where $n$ is the length of the list.
 
 (Not a) _Proof_: By induction on $n$.
 
-Base case: $n=0$. The running time of `isort` is clearly $O(1)$in this case.
+Base case: $n=0$. The running time of `isort` is clearly $\mathcal{O}(1)$in this case.
 
-Inductive step: Assume that the theorem is true for $n-1$. Consider the application of `isort` to a list of length $n$. The code for `isort` does a recursive application on the rest of the list, of length $n-1$. By the inductive hypothesis, this takes $O(n-1)$ time, which is $O(n)$. It then inserts the first element into the result, which takes $O(n-1)$ or $O(n)$ time. Thus the total time taken is $O(n)$, as required. $\blacksquare$
+Inductive step: Assume that the theorem is true for $n-1$. Consider the application of `isort` to a list of length $n$. The code for `isort` does a recursive application on the rest of the list, of length $n-1$. By the inductive hypothesis, this takes $\mathcal{O}(n-1)$ time, which is $\mathcal{O}(n)$. It then inserts the first element into the result, which takes $\mathcal{O}(n-1)$ or $\mathcal{O}(n)$ time. Thus the total time taken is $\mathcal{O}(n)$, as required. $\blacksquare$
 
 
 
@@ -473,50 +473,50 @@ I could have replaced the last four lines of code with
 
 There is a slight technical problem in analyzing this algorithm. The running time of merge is a function of two variables, namely the size (length) of the two list arguments. But order notation deals with functions of one variable. Fortunately, the generalization is not difficult:
 
-> *A function $f(n,m)$ is $O(g(n,m))$ if there exist constants $c$, $n_0$, and $m_0$ such that for all $n \geq n_0$ and $m \geq m_0$, $f(n,m) \leq c \cdot g(n,m)$.*
+> *A function $f(n,m)$ is $\mathcal{O}(g(n,m))$ if there exist constants $c$, $n_0$, and $m_0$ such that for all $n \geq n_0$ and $m \geq m_0$, $f(n,m) \leq c \cdot g(n,m)$.*
 
-If $T_{merge}(n,m)$ is the running time of merge applied to lists of length $n$, $m$ respectively, then the code yields the following recurrence relation:
+If $\mathbb{T}_{merge}(n,m)$ is the running time of merge applied to lists of length $n$, $m$ respectively, then the code yields the following recurrence relation:
 
 \begin{align*}
-T_{merge}(0,m)&= O(1) \\
-T_{merge}(n,0)&= O(1) \\
-T_{merge}(n,m)&= \max \{T(n-1,m),T(n,m-1) \}+O(1)
+\mathbb{T}_{merge}(0,m)&= \mathcal{O}(1) \\
+\mathbb{T}_{merge}(n,0)&= \mathcal{O}(1) \\
+\mathbb{T}_{merge}(n,m)&= \max \{T(n-1,m),T(n,m-1) \}+\mathcal{O}(1)
 \end{align*}
 
-We can prove $T_{merge}(n,m)$ is $O(n+m)$. Intuitively, we are moving from the point $(n,m)$ to the x-axis $(n=0)$ or the y-axis $(m=0)$ by stepping either down or to the left, and each step costs us a constant amount. Formally, an induction on $s=n+m$ will work, after exposing constants.
+We can prove $\mathbb{T}_{merge}(n,m)$ is $\mathcal{O}(n+m)$. Intuitively, we are moving from the point $(n,m)$ to the x-axis $(n=0)$ or the y-axis $(m=0)$ by stepping either down or to the left, and each step costs us a constant amount. Formally, an induction on $s=n+m$ will work, after exposing constants.
 
 We continue the analysis with `split`.
 
 \begin{align*}
-T_{split}(0)&= O(1) \\
-T_{split}(1)&= O(1) \\
-T_{split}(n)&= T_{split}(n-2)+O(1)
+\mathbb{T}_{split}(0)&= \mathcal{O}(1) \\
+\mathbb{T}_{split}(1)&= \mathcal{O}(1) \\
+\mathbb{T}_{split}(n)&= \mathbb{T}_{split}(n-2)+\mathcal{O}(1)
 \end{align*}
 
 
-We can prove using induction on $n$ that $T_{split}(n)$ is $O(n)$. We can use strong induction, where to prove a property holds for $n$ for $n > 0$, the inductive hypothesis assumed is that the property holds for all $i < n$. The other form of induction, where the assumption is that the property holds for $n-1$, is called weak induction, and it is not a good fit for this recurrence.
+We can prove using induction on $n$ that $\mathbb{T}_{split}(n)$ is $\mathcal{O}(n)$. We can use strong induction, where to prove a property holds for $n$ for $n > 0$, the inductive hypothesis assumed is that the property holds for all $i < n$. The other form of induction, where the assumption is that the property holds for $n-1$, is called weak induction, and it is not a good fit for this recurrence.
 
 Finally, for the main function, we are tempted to write:
 
 \begin{align*}
-T_{msort}(0)&= O(1) \\
-T_{msort}(1)&= O(1) \\
-T_{msort}(n)&= 2T_{msort}(n/2)+O(n)
+\mathbb{T}_{msort}(0)&= \mathcal{O}(1) \\
+\mathbb{T}_{msort}(1)&= \mathcal{O}(1) \\
+\mathbb{T}_{msort}(n)&= 2\mathbb{T}_{msort}(n/2)+\mathcal{O}(n)
 \end{align*}
 
-This, however, assumes that when we split a list, we get two equal-sized pieces. This assumption only holds if $n$ is a power of 2, that is, $n=2^k$ for some natural number $k$. In this case, we can prove by weak induction on $k$ that $T_{msort}(2^k)$ is $O(k2^k)$. In terms of $n$, this is saying that $T_{msort}(n)$ is $O(n \log n)$. Intuitively, if we consider the tree of computations, there are $k$ levels (one node at the top, two nodes just below, four below that, and so on), and we are doing $O(2^k)$ work on each level (the number of nodes doubles when we move down a level, but the instances are halved in size, so the total work remains about the same).
+This, however, assumes that when we split a list, we get two equal-sized pieces. This assumption only holds if $n$ is a power of 2, that is, $n=2^k$ for some natural number $k$. In this case, we can prove by weak induction on $k$ that $\mathbb{T}_{msort}(2^k)$ is $\mathcal{O}(k2^k)$. In terms of $n$, this is saying that $\mathbb{T}_{msort}(n)$ is $\mathcal{O}(n \log n)$. Intuitively, if we consider the tree of computations, there are $k$ levels (one node at the top, two nodes just below, four below that, and so on), and we are doing $\mathcal{O}(2^k)$ work on each level (the number of nodes doubles when we move down a level, but the instances are halved in size, so the total work remains about the same).
 
 However, when $n$ is not a power of 2, the code still works, but the recurrence is incorrect. If $n$ is odd, then splitting a list of length $n$ does not yield two lists of length $n/2$. We have to round up for one list and round down for the other. We can use the ceiling function ( $\lceil x \rceil$ is the smallest integer greater than or equal to $x$) and the floor function ($\lfloor x \rfloor$ is the largest integer less than or equal to $x$) for this.
 
 The correct recurrence is:
 
 \begin{align*}
-T_{msort}(0)&= O(1) \\
-T_{msort}(1)&= O(1) \\
-T_{msort}(n)&= T_{msort}(\lfloor n/2 \rfloor)+T_{msort}(\lceil n/2 \rceil)+O(n)
+\mathbb{T}_{msort}(0)&= \mathcal{O}(1) \\
+\mathbb{T}_{msort}(1)&= \mathcal{O}(1) \\
+\mathbb{T}_{msort}(n)&= \mathbb{T}_{msort}(\lfloor n/2 \rfloor)+\mathbb{T}_{msort}(\lceil n/2 \rceil)+\mathcal{O}(n)
 \end{align*}
 
-This is trickier to deal with, for several reasons. Trying to prove that $T_{msort}(n)$ is $O(n \log n)$ by strong induction on $n$ requires us to prove an upper bound on expressions involving terms such as $log \lceil n/2 \rceil$. The ceiling function and the floor function do not have good algebraic properties, but we deal with integral quantities a lot in computer science, so these functions keep coming up. Replacing $\lceil x \rceil$ with $x+1$ (the easiest thing to do) is often too much of an increase and the upper bound cannot be proved. With more careful work, the proof can be made to go through, but it is discouraging to think of doing this for every new recurrence.
+This is trickier to deal with, for several reasons. Trying to prove that $\mathbb{T}_{msort}(n)$ is $\mathcal{O}(n \log n)$ by strong induction on $n$ requires us to prove an upper bound on expressions involving terms such as $log \lceil n/2 \rceil$. The ceiling function and the floor function do not have good algebraic properties, but we deal with integral quantities a lot in computer science, so these functions keep coming up. Replacing $\lceil x \rceil$ with $x+1$ (the easiest thing to do) is often too much of an increase and the upper bound cannot be proved. With more careful work, the proof can be made to go through, but it is discouraging to think of doing this for every new recurrence.
 
 Many references describe a "Master Theorem" for the kind of recurrences that arise in algorithm analysis, but do not attempt to prove the theorem with floors and ceilings in place. One popular textbook that tries to take floors and ceilings more seriously in places still glosses over the details. The simplest reference I have seen that actually does the work properly is the Akra-Bazzi method, first described in a paper by Akra and Bazzi from 1998. There are good expositions available on the Web, written by Tom Leighton and Kurt Mehlhorn.
 
@@ -524,9 +524,9 @@ I will not provide anything close to full details of the method, but I will sket
 
 The actual recurrence, with floors and ceilings, can be viewed as a perturbation of the approximate version, where the recursive arguments are altered slightly ($n/2$ moves to $\lceil n/2 \rceil$, a distance of at most one). Akra and Bazzi show how to bound the solution to the actual recurrence in terms of the bound for the approximate version plus a term depending on the size of the alterations. With the benefit of a good course in calculus, their proof is not hard to follow, but it doesn’t yield much more intuition.
 
-The Akra-Bazzi method can be used to back up any claims about recurrence solutions in this course. Applying Akra-Bazzi in this case shows that the solution to the actual recurrence is also $O(n \log n)$.
+The Akra-Bazzi method can be used to back up any claims about recurrence solutions in this course. Applying Akra-Bazzi in this case shows that the solution to the actual recurrence is also $\mathcal{O}(n \log n)$.
 
-**Exercise 1**: The above implementation of mergesort can be described as top-down, because the merge happens after the recursion. We can also use merge to implement mergesort in more of a bottom-up fashion. The idea is to take the list of items to be sorted and create a list of lists, where each item is put into a list of length one. Such a list can be considered sorted, so we have a list of sorted lists. We can merge these sorted lists in pairs and produce a list of sorted lists of length two (except if we started with an odd number of items, in which case one list of length one has no partner). Repeating the process, we get lists of longer and longer sorted lists (and fewer of them each time), until there is only one sorted list, which is the result we want. Write and test the code, and give an argument that it also takes $O(n \log n)$ time for $n$ items. $\blacksquare$
+**Exercise 1**: The above implementation of mergesort can be described as top-down, because the merge happens after the recursion. We can also use merge to implement mergesort in more of a bottom-up fashion. The idea is to take the list of items to be sorted and create a list of lists, where each item is put into a list of length one. Such a list can be considered sorted, so we have a list of sorted lists. We can merge these sorted lists in pairs and produce a list of sorted lists of length two (except if we started with an odd number of items, in which case one list of length one has no partner). Repeating the process, we get lists of longer and longer sorted lists (and fewer of them each time), until there is only one sorted list, which is the result we want. Write and test the code, and give an argument that it also takes $\mathcal{O}(n \log n)$ time for $n$ items. $\blacksquare$
 
 
 
@@ -737,7 +737,7 @@ One further advantage is in the design of large-scale concurrent or parallel app
 
 ### Improving the index operation for Sequence
 
-The main advantage of the array implementation is efficiency. All operations take $O(1)$ time (at least in our model of computation which ignores factors like caches and virtual memory), and the constants are small, because array operations are usually directly supported by hardware. This is not the case for the list implementations. extend, first, and rest take constant time (again, the constants are small, because pointer operations are also supported by hardware), but index takes time $O(min \{i,n\})$, where $i$ is the index and $n$ the length of the sequence.
+The main advantage of the array implementation is efficiency. All operations take $\mathcal{O}(1)$ time (at least in our model of computation which ignores factors like caches and virtual memory), and the constants are small, because array operations are usually directly supported by hardware. This is not the case for the list implementations. extend, first, and rest take constant time (again, the constants are small, because pointer operations are also supported by hardware), but index takes time $\mathcal{O}(\min \{i,n\})$, where $i$ is the index and $n$ the length of the sequence.
 
 Can we do better than the list implementations, while preserving purity and/or persistence? The problem with the list is that it is a linear structure. That suggests that using trees might improve access.
 
@@ -746,7 +746,7 @@ A **perfect binary tree** of height $k$ has $2^k$ leaves, all at depth $k$, and 
 ![](assets/perfect-tree.png)
 
 
-(In a drawing, the depth of a node is the number of edges in a path from the root to that node, and the height of a tree is the maximum depth over all nodes.) If we store values of the sequence at the leaves and use the internal nodes for navigation, we can get to any value in $O(k)$ time, which is $O(\log n)$ time if $n=2^k$.
+(In a drawing, the depth of a node is the number of edges in a path from the root to that node, and the height of a tree is the maximum depth over all nodes.) If we store values of the sequence at the leaves and use the internal nodes for navigation, we can get to any value in $\mathcal{O}(k)$ time, which is $\mathcal{O}(\log n)$ time if $n=2^k$.
 
 We can represent an index as a $k$-bit binary number and use the bits of an index from most significant (leftmost) to least significant (rightmost) to indicate left child or right child. For example, if $k=3$:
 
@@ -806,34 +806,34 @@ let rec is_perf = function
 
 This code is correct, and quite readable, but what is its running time? The running time of `is_perf` depends on the running time of height. Both of these functions can be applied to arbitrary trees which may not be perfect.
 
-`height` applied to a tree recursively computes the height of the left and right subtrees. Intuitively, the code does constant work at each node, so the total work should be linear in the number of nodes. Formally, if we define $T_{height}(n)$ to be the running time of height on a tree with $n$ constructors, we get a recurrence that looks like this:
+`height` applied to a tree recursively computes the height of the left and right subtrees. Intuitively, the code does constant work at each node, so the total work should be linear in the number of nodes. Formally, if we define $\mathbb{T}_{height}(n)$ to be the running time of height on a tree with $n$ constructors, we get a recurrence that looks like this:
 
 \begin{align*}
-T_{height}(1)&= O(1) \\
-T_{height}(n)&= \max_{0<i<n}\{\ T_{height}(i)+T_{height}(n-i-1)\ \}+O(1)
+\mathbb{T}_{height}(1)&= \mathcal{O}(1) \\
+\mathbb{T}_{height}(n)&= \max_{0<i<n}\{\ \mathbb{T}_{height}(i)+\mathbb{T}_{height}(n-i-1)\ \}+\mathcal{O}(1)
 \end{align*}
 
-We have to use max here because we don’t know the number of nodes $i$ in the left subtree, but we are using worst-case analysis. By strong induction on n, we can show that $T_{height}(n)$ is $O(n)$. (The worst case is a tree where each left subtree is a leaf.)
+We have to use max here because we don’t know the number of nodes $i$ in the left subtree, but we are using worst-case analysis. By strong induction on n, we can show that $\mathbb{T}_{height}(n)$ is $\mathcal{O}(n)$. (The worst case is a tree where each left subtree is a leaf.)
 
 Although we derived this recurrence for specific code, it is quite general. It will show up whenever code does recursion on both subtrees of a binary tree and the two results can be combined in constant time. Sometimes we know something about the shape of the tree (for example, that it is perfect), but that does not change the solution.
 
-Now we can analyze `is_perf.` If $T_{is\_perf}(n)$ is the running time of is_perf on a tree with $n$ constructors, we get this recurrence:
+Now we can analyze `is_perf.` If $\mathbb{T}_{is\_perf}(n)$ is the running time of is_perf on a tree with $n$ constructors, we get this recurrence:
 
 \begin{align*}
 \begin{split}
-T_{is\_perf}(1)&= O(1) \\
-T_{is\_perf}(n)&= \max_{0<i<n}\{\ T_{is\_perf}(i) + T_{is\_perf}(n-i-1) \\ &+ T_{height}(i) + T_{height}(n-i-1)\ \}+O(1)
+\mathbb{T}_{is\_perf}(1)&= \mathcal{O}(1) \\
+\mathbb{T}_{is\_perf}(n)&= \max_{0<i<n}\{\ \mathbb{T}_{is\_perf}(i) + \mathbb{T}_{is\_perf}(n-i-1) \\ &+ \mathbb{T}_{height}(i) + \mathbb{T}_{height}(n-i-1)\ \}+\mathcal{O}(1)
 \end{split}
 \end{align*}
 
 Substituting the solution for height, we get:
 
 \begin{align*}
-T_{is\_perf}(1)&= O(1) \\
-T_{is\_perf}(n)&= \max_{0<i<n}\{\ T_{is\_perf}(i)+T_{is\_perf}(n-i-1)\ \}+O(n)
+\mathbb{T}_{is\_perf}(1)&= \mathcal{O}(1) \\
+\mathbb{T}_{is\_perf}(n)&= \max_{0<i<n}\{\ \mathbb{T}_{is\_perf}(i)+\mathbb{T}_{is\_perf}(n-i-1)\ \}+\mathcal{O}(n)
 \end{align*}
 
-If the max always occurs at $i=1$ (again, when each left subtree is a leaf), then we can see that the solution would be $O(n^2)$. This is in fact the general solution, which can be proved by strong induction on $n$. This recurrence will also show up a lot, but sometimes we can get a better solution, for example, if the tree is perfect. That doesn’t help us this time, because is_perf can be applied to non-perfect trees.
+If the max always occurs at $i=1$ (again, when each left subtree is a leaf), then we can see that the solution would be $\mathcal{O}(n^2)$. This is in fact the general solution, which can be proved by strong induction on $n$. This recurrence will also show up a lot, but sometimes we can get a better solution, for example, if the tree is perfect. That doesn’t help us this time, because is_perf can be applied to non-perfect trees.
 
 It shouldn’t take quadratic time to check perfection. The problem is that we are recursively descending into each subtree twice: once to compute the height, and once to verify perfection. Why not do these tasks at the same time, with only one recursion?
 
@@ -854,17 +854,17 @@ let rec is_perf (t : 'a l_bintree) : int option =
 Now the recurrence is:
 
 \begin{align*}
-T_{is\_perf}(1)&= O(1) \\
-T_{is\_perf}(n)&= \max_{0<i<n}\{\ T_{is\_perf}(i)+T_{is\_perf}(n-i-1)\ \}+O(1)
+\mathbb{T}_{is\_perf}(1)&= \mathcal{O}(1) \\
+\mathbb{T}_{is\_perf}(n)&= \max_{0<i<n}\{\ \mathbb{T}_{is\_perf}(i)+\mathbb{T}_{is\_perf}(n-i-1)\ \}+\mathcal{O}(1)
 \end{align*}
 
-and the solution is that $T_{is\_perf}(n)$ is $O(n)$.
+and the solution is that $\mathbb{T}_{is\_perf}(n)$ is $\mathcal{O}(n)$.
 
 That was more complicated than you might have guessed at the start. Recursive code can be easy to write, but here, we are always concerned with efficiency, and it is also easy to write beautiful but inefficient recursive code. Please keep in mind our primary goal, and examine your code carefully to detect such inefficiencies. Now let’s get back to using perfect trees for sequences.
 
 The perfect binary tree representation only works to store a sequence of length $n$ when $n$ is a power of 2. But since any natural number can be expressed as a sum of distinct powers of 2, we can try to use a collection of perfect binary trees of different heights for an arbitrary $n$. (This can be made to work, and is left as an exercise, specified later.)
 
-In a perfect binary tree of height $k$ with values stored only at leaves, it takes $O(k)$ time to access any value, even the one of index 0, so this does not work as well as the list implementations for small indices. We can do better for some values by storing values at internal nodes also. In this case, the following type for node-labelled trees is a little cleaner.
+In a perfect binary tree of height $k$ with values stored only at leaves, it takes $\mathcal{O}(k)$ time to access any value, even the one of index 0, so this does not work as well as the list implementations for small indices. We can do better for some values by storing values at internal nodes also. In this case, the following type for node-labelled trees is a little cleaner.
 
 ```{ocaml}
 type'a bintree =
@@ -934,31 +934,31 @@ What we have discovered is that the code for extend makes one recursive call, on
 
 **Exercise 4**: Write the OCaml code for `extend`. $\blacksquare$
 
-If $T_{extend}(n)$ is the running time for applying extend to the representation of a sequence of length $n$, then we get the following recurrence:
+If $\mathbb{T}_{extend}(n)$ is the running time for applying extend to the representation of a sequence of length $n$, then we get the following recurrence:
 
 \begin{align*}
-T_{extend}(0)&= O(1) \\
-T_{extend}(2k+1)&= T_{extend}(k)+O(1) \\
-T_{extend}(2k+2)&= T_{extend}(k+1)+O(1)
+\mathbb{T}_{extend}(0)&= \mathcal{O}(1) \\
+\mathbb{T}_{extend}(2k+1)&= \mathbb{T}_{extend}(k)+\mathcal{O}(1) \\
+\mathbb{T}_{extend}(2k+2)&= \mathbb{T}_{extend}(k+1)+\mathcal{O}(1)
 \end{align*}
 
 It is possible to come up with an exact solution for this recurrence, but if we first express the recurrence this way:
 
 \begin{align*}
-T_{extend}(0)&= O(1) \\
-T_{extend}(n)&= T_{extend}(\lfloor n/2 \rfloor)+O(1)
+\mathbb{T}_{extend}(0)&= \mathcal{O}(1) \\
+\mathbb{T}_{extend}(n)&= \mathbb{T}_{extend}(\lfloor n/2 \rfloor)+\mathcal{O}(1)
 \end{align*}
 
 and then remove the use of the floor function, we can come up with a simpler recurrence whose solution for powers of 2 is obvious:
 
 \begin{align*}
-T_{extend}(0)&= O(1) \\
-T_{extend}(n)&= T_{extend}(n/2)+O(1)
+\mathbb{T}_{extend}(0)&= \mathcal{O}(1) \\
+\mathbb{T}_{extend}(n)&= \mathbb{T}_{extend}(n/2)+\mathcal{O}(1)
 \end{align*}
 
-Applying Akra-Bazzi, the solution to the general recurrence is that $T_{extend}(n)$ is $O(\log n)$. We could also argue that the running time of extend is $O(k)$, where $k$ is the height of the tree representing the sequence argument, and $k=O(\log n)$ where $n$ is the length of the sequence. But each of these are just imprecise versions of the (itself imprecise) above recurrence relation.
+Applying Akra-Bazzi, the solution to the general recurrence is that $\mathbb{T}_{extend}(n)$ is $\mathcal{O}(\log n)$. We could also argue that the running time of extend is $\mathcal{O}(k)$, where $k$ is the height of the tree representing the sequence argument, and $k=O(\log n)$ where $n$ is the length of the sequence. But each of these are just imprecise versions of the (itself imprecise) above recurrence relation.
 
-**Exercise 5**: Complete the implementation of Sequence using Braun trees. Show that the analysis of `rest` involves a recurrence similar to that of `extend`, and that the solution is also $O(\log n)$, where $n$ is the length of the sequence. $\blacksquare$
+**Exercise 5**: Complete the implementation of Sequence using Braun trees. Show that the analysis of `rest` involves a recurrence similar to that of `extend`, and that the solution is also $\mathcal{O}(\log n)$, where $n$ is the length of the sequence. $\blacksquare$
 
 **Exercise 6**: Work out the algorithm and the OCaml code for a new operation, `update`, which consumes an index and a value, and produces a new version of the sequence with the element at the given index updated to be the provided value. Show that this code also runs in logarithmic time. $\blacksquare$
 
@@ -968,17 +968,17 @@ A Braun tree with $2k+1$ nodes has two subtrees with $k$ nodes (the ones of odd 
 
 **Exercise 7**: Write OCaml code to check whether or not a tree is a Braun tree. Your code should run in linear time. $\blacksquare$
 
-If we define $T_{index}(i,n)$ to be the running time of index with index argument $i$ and sequence argument of length $n$, we have the following recurrence (again neglecting floors and ceilings):
+If we define $\mathbb{T}_{index}(i,n)$ to be the running time of index with index argument $i$ and sequence argument of length $n$, we have the following recurrence (again neglecting floors and ceilings):
 
 \begin{align*}
-T_{index}(i,0)&= O(1) \\
-T_{index}(0,n)&= O(1) \\
-T_{index}(i,n)&= T_{index}(i/2,n/2)+O(1)
+\mathbb{T}_{index}(i,0)&= \mathcal{O}(1) \\
+\mathbb{T}_{index}(0,n)&= \mathcal{O}(1) \\
+\mathbb{T}_{index}(i,n)&= \mathbb{T}_{index}(i/2,n/2)+\mathcal{O}(1)
 \end{align*}
 
-The solution to this is $T_{index}(i,n)=O(\min \{\log i, \log n \})$. Intuitively, each parameter is reduced by a factor of 2 at a constant cost, so the total cost is proportional to the logarithm of the first parameter to reach 0, that is, the smaller parameter. This is a considerable improvement over the list-based implementation, which was our original motivation.
+The solution to this is $\mathbb{T}_{index}(i,n)=O(\min \{\log i, \log n \})$. Intuitively, each parameter is reduced by a factor of 2 at a constant cost, so the total cost is proportional to the logarithm of the first parameter to reach 0, that is, the smaller parameter. This is a considerable improvement over the list-based implementation, which was our original motivation.
 
-We can see that the Braun tree implementation of sequences is not better in all cases than the list implementation. Lists have $O(1)$ implementations of `rest` and `extend`, while Braun trees take $O(\log n)$ time. But Braun trees do better on `index.` It is possible, with a different idea, to lower the cost of `rest` and `extend` to $O(1)$, while preserving the $O(\log n)$ part of the cost of `index`.
+We can see that the Braun tree implementation of sequences is not better in all cases than the list implementation. Lists have $\mathcal{O}(1)$ implementations of `rest` and `extend`, while Braun trees take $\mathcal{O}(\log n)$ time. But Braun trees do better on `index.` It is possible, with a different idea, to lower the cost of `rest` and `extend` to $\mathcal{O}(1)$, while preserving the $\mathcal{O}(\log n)$ part of the cost of `index`.
 
 Consider the effect of applying the `update` operation (defined in the exercise above) to a Braun tree. The shape of the new tree is exactly the same as the shape of the old tree, and the only difference in values is at the index that was updated. But the cost is only logarithmic in the index. What does the sharing look like between the new tree and the old tree?
 
