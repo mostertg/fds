@@ -2,6 +2,10 @@
 .Rhistory
 .RData
 .Ruserdata
+*.Rproj
 *.html
 *.pdf
 *.log
+output/
+src/md/*
+src/Rmd*

@@ -751,11 +751,11 @@ A **perfect binary tree** of height $k$ has $2^k$ leaves, all at depth $k$, and 
 We can represent an index as a $k$-bit binary number and use the bits of an index from most significant (leftmost) to least significant (rightmost) to indicate left child or right child. For example, if $k=3$:
 
 
-- 0 is represented by 000 since $0 =0 \cdot 2^2+0 \cdot 2^1+0 \cdot 2^0$.
-- 1 is represented by 001 since $1 =0 \cdot 2^2+0 \cdot 2^1+1 \cdot 2^0$.
-- 2 is represented by 010 since $2 =0 \cdot 2^2+1 \cdot 2^1+0 \cdot 2^0$.
-- 3 is represented by 011 since $3 =0 \cdot 2^2+1 \cdot 2^1+1 \cdot 2^0$.
-- 4 is represented by 100 since $4 =1 \cdot 2^2+0 \cdot 2^1+0 \cdot 2^0$.
+0 is represented by 000 since $0 =0 \cdot 2^2+0 \cdot 2^1+0 \cdot 2^0$.  
+1 is represented by 001 since $1 =0 \cdot 2^2+0 \cdot 2^1+1 \cdot 2^0$.  
+2 is represented by 010 since $2 =0 \cdot 2^2+1 \cdot 2^1+0 \cdot 2^0$.  
+3 is represented by 011 since $3 =0 \cdot 2^2+1 \cdot 2^1+1 \cdot 2^0$.  
+4 is represented by 100 since $4 =1 \cdot 2^2+0 \cdot 2^1+0 \cdot 2^0$.
 
 
 And so on. If we conceptually label each leaf with the index of the value stored there, the leaves are labelled $0,1,\dots 2^k-1$ from left to right in a drawing, which is attractive.
@@ -888,23 +888,23 @@ This image shows a perfect tree with 15 nodes. To get one with fewer nodes, say 
 We need a way to compute the path to the value of index $i$ in a LJNP tree. You can probably work out some indexing algorithm by examining small cases. One clever way of doing the computation is to alter the standard binary representation which represents any natural number with the minimum number of digits, each digit (bit) being either 0 or 1. In standard binary representation:
 
 
-- 0 is represented by 0 since $0=0 \cdot 2^0$.
-- 1 is represented by 1 since $1=1 \cdot 2^0$.
-- 2 is represented by 10 since $2=1 \cdot 2^1+0 \cdot 2^0$.
-- 3 is represented by 11 since $3=1 \cdot 2^1+1 \cdot 2^0$.
-- 4 is represented by 100 since $4=1 \cdot 2^2+0 \cdot 2^1+0 \cdot 2^0$.
+0 is represented by 0 since $0=0 \cdot 2^0$.  
+1 is represented by 1 since $1=1 \cdot 2^0$.  
+2 is represented by 10 since $2=1 \cdot 2^1+0 \cdot 2^0$.  
+3 is represented by 11 since $3=1 \cdot 2^1+1 \cdot 2^0$.  
+4 is represented by 100 since $4=1 \cdot 2^2+0 \cdot 2^1+0 \cdot 2^0$.
 
 
 All modern 64-bit architectures store 64-bit integers in two’s complement representation, which coincides with standard binary representation for nonnegative integers. There are consequently two ways of working with bits: modular arithmetic, and bitwise operations. The former is easier to get right, though the latter is faster at the machine level and should be considered for frequently-executed production code. For learning purposes, I would suggest using arithmetic, as it is easier to get right (and to debug when you get it wrong).
 
 In **bijective binary numbering**, instead of using the digits 0 and 1, we use the digits 1 and 2. They are still used as multipliers for powers of two.
 
-1 is represented by 1 since $1=1 \cdot 2^0$.
-2 is represented by 2 since $2=2 \cdot 2^0$.
-3 is represented by 11 since $3=1 \cdot 2^1+1 \cdot 2^0$.
-4 is represented by 12 since $4=1 \cdot 2^1+2 \cdot 2^0$.
-5 is represented by 21 since $5=2 \cdot 2^1+1 \cdot 2^0$.
-6 is represented by 22 since $6=2 \cdot 2^1+2 \cdot 2^0$.
+1 is represented by 1 since $1=1 \cdot 2^0$.  
+2 is represented by 2 since $2=2 \cdot 2^0$.  
+3 is represented by 11 since $3=1 \cdot 2^1+1 \cdot 2^0$.  
+4 is represented by 12 since $4=1 \cdot 2^1+2 \cdot 2^0$.  
+5 is represented by 21 since $5=2 \cdot 2^1+1 \cdot 2^0$.  
+6 is represented by 22 since $6=2 \cdot 2^1+2 \cdot 2^0$.  
 7 is represented by 111 since $7=1 \cdot 2^2+1 \cdot 2^1+1 \cdot 2^0$.
 
 It’s not hard to show that every positive integer has a unique bijective binary representation and every sequence of digits represents a number. (This is not true when using 0 and 1; we need a convention about omitting leading zeroes.) Furthermore, it’s as easy to figure out the digits in this representation as it is for regular binary, by computing them in reverse order. The least significant digit (rightmost) represents the multiplier for $2^0$, and the digits to its left represent the multiplier for $2^1$, $2^2$, and so on. So the least significant digit is determined by the parity (even/odd) of the number. Non-zero even numbers have least significant digit 2, and odd numbers have least significant digit 1. We can remove the least significant digit by subtracting off that digit value and dividing by 2, and continue to extract the rest of the digits.

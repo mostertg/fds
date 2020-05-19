@@ -189,17 +189,17 @@ The expectation of a random variable is its average, weighted by probability. If
 
 Since it is only the relative ordering of the keys that is important, let’s assume the keys are are $0$ through $n−1$. This makes the notation simpler. The priorities are still chosen by independent samples of the uniform distribution over $[0,1]$.
 
-> ** Treap Depth Lemma ** 
+> ** Treap Depth Lemma **
 > The expected depth of $j$ in a treap is $H_{j+1}+H{n−j}−2$, where $H_{k}=\sum^{k}_{d=1}{}(\frac{1}{d})^{k} (these are often called "harmonic numbers").
 
 This is a messy expression, but we can bound $H_{k}$ above by $\lceil \log_{2} k \rceil$, since $H_{k} \leq \sum^{\lceil \log_{2} k \rceil}_{i=0} \sum^{2^{i}}_{j=1}(\frac{1}{2^{i}}) \lew \sum^{\lceil \log_{2} k \rceil}_{i=0}1=\lceil \log_{2} k \rceil$. (A more careful analysis improves the base of the logarithm to $e$, that is, $H_{k}$ is close to $\ln k$ for large $k$.) So if we can prove the Treap Depth Lemma, we can say that the expected depth of a particular key in a treap with $n$ nodes is $\mathcal{O}(\log n)$. Proving it requires the following result.
 
 > ** Treap Ancestor Lemma **
-> $i$ is an ancestor of $j$ (for $i \lt j$) in a treap if and only if the priority of $i$ is smaller than the priorities of ${i+1, \cdots ,j}$.
+> $i$ is an ancestor of $j$ (for $i \lt j$) in a treap if and only if the priority of $i$ is smaller than the priorities of ${i+1, \ldots, j}$.
 
 We prove the Treap Ancestor Lemma by induction on the size of the treap. Let $r$ be the root of the treap. If $i=r$, then all $j$ such that $i \lt j$ are descendants, and they all have have greater priority, so the statement holds. If $j=r$, then no $i$ such that $i \lt j$ are ancestors, and they all have greater priority, so the statement holds. If $i$ is in the left subtree of $r$ and $j$ is in the right subtree of $r$, then $i \lt r \lt j$, there is no ancestor relationship between $i$ and $j$, and $r$ has smaller priority than $i$, so the statement holds. Finally, if $i$ and $j$ are in the same subtree of $r$, we apply the induction hypothesis.
 
-Having proved the Treap Ancestor Lemma, how do we prove the Treap Depth Lemma? Since the priorities are independent and identically distributed, the probability that $i$ (where $i \gt j$) is an ancestor of $j$ in a treap is $\frac{1}{(i−j+1)}$, since this is the probability that $i$ has the smallest priority in the set ${i, \cdots ,j}$.
+Having proved the Treap Ancestor Lemma, how do we prove the Treap Depth Lemma? Since the priorities are independent and identically distributed, the probability that $i$ (where $i \gt j$) is an ancestor of $j$ in a treap is $\frac{1}{(i−j+1)}$, since this is the probability that $i$ has the smallest priority in the set ${i, \ldots, j}$.
 
 We define $I_{i,j}$ to be $1$ if $i$ is an ancestor of $j$ and $0$ otherwise. (This is known as an indicator variable.) Then the depth of $j$ is $\sum_{i \neq j}I_{i,j}$. From the observation in the previous paragraph, the expected value of $I_{i,j}$ is $\frac{1}{(\mid j−i \mid +1)}$.
 
@@ -209,7 +209,7 @@ How do we show that this holds with high probability and not just in expectation
 
 A Chernoff bound applies to the sum of independent, identically-distributed random variables. For example, we could use one to be precise about our intuition that in our coin-flipping experiment, the difference of the number of heads and tails will not deviate too far from zero, with high probability. Chernoff bounds are commonly used in the analysis of randomized algorithms.
 
-The fact that the depth of a given node is $\mathcal{O}(\log n)$ with high probability allows us to show that the height of a treap (the maximum depth over all nodes) is $\mathcal{O}(\log n)$ with high probability. We could not do this with just our work on expectations, as $E[\max{X_{i}}] is not necessarily $\max{E[X_{i}]}.
+The fact that the depth of a given node is $\mathcal{O}(\log n)$ with high probability allows us to show that the height of a treap (the maximum depth over all nodes) is $\mathcal{O}(\log n)$ with high probability. We could not do this with just our work on expectations, as $E[\max{X_{i}}]$ is not necessarily $\max{E[X_{i}]}$.
 
 Lookup of a key that is in the treap takes time proportional to the depth of the key, which is $\mathcal{O}(\log n)$ (in expectation and with high probability). What about a key that is not in the treap? Continuing with the above notation for keys, a search for a key less than 0 terminates at 0, and a search for a key greater than $n−1$ terminates at $n−1$. A search for a key in $(k,k+1)$ terminates either at $k$ or $k+1$, and the max of these is bounded by twice the sum, so this is also $\mathcal{O}(\log n)$ with high probability.
 
@@ -304,169 +304,139 @@ How does this height change propagate up the tree? In the general case, a right 
 
 The fix if this happens is shown in the following diagram. It is called a **single rotation**. This one is a left single rotation; in the symmetric case, we may need a right single rotation. The rotation does not propagate the height change to the parent.
 
-AVL-single.png here
-![AVL-single](AVL-single.png)
+
+![](assets/AVL-single.png)
+
 
 We still have to deal with the third subcase of the second case, which is where $h(S)=h(R)$. In this case, the height of $N$ is $h(L′)+1=h(R)+2$, which means there is a violation of the AVL property at $P′$.
 
 The fix if this happens is shown in the following diagram. It is called a **double rotation**, because it can be factored into two single rotations (a right rotation at $k′$, and then a left rotation at $p′$). Again, there is a symmetric double rotation for the symmetric situation.
 
-![AVL-double](AVL-double.png)
+
+![](assets/AVL-double.png)
+
 
 Replacement followed by a double rotation gives a resulting tree where the new parent node has the same height as the parent node of the original. So the height change does not propagate further in the tree.
 
-To summarize the helper function: we head right in L
-until we find a right subtree that can be paired with R in an AVL tree (in the case where L
+To summarize the helper function: we head right in $L$ until we find a right subtree that can be paired with $R$ in an AVL tree (in the case where $L$ has greater height). That might cause a double rotation, in which case the work is done, or it might just increase the height when the right subtree is replaced. The increase in height might propagate up the tree and then disappear, or it might require a left single rotation to fix. That might propagate the height increase to the parent, and eventually it might reach the root (in which case the whole tree has grown in height).
 
-has greater height). That might cause a double rotation, in which case the work is done, or it might just increase the height when the right subtree is replaced. The increase in height might propagate up the tree and then disappear, or it might require a left single rotation to fix. That might propagate the height increase to the parent, and eventually it might reach the root (in which case the whole tree has grown in height).
+The cost of a join on $L$ and $R$ is $\mathcal{ O }(\max{h(L),h(R)})$. If the result has $n$ nodes, this is $\mathcal{O}(\log n)$. However, this analysis will not let us conclude that `split` takes logarithmic time. It sufficed for treaps because we could show that the joins done by `split` were all constant time. But this may not be the case for AVL trees. We need to be more careful about the cost of a join.
 
-The cost of a join on L
-and R is O(max{h(L),h(R)}). If the result has n nodes, this is $\mathcal{O}(\log n)$
+The more careful statement, which should be clear from the above discussion is this: The cost of a join on $L$ and $R$ is $\mathcal{ O }(max{|1,h(L)−h(R)|})$, and the resulting tree either has height $\max{h(L),h(R)}$ or one more than this. This statement will also be true for the remaining two implementations (with a suitable redefinition of $h$), allowing us to reuse this analysis later on. For simplicity, we’ll take off the $\mathcal{ O }()$ brackets in the cost of a join (instead of carrying along the hidden constant in our calculations).
 
-. However, this analysis will not let us conclude that split takes logarithmic time. It sufficed for treaps because we could show that the joins done by split were all constant time. But this may not be the case for AVL trees. We need to be more careful about the cost of a join.
+Now we can analyze `split`. Recall that this operation splits a tree $T$ into $L$ and $R$ given a key $k$ (which may or may not be in the tree). It recursively splits the left or right subtree (depending on the comparison of $k$ and the root key) and then joins the appropriate part of the result with the subtree not recursed upon. We need to bound the work done by the joins. We can show by induction on the height of the tree that the cost is bounded above by $h(L)+h(R)+h(T)$, and that both $h(L)$ and $h(R)$ are bounded by $h(T)$. This gives us time $\mathcal{O}(\log n)$ to split a tree with $n$ nodes.
 
-The more careful statement, which should be clear from the above discussion is this: The cost of a join on L
-and R is O(max{|1,h(L)−h(R)|}), and the resulting tree either has height max{h(L),h(R)} or one more than this. This statement will also be true for the remaining two implementations (with a suitable redefinition of h), allowing us to reuse this analysis later on. For simplicity, we’ll take off the O()
+Consider a recursive split on the left subtree T_{ L }. It produces $L′$ and $R′$ with cost bounded above by $h(L′)+h(R′)+h(T_{ L })$ and $h(L′) \leq h(T_{ L })$ and $h(R′) \leq h(T_{ L })$ by the inductive hypothesis. The result $L$ is $L′$, and the result $R$ is the join of $R′$ and T_{ R }, at cost $\mathcal{ O }(\max{ \mid 1,h(R′)−h(T_{ R }) \mid })$.
 
-brackets in the cost of a join (instead of carrying along the hidden constant in our calculations).
+If the cost of the join is the 1 term in the maximum, then $h(R′)=h(T_{ R })$, and $h(R)$ is either the same or one more. Thus the total cost is $h(L′)+h(R′)+h(T_{ L })+1 \leq h(L)+h(R)+h(T)$.
 
-Now we can analyze split. Recall that this operation splits a tree T
-into L and R given a key k (which may or may not be in the tree). It recursively splits the left or right subtree (depending on the comparison of k and the root key) and then joins the appropriate part of the result with the subtree not recursed upon. We need to bound the work done by the joins. We can show by induction on the height of the tree that the cost is bounded above by h(L)+h(R)+h(T), and that both h(L) and h(R) are bounded by h(T). This gives us time $\mathcal{O}(\log n)$ to split a tree with n
+If the cost of the join is $h(R′)−h(T_{ R })$, then since $h(R′) \leq h(T_{ L })$ by the induction hypothesis, and $h(T_{L})−h(T_{R}) \leq 1$ because this is an AVL tree. So the cost of the join is 1 and $h(R)$ is either $h(R′)$ or one more. Thus the total cost is $h(L′)+h(R′)+h(T_{L})+1 \leq h(L)+h(R)+h(T)$.
 
-nodes.
+If the cost of the join is $h(T_{R})−h(R′)$, then $h(R)$ is either $h(T_{R})$ or one more. Thus the total cost is $h(L′)+h(R′)+h(T_{L})+h(T_{R})−h(R′) \leq h(L)+h(T_{R})+h(T_{L})≤h(L)+h(R)+h(T)$.
 
-Consider a recursive split on the left subtree TL
-. It produces L′ and R′ with cost bounded above by h(L′)+h(R′)+h(TL) and h(L′)≤h(TL) and h(R′)≤h(TL) by the inductive hypothesis. The result L is L′, and the result R is the join of R′ and TR, at cost O(max{|1,h(R′)−h(TR)|})
+That concludes the inductive step for a left recursion; the right recursion is symmetric, giving us our desired cost bound. This same analysis will work for the next two versions of balanced BSTs, so we have less to cover as we proceed. We can also reuse the analysis of set operations for treaps, which I sketched above, to get worst-case running times of $\mathcal{O}(m \log(\frac{ n }{ m }+1))$.
 
-.
-
-If the cost of the join is the 1 term in the maximum, then h(R′)=h(TR)
-, and h(R) is either the same or one more. Thus the total cost is h(L′)+h(R′)+h(TL)+1≤h(L)+h(R)+h(T)
-
-.
-
-If the cost of the join is h(R′)−h(TR)
-, then since h(R′)≤h(TL) by the induction hypothesis, and h(TL)−h(TR)≤1 because this is an AVL tree. So the cost of the join is 1 and h(R) is either h(R′) or one more. Thus the total cost is h(L′)+h(R′)+h(TL)+1≤h(L)+h(R)+h(T)
-
-.
-
-If the cost of the join is h(TR)−h(R′)
-, then h(R) is either h(TR) or one more. Thus the total cost is h(L′)+h(R′)+h(TL)+h(TR)−h(R′)≤h(L)+h(TR)+h(TL)≤h(L)+h(R)+h(T)
-
-.
-
-That concludes the inductive step for a left recursion; the right recursion is symmetric, giving us our desired cost bound. This same analysis will work for the next two versions of balanced BSTs, so we have less to cover as we proceed. We can also reuse the analysis of set operations for treaps, which I sketched above, to get worst-case running times of O(mlog(nm+1))
-
-.
-
-A conventional presentation of AVL trees focussing on insert and delete can use the same rebalancing function for both (making use of single and double rotations as we have done here), which is not the case for the next two variations. This, combined with a relatively intuitive balance condition that is easy to reason about, makes it a popular choice for data structures courses.
+A conventional presentation of AVL trees focussing on `insert` and `delete` can use the same rebalancing function for both (making use of single and double rotations as we have done here), which is not the case for the next two variations. This, combined with a relatively intuitive balance condition that is easy to reason about, makes it a popular choice for data structures courses.
 
 Even though AVL trees are the oldest variant, and there has been much work since then, they were still chosen to be the implementation for the Map and Set ADTs in the OCaml standard library. In 2014, the team responsible for Core (the proposed alternative standard library used at Jane Street and in the Real World OCaml book) benchmarked all the variants we consider here and some others, and decided to stick with AVL trees. In both OCaml implementations, the height restriction is relaxed so that left and right subtrees can have a height difference of two instead of one. This makes the worst-case depth higher (though still logarithmic), which might make lookups more expensive but simplifies balancing in the other operations. The tradeoff was judged to be worth it.
 
-Exercise 37: Implement join for AVL trees, using the following datatype.
+**Exercise 37**: Implement `join` for AVL trees, using the following datatype.
 
+```ocaml
 type 'a avl_tree =
-
   | Empty
-
   | Node of int * 'a * 'a avl_tree * 'a avl_tree
-
-
 
 type 'a bst = 'a avl_tree
 
+```
+
 As before, write a is_avl function that runs in linear time. You might wish to use your AVL implementation to do further testing on the derived operations. $\blacksquare$
 
-4.1.6 Weight-balanced trees
 
-I will just sketch the ideas in this section, for reasons that will become evident. Weight-balanced trees (WBTs) can be thought of as relaxing the Braun tree condition that the two subtrees have size differing by at most one. Intuitively, think of the weight as the size. The WBT invariant or balance condition is that each subtree has weight no more than δ
-times the weight of its sibling tree, for a fixed constant δ>1
 
-to be chosen later.
+### Weight-balanced trees
+
+I will just sketch the ideas in this section, for reasons that will become evident. Weight-balanced trees (WBTs) can be thought of as relaxing the Braun tree condition that the two subtrees have size differing by at most one. Intuitively, think of the weight as the size. The WBT invariant or balance condition is that each subtree has weight no more than $\delta$ times the weight of its sibling tree, for a fixed constant $\delta \gt 1$ to be chosen later.
 
 The case of trees of size 2 (with one empty subtree) is awkward; one solution is to take the weight to be the size plus one, and another is to handle an empty subtree as a special case. Both solutions complicate the correctness proof.
 
-The recurrence for the maximum height of a WBT as a function of size resembles T(n)=T((1−1δ)n)+1
-, which for δ>1 has the solution T(n)=O(\log n)
-
-.
+The recurrence for the maximum height of a WBT as a function of size resembles $\mathbb{T}(n)=\mathbb{ T }((1− \frac{ 1 }{\delta})n)+1$, which for $\delta \gt 1$ has the solution \mathbb{T}(n)=\mathcal{O}(\log n).
 
 The balance condition for AVL trees is that the heights of the two subtrees are within 1 of each other. The WBT balance condition is expressed in terms of weight, but if we take logarithms, the logarithms of the weights of the two subtrees are within a constant additive factor of each other.
 
-The code for join for WBTs can be viewed as a variation on the code for height-balanced (AVL) trees. If the two trees L, R
-being joined are in balance, we just use the Node constructor. Otherwise, we recursively descend into the larger subtree. Say it is the left subtree; as with AVL trees, we descend along the right spine until we find a place where the current subtree L′ and R are in balance. We would like to replace L′ in the result with the tree formed by the join key k, L′, and R′
+The code for `join` for WBTs can be viewed as a variation on the code for height-balanced (AVL) trees. If the two trees $L$, $R$ being joined are in balance, we just use the `Node` constructor. Otherwise, we recursively descend into the larger subtree. Say it is the left subtree; as with AVL trees, we descend along the right spine until we find a place where the current subtree $L′$ and $R$ are in balance. We would like to replace $L′$ in the result with the tree formed by the join key $k$, $L′$, and $R′$.
 
-.
+But this might violate the balance condition with respect to the sibling of $L′$. Either a single rotation or a double rotation is necessary at this point, and the algorithm uses another parameter $\Delta$ to choose. If the replacement has weight more than $\Delta$ times the weight of the sibling, a double rotation is done, otherwise a single rotation. The imbalance may propagate to the parent and its sibling, so rotations may be needed all the way up the tree.
 
-But this might violate the balance condition with respect to the sibling of L′
-. Either a single rotation or a double rotation is necessary at this point, and the algorithm uses another parameter Δ to choose. If the replacement has weight more than Δ
+The code is relatively short and clear, and the analysis goes through as before, if we replace the height of the tree with a measure the original authors call rank, defined as one plus the logarithm of the weight. What remains is the correctness proof, and that is obviously heavily dependent on the choice of the parameters $(\delta, \Delta)$. Whatever the choice, all proofs are lengthy with many cases. But the proof only has to be done once.
 
-times the weight of the sibling, a double rotation is done, otherwise a single rotation. The imbalance may propagate to the parent and its sibling, so rotations may be needed all the way up the tree.
+The original paper by Nievergelt and Deo (1973) used parameters $(1 + \sqrt{2}, \sqrt{2})$, which is the tightest balance condition that works (and leads to the shortest worst-case trees). But the irrational numbers make for some awkwardness. They have to be approximated in practice, and that could lead to problems in maintaining the balance. It would be better to use rational or even integer parameters.
 
-The code is relatively short and clear, and the analysis goes through as before, if we replace the height of the tree with a measure the original authors call rank, defined as one plus the logarithm of the weight. What remains is the correctness proof, and that is obviously heavily dependent on the choice of the parameters (δ,Δ)
-
-. Whatever the choice, all proofs are lengthy with many cases. But the proof only has to be done once.
-
-The original paper by Nievergelt and Deo (1973) used parameters (1+2‾√,2‾√)
-
-, which is the tightest balance condition that works (and leads to the shortest worst-case trees). But the irrational numbers make for some awkwardness. They have to be approximated in practice, and that could lead to problems in maintaining the balance. It would be better to use rational or even integer parameters.
-
-Adams wrote elegant purely-functional code using WBTs for an ML competition in 1993, but he was more concerned about implementation and benchmarking than correctness proofs. His SML (Standard ML) library (which became the standard) and his implementation for GNU/MIT Scheme (also the standard) used different parameter choices; a port to Data.Map in Haskell used yet another choice. In 2010, a bug report filed for the Haskell library gave an instance involving a deletion from a tree with twelve elements which resulted in an imbalanced tree. It was probably found by randomized testing.
+Adams wrote elegant purely-functional code using WBTs for an ML competition in 1993, but he was more concerned about implementation and benchmarking than correctness proofs. His SML (Standard ML) library (which became the standard) and his implementation for GNU/MIT Scheme (also the standard) used different parameter choices; a port to `Data.Map` in Haskell used yet another choice. In 2010, a bug report filed for the Haskell library gave an instance involving a deletion from a tree with twelve elements which resulted in an imbalanced tree. It was probably found by randomized testing.
 
 Straka (2010-2012) fixed the Haskell bug by changing the parameters, and produced a careful paper proof of correctness for his choice, as well as benchmarks investigating various choices. Hirai and Yamamoto (2011) found and fixed bugs in the SML and Scheme implementations, characterized the space of possible parameter choices, and produced a formal proof (using Coq) of the correctness of an implementation of the algorithm for proper parameter choices.
 
 Weight-balanced trees provide a good case study of the issues involved in moving from a theoretical design to a widely-used practical implementation.
-4.1.7 Red-black trees
+
+
+
+### Red-black trees
 
 Red-black trees are probably the most popular balanced BST implementation, both in terms of actual use and exposure in education. As I mentioned above, they originally developed from work on nonbinary trees where all leaves have the same depth, and are best motivated this way. Without this analogy, the invariant seems mysterious, even though the reasoning is not difficult.
 
-Bayer worked in this setting around 1970, both with small bounds on the number of keys in a node and with large bounds. Trees with large bounds are commonly called B-trees, and are best studied in the context of their major applications, file systems and databases, because low-level aspects play more of a role in their implementation and analysis, and here we are maintaining a high-level fictional view of the machine that ignores virtual memory and caches. Of the trees with small bounds, the 2-3-4 tree is the one we will focus on.
+Bayer worked in this setting around 1970, both with small bounds on the number of keys in a node and with large bounds. Trees with large bounds are commonly called **B-trees**, and are best studied in the context of their major applications, file systems and databases, because low-level aspects play more of a role in their implementation and analysis, and here we are maintaining a high-level fictional view of the machine that ignores virtual memory and caches. Of the trees with small bounds, the 2-3-4 tree is the one we will focus on.
 
-A 3-node contains two keys and has three children.
+A **3-node** contains two keys and has three children.
+
+
+![](assets/3-node.png)
+
 
 The left subtree of a 3-node contains keys less than the first root key; the middle subtree contains keys between the first and second root keys; and the right subtree contains keys greater than the second root key.
 
-A 4-node contains three keys and has four children, with the same sort of relationship among keys and children.
+A **4-node** contains three keys and has four children, with the same sort of relationship among keys and children.
 
-Since all leaves are at the same depth and every internal node has at least two children, it is not hard to show that the height of a 2-3-4 tree with n
-keys is $\mathcal{O}(\log n)$
+![](assets/4-node.png)
 
-(the worst case is a perfect tree). The lookup procedure for 2-3-4 trees is messier than for binary trees, but there are no new ideas, just more cases.
+
+Since all leaves are at the same depth and every internal node has at least two children, it is not hard to show that the height of a 2-3-4 tree with $n$ keys is $\mathcal{O}(\log n)$ (the worst case is a perfect tree). The lookup procedure for 2-3-4 trees is messier than for binary trees, but there are no new ideas, just more cases.
 
 Naive insertion into a binary search tree replaces an empty leaf with a node containing the new key. Insertion into a 2-3-4 tree is similar, but we attempt to insert the key into the parent of the empty leaf. If that would result in four keys in a node, one of the two middle keys is removed, and the node is split into a 2-node and a 3-node (containing the inserted value). But then we continue to insert the removed middle key into the parent. If the top is reached, the key becomes a 2-node.
 
-This sounds nice, but actually coding it results in a number of annoying special cases, and deletion is worse. It gets better with an encoding, described by Guibas and Sedgewick, that simulates a 2-3-4 tree by a binary search tree with additional information. In a red-black binary search tree, each node is coloured either red or black. Here is the translation from a 3-node into a black node with a red child.
+This sounds nice, but actually coding it results in a number of annoying special cases, and deletion is worse. It gets better with an encoding, described by Guibas and Sedgewick, that simulates a 2-3-4 tree by a binary search tree with additional information. In a **red-black** binary search tree, each node is coloured either red or black. Here is the translation from a 3-node into a black node with a red child.
+
+
+![](assets/3-node-translation.png)
+
 
 A symmetric translation is also possible, allowing us more flexibility. Here is the translation of a 4-node.
 
+
+![](assets/4-node-translation.png)
+
+
 We see that in such a translation, no red node has a red child. It is also the case that the root is black, but we will relax this requirement, as it is not essential for correctness, and the flexibility helps to extend the previous analysis for union in this framework to this variant.
 
-If we define the black depth of a leaf to be the number of black nodes on the root-leaf path, then all leaves are at the same black depth. But since no root-leaf path has two red nodes in a row, the actual depth of a leaf is at most twice the black depth. This lets us conclude that the height of a red-black tree with n
-nodes is $\mathcal{O}(\log n)$
+If we define the **black depth** of a leaf to be the number of black nodes on the root-leaf path, then all leaves are at the same black depth. But since no root-leaf path has two red nodes in a row, the actual depth of a leaf is at most twice the black depth. This lets us conclude that the height of a red-black tree with $n$ nodes is $\mathcal{O}(\log n)$.
 
-.
+`lookup` for a red-black tree is simpler than for a 2-3-4 tree; it simply proceeds as in an uncoloured binary search tree, ignoring colour.
 
-lookup for a red-black tree is simpler than for a 2-3-4 tree; it simply proceeds as in an uncoloured binary search tree, ignoring colour.
+To code `join`, we define the black height $\hat{h} (T)$ of tree $T$ to be the maximum black depth of any descendant, and maintain this value at each node in addition to the colour. To join $L$, $k$, $R$, we start as with AVL and weight-balanced trees. If the black heights of $L$ and $R$ are equal, we apply the Node constructor with these subtrees and $k$. If the roots of $L$ and $R$ are both black, the root of the new tree is red, otherwise it is black.
 
-To code join, we define the black height ĥ (T)
-of tree T to be the maximum black depth of any descendant, and maintain this value at each node in addition to the colour. To join L, k, R, we start as with AVL and weight-balanced trees. If the black heights of L and R are equal, we apply the Node constructor with these subtrees and k. If the roots of L and R
+In the remaining cases, one tree has greater black height. As before, we assume it is $L$, the other case being symmetric. The recursion proceeds down the right spine of $L$ until $L′$ is found with a black root and $\hat{h} (L′)=\hat{h} (R)$. We can apply the `Node` constructor to $L′$,$k$,$R$, where $k$ is coloured red. This result is supposed to replace $L′$.
 
-are both black, the root of the new tree is red, otherwise it is black.
+But the root of $R$ could be coloured red, or the parent $p$ of the replacement could be red. If the parent $p$ of the replacement is black but the root of $R$ is red, we recolour the root of $R$ black and do a single left rotation. This does not change the black depth of any node.
 
-In the remaining cases, one tree has greater black height. As before, we assume it is L
-, the other case being symmetric. The recursion proceeds down the right spine of L until L′ is found with a black root and ĥ (L′)=ĥ (R). We can apply the Node constructor to L′,k,R, where k is coloured red. This result is supposed to replace L′
 
-.
+![](assets/RB-single.png)
 
-But the root of R
-could be coloured red, or the parent p of the replacement could be red. If the parent p of the replacement is black but the root of R is red, we recolour the root of R
 
-black and do a single left rotation. This does not change the black depth of any node.
+If $p$ is red, then its parent $g$ must be black. We recolour $k$ as black and do a single left rotation. Again, this does not change the black depth of any node.
 
-If p
-is red, then its parent g must be black. We recolour k
 
-as black and do a single left rotation. Again, this does not change the black depth of any node.
+![](assets/RB-single2.png)
+
 
 The rotation results in the new parent being red, so the same logic needs to be used higher up. In other words, when a result is produced by the recursion down the right spine, we are replacing the left subtree recursed upon with the result of the recursion, but if the right child of the result of the recursion is red and its right child is also red, we recolour the second of these two black and do a single left rotation. There is nothing to rotate with when we reach the top, but in this case, if there is a red root with a red right child, we just colour the root black.
 
@@ -480,156 +450,138 @@ There are further refinements possible. Andersson in 1993 created what are usual
 
 Red-black trees are the basis of the Map and Set implementations in the C++ STL and in the Java standard library. However, the recent and increasingly popular languages Scala and Clojure, both of which run on the JVM (Java Virtual Machine), do not use any form of balanced binary trees for their implementations. They use a more recent data structure called HAMT (hash array mapped tries), best learned about after reading the rest of this flânerie. That is also what is used for Racket’s "immutable hash table" data structure.
 
-Exercise 38: Implement join for red-black trees, using the following datatype.
+**Exercise 38**: Implement `join` for red-black trees, using the following datatype.
 
+```
 type colour = Red | Black
 
-
-
 type 'a rb_tree =
-
   | Empty
-
   | Node of colour * 'a * 'a avl_tree * 'a avl_tree
-
-
 
 type 'a bst = 'a rb_tree
 
-As before, write a is_rb_tree function to aid in testing (it should run in linear time).
+```
+
+As before, write a `is_rb_tree` function to aid in testing (it should run in linear time).
 
 $\blacksquare$
 
-Extended Exercise 39: The simplest non-binary tree is a one-two tree (OTT). It uses a definition like the following:
+**Extended Exercise 39**: The simplest non-binary tree is a one-two tree (OTT). It uses a definition like the following:
 
+```
 type 'a ott =
-
   | Empty
-
   | One of 'a ott
-
   | Two of 'a ott * 'a * 'a ott
 
-An OTT satisfies the BST invariant, namely that the key at a Two node is greater than every key in the left subtree and less than every key in the right subtree. An OTT also satisfies the invariant for nonbinary trees that all Empty leaves will be at the same depth (the height of the tree plus one).
+```
 
-This is not enough to keep an OTT from degenerating to a path, so there is one more invariant: every One node has a Two sibling. As a consequence, the root of an OTT cannot be a One node, and the child of a One node cannot be a One node. Another consequence is that a left or right subtree might not be an OTT (it could be a One node containing a valid OTT).
+An OTT satisfies the BST invariant, namely that the key at a `Two` node is greater than every key in the left subtree and less than every key in the right subtree. An OTT also satisfies the invariant for nonbinary trees that all Empty leaves will be at the same depth (the height of the tree plus one).
 
-Your task is to implement insert for OTTs, working out all the details of the algorithm from scratch. As before, you should also consider writing an is_ott function to catch bugs in your code.
+This is not enough to keep an OTT from degenerating to a path, so there is one more invariant: every `One` node has a `Two` sibling. As a consequence, the root of an OTT cannot be a `One` node, and the child of a `One` node cannot be a `One` node. Another consequence is that a left or right subtree might not be an OTT (it could be a `One` node containing a valid OTT).
 
-To facilitate implementation, we will add to the above datatype definition. Two constructors can be added for temporary use, New and Three. You don’t have to use either or both of them, but using them properly can reduce cases, and can be convenient when dealing with intermediate results which otherwise would have to be put into a tuple or added parameters.
+Your task is to implement `insert` for OTTs, working out all the details of the algorithm from scratch. As before, you should also consider writing an `is_ott` function to catch bugs in your code.
 
+To facilitate implementation, we will add to the above datatype definition. Two constructors can be added for temporary use, `New` and `Three`. You don’t have to use either or both of them, but using them properly can reduce cases, and can be convenient when dealing with intermediate results which otherwise would have to be put into a tuple or added parameters.
+
+```
 type 'a ott =
-
   | Empty
-
   | New of 'a
-
   | One of 'a ott
-
   | Two of 'a ott * 'a * 'a ott
-
   | Three of 'a ott * 'a * 'a ott * 'a * 'a ott
 
-The idea is that a New node is a temporarily overstuffed Empty node that results from naive insertion. It can be removed right after it is produced as the result of recursive insertion. Similarly, a Three node is a temporarily overstuffed Two node. Removal of a Three node that is produced as the result of recursion might result in the production of a new Three node. Note that no valid OTT contains a New node or a Three node. The insert operation should consume and produce only a valid OTT. New and Three are solely for internal use in the implementation of insert.
+```
 
-Again, the choice is up to you, but consider maintaining an additional invariant on the use of Three: all three subtrees are either Empty or they are Two, One, Two respectively. This might cut down on the number of cases to consider.
+The idea is that a `New` node is a temporarily overstuffed `Empty` node that results from naive insertion. It can be removed right after it is produced as the result of recursive insertion. Similarly, a `Three` node is a temporarily overstuffed `Two` node. Removal of a `Three` node that is produced as the result of recursion might result in the production of a new `Three` node. Note that no valid OTT contains a `New` node or a `Three` node. The `insert` operation should consume and produce only a valid OTT. `New` and `Three` are solely for internal use in the implementation of `insert`.
 
-State and justify an expression for the smallest number of keys in an OTT of height h
-, and give an O-notation bound on h as a function of n
+Again, the choice is up to you, but consider maintaining an additional invariant on the use of `Three`: all three subtrees are either `Empty` or they are `Two`, `One`, `Two` respectively. This might cut down on the number of cases to consider.
 
-.
+State and justify an expression for the smallest number of keys in an OTT of height $h$, and give an $\mathcal{ O }$-notation bound on $h$ as a function of $n$.
 
-Then implement delete, which does not require the use of New or Three.
+Then implement `delete`, which does not require the use of `New` or `Three`.
 
-The unified framework requires binary trees, but it is not hard to adapt the derived operations to the use of One. Another challenge is to implement join for OTTs. My course tutor and I independently worked on this task, and produced different solutions, both more complicated than the other implementations discussed here. Can you come up with an elegant implementation?
+The unified framework requires binary trees, but it is not hard to adapt the derived operations to the use of `One`. Another challenge is to implement `join` for OTTs. My course tutor and I independently worked on this task, and produced different solutions, both more complicated than the other implementations discussed here. Can you come up with an elegant implementation?
 
 The OCaml feature called "polymorphic variants" provides a nice way to avoid completely rewriting the derived functions in the unified framework under circumstances such as this.
 
 OTTs were introduced by Ottmann and Six in 1976, but they came to my attention via a 2009 "functional pearl" paper by Ralf Hinze, to whom I am indebted for details of this exercise. $\blacksquare$
 
-4.2 Binary tries
+
+
+## Binary tries
 
 In the previous section, the only computations we did on keys was comparison under some arbitrary total ordering. In this section, we will consider other computations on keys, in order to introduce a data structure that is not only useful for maps, but (suitably generalized) in text processing, as described in the next chapter.
 
-For simplicity, let’s consider the keys to be natural numbers, and once again primarily consider maintaining sets of keys, rather than maps. One powerful computation we can do with a natural number is use it to index an array. If we maintain an array where elements are some representation of "yes" (the index is in the set) and "no" (the index is not in the set), then we can answer membership queries in constant time. Besides the usual problems with arrays, this approach is impractical, as the array has to have size at least M
+For simplicity, let’s consider the keys to be natural numbers, and once again primarily consider maintaining sets of keys, rather than maps. One powerful computation we can do with a natural number is use it to index an array. If we maintain an array where elements are some representation of "yes" (the index is in the set) and "no" (the index is not in the set), then we can answer membership queries in constant time. Besides the usual problems with arrays, this approach is impractical, as the array has to have size at least $M$, the size of the largest number in the set.
 
-, the size of the largest number in the set.
+If you have been exposed to material on computer architecture, you know that memory addresses are treated as sequences of bits to be decomposed by hardware, and the size of memory means that memory accesses are much more expensive than other primitive machine operations. This suggests that we might ourselves consider decomposing keys into sequences of bits, as we did for an index into a sequence in Chapter 2. Let’s start with perfect binary trees with "yes" and "no" stored at the leaves, with navigation on the key in standard binary notation, least significant bit first. Here’s what the tree for the set ${1,4,5}$ would look like. (This set will be our running example.)
 
-If you have been exposed to material on computer architecture, you know that memory addresses are treated as sequences of bits to be decomposed by hardware, and the size of memory means that memory accesses are much more expensive than other primitive machine operations. This suggests that we might ourselves consider decomposing keys into sequences of bits, as we did for an index into a sequence in Chapter 2. Let’s start with perfect binary trees with "yes" and "no" stored at the leaves, with navigation on the key in standard binary notation, least significant bit first. Here’s what the tree for the set {1,4,5}
 
-would look like. (This set will be our running example.)
+![](assets/noyes.png)
 
-The number of leaves is between M
-and 2M−1, so the total size of the data structure is still O(M), and the lookup time is now O(logM)
 
-. We are going to try to preserve the lookup time while reducing the space cost. One obvious optimization is to get rid of trees full of "no". Every subtree with only "no" leaves can be replaced with a single "no" leaf. Here’s what our example set looks like with this optimization.
+The number of leaves is between $M$ and $2M−1$, so the total size of the data structure is still $\mathcal{O}(M)$, and the lookup time is now $\mathcal{O}(\log M)$. We are going to try to preserve the lookup time while reducing the space cost. One obvious optimization is to get rid of trees full of "no". Every subtree with only "no" leaves can be replaced with a single "no" leaf. Here’s what our example set looks like with this optimization.
 
-The worst-case lookup time has not changed, but the space requirement has decreased. By how much? For a nonempty set, every "no" is the child of a node whose other child contains at least one "yes". In this fashion, we can associate every "no" with some "yes". How many "no"es can be associated with a given "yes"? At most one for each ancestor of that "yes". So the total space cost is now O(nlogM)
-, where n
 
-is the number of elements of the set.
+![](assets/yes-nono.png)
 
-The space used by the balanced binary search trees earlier in this chapter was O(n)
 
-, so it would be nice if we could achieve that. We no longer have internal nodes all of whose associated leaves are "no". The new worst case is that all leaves are "no" except for one. When doing a lookup, if we reach a subtree with only one "yes" leaf, we can finish things off with a direct equality comparison of the search key and the leaf key. So we replace such a tree with a "yes" leaf containing the key value it represents. For our example set:
+The worst-case lookup time has not changed, but the space requirement has decreased. By how much? For a nonempty set, every "no" is the child of a node whose other child contains at least one "yes". In this fashion, we can associate every "no" with some "yes". How many "no"es can be associated with a given "yes"? At most one for each ancestor of that "yes". So the total space cost is now $\mathcal{O}(n \log M)$, where $n$ is the number of elements of the set.
+
+The space used by the balanced binary search trees earlier in this chapter was $\mathcal{O}(n)$, so it would be nice if we could achieve that. We no longer have internal nodes all of whose associated leaves are "no". The new worst case is that all leaves are "no" except for one. When doing a lookup, if we reach a subtree with only one "yes" leaf, we can finish things off with a direct equality comparison of the search key and the leaf key. So we replace such a tree with a "yes" leaf containing the key value it represents. For our example set:
+
+
+![](assets/yes-and-key.png)
+
 
 We would have to keep a copy of the original key in the lookup, rather than discarding low-order bits as we move down the tree. Alternately, we can store at the "yes" leaf the key value it represents with the appropriate low-order bits removed.
 
-While this can result in some space improvement, the worst-case space cost is the same as before. It’s not hard to construct a tree with Ω(n)
-long paths to "yes" leaves that uses Ω(nlogM)
+While this can result in some space improvement, the worst-case space cost is the same as before. It’s not hard to construct a tree with $\Omega(n)$ long paths to "yes" leaves that uses $\Omega(n \log M)$ space. The final optimization gets rid of those paths, which have many internal nodes with one "no" child. Since we are doing a final equality comparison at a "yes" leaf, we can afford to skip the navigation at these internal nodes even though it might let a failed lookup stop early. We store at each internal node the bit that is used for navigation at that node (represented as a power of 2). Here is the result for our example set.
 
-space. The final optimization gets rid of those paths, which have many internal nodes with one "no" child. Since we are doing a final equality comparison at a "yes" leaf, we can afford to skip the navigation at these internal nodes even though it might let a failed lookup stop early. We store at each internal node the bit that is used for navigation at that node (represented as a power of 2). Here is the result for our example set.
 
-Now each leaf contains a unique key, so the space cost is O(n)
-, while lookup is still O(logM)
+![](assets/only-keys.png)
 
-.
 
-This data structure is called a binary trie. The word "trie" is pronounced like the English word "try", even though it comes from the middle letters of the English word "retrieval", which would suggest a pronunciation like "tree". The basic idea was first proposed in 1959 (for strings, which we will examine in the next chapter), and the final optimization in 1966 by Morrison, with the name "Patricia tree" (sometimes these are called "compressed tries").
+Now each leaf contains a unique key, so the space cost is $\mathcal{O}(n)$, while lookup is still $\mathcal{O}(\log M)$.
+
+This data structure is called a **binary trie**. The word "trie" is pronounced like the English word "try", even though it comes from the middle letters of the English word "retrieval", which would suggest a pronunciation like "tree". The basic idea was first proposed in 1959 (for strings, which we will examine in the next chapter), and the final optimization in 1966 by Morrison, with the name "Patricia tree" (sometimes these are called "compressed tries").
 
 The lookup operation has gotten more complicated, so it’s worth summarizing it. The original search key is preserved as we go down the tree. Each internal node is labelled with the bit used for navigation. Arithmetic (or, perhaps, bit operations) can be used to see whether that bit of the search key is 0 or 1, and thus whether to go left or right. Only "yes" leaves remain, and the search key is compared with the leaf key to give the final answer.
 
 What about the other set operations? To facilitate them, we maintain some additional information at the internal nodes, which is the discarded bits that reached that node (as a number). Viewing the bits of a key in standard order, these bits will be a common suffix of the bits of all keys in that subtree. (They are a prefix of the bits viewed in right-to-left order, which is the order in which we view them to navigate.) Lookup could stop early if we check for this common suffix and fail to find it, but this does not change the worst-case running time.
 
-To insert key k
-into trie t, we use structural recursion on t. If t is a "no" leaf, the result is a "yes" leaf containing k. If t is a "yes" leaf containing n, and n=k, then the new trie is the old trie. If n≠k, then we need to find the lowest-order bit where they differ and their common suffix. If the numbers are standard 64-bit integers, there are clever ways to use bitwise operations on words to do this in constant time, but it can also be done with the obvious search without changing the asymptotic running time of O(logM). In the new trie, the "yes" leaf is replaced by a node with the computed common suffix and bit to navigate on, with children consisting of the old "yes" leaf and a new "yes" leaf containing k
+To insert key $k$ into trie $t$, we use structural recursion on $t$. If $t$ is a "no" leaf, the result is a "yes" leaf containing $k$. If $t$ is a "yes" leaf containing $n$, and $n=k$, then the new trie is the old trie. If $n \neq k$, then we need to find the lowest-order bit where they differ and their common suffix. If the numbers are standard 64-bit integers, there are clever ways to use bitwise operations on words to do this in constant time, but it can also be done with the obvious search without changing the asymptotic running time of $\mathcal{O}(\log M)$. In the new trie, the "yes" leaf is replaced by a node with the computed common suffix and bit to navigate on, with children consisting of the old "yes" leaf and a new "yes" leaf containing $k$.
 
-.
+If $t$ is an internal node, and $k$ shares its suffix, then we use its bit to navigate, and recursively insert $k$ into one of the children. If $k$ does not share the suffix, we must (as above, so there is scope for shared code here) find a shorter suffix that it does share and bit to branch on, and make a new internal node with this suffix and bit, with one child being $t$ and the other being a "yes" leaf containing $k$. All of this pretty much follows from the definition of binary trie.
 
-If t
-is an internal node, and k shares its suffix, then we use its bit to navigate, and recursively insert k into one of the children. If k does not share the suffix, we must (as above, so there is scope for shared code here) find a shorter suffix that it does share and bit to branch on, and make a new internal node with this suffix and bit, with one child being t and the other being a "yes" leaf containing k
+Inserting into a trie with $n$ keys takes time $\mathcal{O}(\log M)$, which can be slightly improved to $\mathcal{O}(\min{n,\log M})$ if constant-time operations are available to quickly find the lowest different bit of two values. Deletion is left as an exercise for you.
 
-. All of this pretty much follows from the definition of binary trie.
+**Exercise 40**: Implement binary tries, using the following datatype.
 
-Inserting into a trie with n
-keys takes time O(logM), which can be slightly improved to O(min{n,logM})
-
-if constant-time operations are available to quickly find the lowest different bit of two values. Deletion is left as an exercise for you.
-
-Exercise 40: Implement binary tries, using the following datatype.
-
+```ocaml
 type btrie =
-
   | No
-
   | Yes of int
-
   | Node of int * int * btrie * btrie (* suffix, branch bit *)
-
-
 
 type intset = btrie
 
+```
+
 The two int fields in a Node hold the suffix and branch bit (which is a power of 2) respectively. You should provide the following functions.
 
+```ocaml
 val empty : intset
-
 val lookup : int -> intset -> bool
-
 val insert : int -> intset -> intset
-
 val delete : int -> intset -> intset
+
+```
 
 As an added challenge, consider implementing set operations. $\blacksquare$
 
-Exercise 41: Write a is_binary_trie function that runs in linear time. This is harder than it looks at first. Think carefully about all the relationships among the information contained in a valid binary trie and how you might verify them. $\blacksquare$
+**Exercise 41**: Write a `is_binary_trie` function that runs in linear time. This is harder than it looks at first. Think carefully about all the relationships among the information contained in a valid binary trie and how you might verify them. $\blacksquare$
+
