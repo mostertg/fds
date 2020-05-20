@@ -1,7 +1,7 @@
 
 # Introduction
 
-> "*This ain’t no party* / *This ain’t no disco* / *This ain’t no foolin’ around*"
+> *"This ain’t no party / This ain’t no disco / This ain’t no foolin’ around"*
 >
 > Talking Heads, "Life During Wartime", Fear of Music, 1979
 

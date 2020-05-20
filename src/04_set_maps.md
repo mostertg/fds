@@ -1,6 +1,8 @@
+
 # Sets and Maps
 
-> "I sleep in the daytime / I work in the nighttime / I might not ever get home"
+
+> *"I sleep in the daytime / I work in the nighttime / I might not ever get home"*
 >
 > Talking Heads, "Life During Wartime", Fear of Music, 1979
 
@@ -16,7 +18,7 @@ Given an implementation of the Map ADT, we can store sets by simply making the a
 
 With priority queues, the ordering of stored values was an important part supplied by the user. In our implementations of Set, we will make use of an ordering on the domain, but it does not have to be supplied by the user. It is only used to help deliver the promised efficiency. Some domains do not have a "natural" ordering, or the natural ordering is not really relevant. But for most domains, one can create some ordering that suffices.
 
-Although points in the two-dimensional plane do not have a natural ordering, we can impose one: compare the x-coordinates, and if one is smaller, that point is smaller. But if they are the same, compare the y-coordinates. This can generalize to arbitrary tuples (comparing from left to right), and to unbounded sequences like lists. In the case of different lengths, if one sequence is a prefix of another, the shorter one is considered to be smaller. This ordering is called **lexicographic**, because it is the ordering of words in an English dictionary (considering the words as sequences of letters). It is useful enough that some languages provide predefined ways of using it. Haskell has the `Ord` typeclass that can be automatically derived for many datatypes. OCaml has a generic compare operation that provides a similar functionality, and the structural ordering functions ($\lt$, $\gt$, $\leq$, $\geq$).
+Although points in the two-dimensional plane do not have a natural ordering, we can impose one: compare the x-coordinates, and if one is smaller, that point is smaller. But if they are the same, compare the y-coordinates. This can generalize to arbitrary tuples (comparing from left to right), and to unbounded sequences like lists. In the case of different lengths, if one sequence is a prefix of another, the shorter one is considered to be smaller. This ordering is called **lexicographic**, because it is the ordering of words in an English dictionary (considering the words as sequences of letters). It is useful enough that some languages provide predefined ways of using it. Haskell has the `Ord` typeclass that can be automatically derived for many datatypes. OCaml has a generic compare operation that provides a similar functionality, and the structural ordering functions ( $<$, $>$, $\leq$, $\geq$ ).
 
 For any given domain, we can fix an ordering to use in our algorithms. In Chapter 3, I discussed general mechanisms involving functors that let one provide an arbitrary ordering for use by generic code. The `OrderedType` datatype described there is used by the OCaml library modules `Set` and `Map`. For simplicity, in this chapter I will assume keys are compared using the structural ordering functions, but you should feel free to write fully general code for the exercises, if you’d like the practice.
 
@@ -30,10 +32,12 @@ The operations for `Map` are _empty_, _lookup_, _insert_, and _delete_. The oper
 
 We will focus on binary search trees (BSTs), which you may have encountered in your earlier exposure to programming. If not, don’t worry, we will start from scratch. A binary search tree is a binary tree that satisfies an additional property or invariant known as the BST property. We can keep in mind the binary tree data type we developed in Chapter 2.
 
+
 ```ocaml
 type 'a bintree =
     Empty
   | Node of 'a * 'a bintree * 'a bintree
+
 ```
 
 The BST property is that all the elements in the left subtree are less than the root (using the domain ordering we have decided to use), those in the right subtree are greater than the root, and the two subtrees are (recursively) binary search trees. As with heaps, there are many possible representations for a given set of keys.
@@ -93,7 +97,7 @@ We will discuss the four specific implementations of `join` later. First, let’
 
 We start with a useful helper operation `split`, which consumes a key $k$ and a BST $T$. It produces a triple $(L,b,R)$, where $L$ is a BST with all keys less than $k$, $R$ is a BST with all keys greater than $k$, and $b$ is a Boolean value that is **_true_** if and only if $k$ is in $T$. This operation is a little harder to motivate before seeing its use. It represents a common action of deconstructing a BST into pieces that can then be reassembled in a different way to ensure the version-specific invariant. You are familiar with separating $T$ into the root key and the left and right subtrees in the course of structural recursion. If $k$ is the root key, then `split` is trivial. The interesting case is when it is not the root key.
 
-The base case of `split` is if $T$ is `Empty`, in which case the result is (`Empty`, `false`, `Empty`). Otherwise $T$ is a tree with root $r$ and left and right subtrees $L′$,$R′$. We compare $r$ to $k$, with three outcomes. If they are equal, the result is $(L′, true, R′)$. If $k \lt r$, then we need to recursively split $L′$ using $k$ into $(L″,b,R″)$ and then form the result $(L″,b,join R″ r R)$. The remaining case is symmetric.
+The base case of `split` is if $T$ is `Empty`, in which case the result is (`Empty`, `false`, `Empty`). Otherwise $T$ is a tree with root $r$ and left and right subtrees $L′$,$R′$. We compare $r$ to $k$, with three outcomes. If they are equal, the result is $(L′, true, R′)$. If $k < r$, then we need to recursively split $L′$ using $k$ into $(L″,b,R″)$ and then form the result $(L″,b,join \ R″ \ r \ R)$. The remaining case is symmetric.
 
 Using these two helper functions, we can implement the ADT operations. I hope you will agree, once you complete this task, that it is is not challenging, in the sense that there are clever ideas used. It’s just a matter of using the tools at hand.
 
@@ -137,6 +141,7 @@ module type bst_deriv = sig
   end
 
   module BSTDeriv (I : bst_impl) : (bst_deriv with module BSTImpl = I)
+
 ```
 
 The `unwrap` function exposes the tree structure by providing the root value and left and right subtrees; this will be useful to you in writing some of the derived functions in a generic fashion, and you can also use it for white-box testing.
@@ -163,9 +168,9 @@ We can think of this number as a real number uniformly distributed over the inte
 
 Perhaps the brilliance of this choice cannot be fully appreciated until one has tried to analyze a randomized algorithm. The issue is that it is relatively easy to deal with independent random variables, but not so easy to deal with dependent ones. A randomized algorithm is deterministic most of the time, but at some point it generates a random value (say, it flips a coin). Presumably it acts on this value, otherwise there would be no point in the flip. So in the two computational paths that result from the first flip, different things are done. An analysis of the running time will need to consider how many steps are taken in various tasks within the algorithm. Those measurements become random variables, but the random variables are not independent; they may depend on the outcomes of the same coin flip. And that dependency is hard to deal with.
 
-The definition of two events $E1$ and $E2$ being independent is if $Pr[E1 and E2]=(Pr[E1])(Pr[E2])$. Consider the following simple example. You flip a coin some large odd number of times $n$, and count the heads and tails. Intuitively, the probability of the number of heads being much larger than the number of tails is very low, and this can be proved. Now you ask a friend to repeat the experiment, but your friend is lazy. They just flip a coin once and then say that all the other flips produce the same outcome.
+The definition of two events $E_{1}$ and $E_{2}$ being independent is if $\Pr[E_{1} \ and \ E_{2}]=(\Pr[E_{1}])(\Pr[E_{2}])$. Consider the following simple example. You flip a coin some large odd number of times $n$, and count the heads and tails. Intuitively, the probability of the number of heads being much larger than the number of tails is very low, and this can be proved. Now you ask a friend to repeat the experiment, but your friend is lazy. They just flip a coin once and then say that all the other flips produce the same outcome.
 
-Your first flip and your second flip are independent. But your friend’s reported first flip and their reported second flip are not independent; they are dependent. The probability that both are heads is not $\frac{1}{4}$; it is $\frac{1}{2}$. This is true despite the fact that the reported second flip, by itself, looks like a legitimate coin flip: it is heads with probability 1/2 and tails with probability $\frac{1}{2}$. Because of the dependency, the probability that the number of heads is much larger than the number of tails is not low for your friend’s experiment; it is $\frac{1}{2}$.
+Your first flip and your second flip are independent. But your friend’s reported first flip and their reported second flip are not independent; they are dependent. The probability that both are heads is not $\sfrac{1}{4}$; it is $\sfrac{1}{2}$. This is true despite the fact that the reported second flip, by itself, looks like a legitimate coin flip: it is heads with probability $\sfrac{1}{2}$ and tails with probability $\sfrac{1}{2}$. Because of the dependency, the probability that the number of heads is much larger than the number of tails is not low for your friend’s experiment; it is $\sfrac{1}{2}$.
 
 In general, if we want to say something about the state of a randomized algorithm partway through its work, that will depend on the history of how it got to where it is. In the case of data structures that employ randomization, the sequence of operations usually has to be taken into account. But that is not the case for treaps. The uniqueness property ensures that history does not matter; the tree is determined entirely by the set of keys and their associated priorities. This simplifies the analysis.
 
@@ -185,31 +190,33 @@ Treaps are quite elegant, but not often used in practice. One reason seems to be
 
 The weaker result I said I would prove about treaps requires only a few basic facts about probability, but it still should be considered optional reading, especially if you have had little or no exposure to probability.
 
-The expectation of a random variable is its average, weighted by probability. If the random variable $X$ can take on values from some domain $\mathcal{D}$, then its expectation $E[X]$ is defined as $\sum_{v \in \mathcal{D}}{v Pr[X=v]}$. (The sum is replaced by an integral if real numbers are involved.) For example, if you win a dollar if a fair flipped coin turns up heads, and nothing if it turns up tails, your expected win is half a dollar, since 0($\frac{1}{2}$)+1($\frac{1}{2}$)=$\frac{1}{2}$. The key fact we will need about expectations is that they add, that is, for two random variables $X$ and $Y$, $E[X+Y]=E[X]+E[Y]$. This is just an exercise in rearranging summations (or integrals), and it holds for any two random variables, regardless of whether or not they are independent.
+The expectation of a random variable is its average, weighted by probability. If the random variable $X$ can take on values from some domain $\mathcal{D}$, then its expectation $E[X]$ is defined as $\sum_{v \in \mathcal{D}}{v \ \Pr[X=v]}$. (The sum is replaced by an integral if real numbers are involved.) For example, if you win a dollar if a fair flipped coin turns up heads, and nothing if it turns up tails, your expected win is half a dollar, since 0($\sfrac{1}{2}$)+1($\sfrac{1}{2}$)=$\sfrac{1}{2}$. The key fact we will need about expectations is that they add, that is, for two random variables $X$ and $Y$, $\mathbb{E}[X+Y]=\mathbb{E}[X]+\mathbb{E}[Y]$. This is just an exercise in rearranging summations (or integrals), and it holds for any two random variables, regardless of whether or not they are independent.
 
 Since it is only the relative ordering of the keys that is important, let’s assume the keys are are $0$ through $n−1$. This makes the notation simpler. The priorities are still chosen by independent samples of the uniform distribution over $[0,1]$.
 
-> ** Treap Depth Lemma **
-> The expected depth of $j$ in a treap is $H_{j+1}+H{n−j}−2$, where $H_{k}=\sum^{k}_{d=1}{}(\frac{1}{d})^{k} (these are often called "harmonic numbers").
+> **Treap Depth Lemma**
+>
+> The expected depth of $j$ in a treap is $H_{j+1}+H{n−j}−2$, where $H_{k}=\sum^{k}_{d=1}(\sfrac{1}{d})^{k}$ (these are often called "harmonic numbers").
 
-This is a messy expression, but we can bound $H_{k}$ above by $\lceil \log_{2} k \rceil$, since $H_{k} \leq \sum^{\lceil \log_{2} k \rceil}_{i=0} \sum^{2^{i}}_{j=1}(\frac{1}{2^{i}}) \lew \sum^{\lceil \log_{2} k \rceil}_{i=0}1=\lceil \log_{2} k \rceil$. (A more careful analysis improves the base of the logarithm to $e$, that is, $H_{k}$ is close to $\ln k$ for large $k$.) So if we can prove the Treap Depth Lemma, we can say that the expected depth of a particular key in a treap with $n$ nodes is $\mathcal{O}(\log n)$. Proving it requires the following result.
+This is a messy expression, but we can bound $H_{k}$ above by $\lceil \log_{2} k \rceil$, since $H_{k} \leq \sum^{\lceil \log_{2} k \rceil}_{i=0} \sum^{2^{i}}_{j=1}(\sfrac{1}{2^{i}}) \leq \sum^{\lceil \log_{2} k \rceil}_{i=0}1=\lceil \log_{2} k \rceil$. (A more careful analysis improves the base of the logarithm to $e$, that is, $H_{k}$ is close to $\ln k$ for large $k$.) So if we can prove the Treap Depth Lemma, we can say that the expected depth of a particular key in a treap with $n$ nodes is $\mathcal{O}(\log n)$. Proving it requires the following result.
 
-> ** Treap Ancestor Lemma **
-> $i$ is an ancestor of $j$ (for $i \lt j$) in a treap if and only if the priority of $i$ is smaller than the priorities of ${i+1, \ldots, j}$.
+> **Treap Ancestor Lemma**
+>
+> $i$ is an ancestor of $j$ (for $i < j$ ) in a treap if and only if the priority of $i$ is smaller than the priorities of ${i+1, \ldots, j}$.
 
-We prove the Treap Ancestor Lemma by induction on the size of the treap. Let $r$ be the root of the treap. If $i=r$, then all $j$ such that $i \lt j$ are descendants, and they all have have greater priority, so the statement holds. If $j=r$, then no $i$ such that $i \lt j$ are ancestors, and they all have greater priority, so the statement holds. If $i$ is in the left subtree of $r$ and $j$ is in the right subtree of $r$, then $i \lt r \lt j$, there is no ancestor relationship between $i$ and $j$, and $r$ has smaller priority than $i$, so the statement holds. Finally, if $i$ and $j$ are in the same subtree of $r$, we apply the induction hypothesis.
+We prove the Treap Ancestor Lemma by induction on the size of the treap. Let $r$ be the root of the treap. If $i=r$, then all $j$ such that $i < j$ are descendants, and they all have have greater priority, so the statement holds. If $j=r$, then no $i$ such that $i < j$ are ancestors, and they all have greater priority, so the statement holds. If $i$ is in the left subtree of $r$ and $j$ is in the right subtree of $r$, then $i < r < j$, there is no ancestor relationship between $i$ and $j$, and $r$ has smaller priority than $i$, so the statement holds. Finally, if $i$ and $j$ are in the same subtree of $r$, we apply the induction hypothesis.
 
-Having proved the Treap Ancestor Lemma, how do we prove the Treap Depth Lemma? Since the priorities are independent and identically distributed, the probability that $i$ (where $i \gt j$) is an ancestor of $j$ in a treap is $\frac{1}{(i−j+1)}$, since this is the probability that $i$ has the smallest priority in the set ${i, \ldots, j}$.
+Having proved the Treap Ancestor Lemma, how do we prove the Treap Depth Lemma? Since the priorities are independent and identically distributed, the probability that $i$ (where $i > j$) is an ancestor of $j$ in a treap is $\frac{1}{(i−j+1)}$, since this is the probability that $i$ has the smallest priority in the set ${i, \ldots, j}$.
 
-We define $I_{i,j}$ to be $1$ if $i$ is an ancestor of $j$ and $0$ otherwise. (This is known as an indicator variable.) Then the depth of $j$ is $\sum_{i \neq j}I_{i,j}$. From the observation in the previous paragraph, the expected value of $I_{i,j}$ is $\frac{1}{(\mid j−i \mid +1)}$.
+We define $I_{i,j}$ to be $1$ if $i$ is an ancestor of $j$ and $0$ otherwise. (This is known as an indicator variable.) Then the depth of $j$ is $\sum_{i \neq j}I_{i,j}$. From the observation in the previous paragraph, the expected value of $I_{i,j}$ is $\frac{1}{(\lvert j−i \rvert +1)}$.
 
-So the expected depth of $j$ is $\sum_{i≠j}{({1}{(\mid j−i \mid +1)})}$, which is $H_{j}+1+H_{n−j}−2$. Here we are using the fact that the expectation of a sum is the sum of the expectations, and then splitting the sum into the two cases $i \lt j$ and $i \gt j$. That proves the Treap Depth Lemma, and its corollary that the expected depth of a particular key in a treap with $n$ nodes is $\mathcal{O}(\log n)$.
+So the expected depth of $j$ is $\sum_{i \neq j}{({1}{(\lvert j−i \rvert +1)})}$, which is $H_{j}+1+H_{n−j}−2$. Here we are using the fact that the expectation of a sum is the sum of the expectations, and then splitting the sum into the two cases $i < j$ and $i > j$. That proves the Treap Depth Lemma, and its corollary that the expected depth of a particular key in a treap with $n$ nodes is $\mathcal{O}(\log n)$.
 
-How do we show that this holds with high probability and not just in expectation? The Treap Ancestor Lemma shows that if we fix $i$, the set of indicator variables $I_{i,j}$ for $j \gt i$ are independent, and similarly the set $I_{j,i}$ for $j \lt i$. We can then apply bounds known as **Chernoff bounds** to the sum in the Treap Depth Lemma which bounds the depth of a node.
+How do we show that this holds with high probability and not just in expectation? The Treap Ancestor Lemma shows that if we fix $i$, the set of indicator variables $I_{i,j}$ for $j > i$ are independent, and similarly the set $I_{j,i}$ for $j < i$. We can then apply bounds known as **Chernoff bounds** to the sum in the Treap Depth Lemma which bounds the depth of a node.
 
 A Chernoff bound applies to the sum of independent, identically-distributed random variables. For example, we could use one to be precise about our intuition that in our coin-flipping experiment, the difference of the number of heads and tails will not deviate too far from zero, with high probability. Chernoff bounds are commonly used in the analysis of randomized algorithms.
 
-The fact that the depth of a given node is $\mathcal{O}(\log n)$ with high probability allows us to show that the height of a treap (the maximum depth over all nodes) is $\mathcal{O}(\log n)$ with high probability. We could not do this with just our work on expectations, as $E[\max{X_{i}}]$ is not necessarily $\max{E[X_{i}]}$.
+The fact that the depth of a given node is $\mathcal{O}(\log n)$ with high probability allows us to show that the height of a treap (the maximum depth over all nodes) is $\mathcal{O}(\log n)$ with high probability. We could not do this with just our work on expectations, as $\mathcal{E}[\max{X_{i}}]$ is not necessarily $\max{\mathcal{E}[X_{i}]}$.
 
 Lookup of a key that is in the treap takes time proportional to the depth of the key, which is $\mathcal{O}(\log n)$ (in expectation and with high probability). What about a key that is not in the treap? Continuing with the above notation for keys, a search for a key less than 0 terminates at 0, and a search for a key greater than $n−1$ terminates at $n−1$. A search for a key in $(k,k+1)$ terminates either at $k$ or $k+1$, and the max of these is bounded by twice the sum, so this is also $\mathcal{O}(\log n)$ with high probability.
 
@@ -225,21 +232,21 @@ A `split` with key $k$ behaves like a search for $k$ (whether successful or unsu
 
 The set operations are more complicated to analyze. We will not achieve logarithmic time, and it’s important to understand why, which is that we can’t hope for this while using BSTs. Consider taking the union of two sets of size $n$ and $m$ respectively, where $m \leq n$. Since we are using BSTs, we can recover sorted order for each set separately with no further comparisons, and sorted order for their union (once it is computed) with no further comparisons. What does this say about the number of comparisons needed to do the union?
 
-If all keys are distinct, we can describe the sorted order of the union by specifying which $m$ positions out of $n+m$ are occupied by keys from the smaller set. Thus there are $\left( \begin{array}{c} n+m w\\ m \end{array} \right)$ possibilities. The same argument we used for the lower bound for comparison-based sorting tells us we have to do at least $\log_{2} \left( \begin{array}{c} n+m w\\ m \end{array} \right)$ comparisons, which is at least $\log_{2}(\frac{n}{m}+1)^{m}$, which is at least $m \log_{2}(\frac{n}{m}+1)$.
+If all keys are distinct, we can describe the sorted order of the union by specifying which $m$ positions out of $n+m$ are occupied by keys from the smaller set. Thus there are $\left( \begin{smallmatrix} n+m\\ m \end{smallmatrix} \right)$ possibilities. The same argument we used for the lower bound for comparison-based sorting tells us we have to do at least $\log_{2} \left( \begin{smallmatrix} n+m\\ m \end{smallmatrix} \right)$ comparisons, which is at least $\log_{2}(\frac{n}{m}+1)^{m}$, which is at least $m \log_{2}(\frac{n}{m}+1)$.
 
-So we can’t hope to do better than this. Fortunately, the generic version of union, when used with the specific join for treaps, takes $\mathcal{O}(m \log(\frac{n}{m}+1))$ expected time. The analysis is quite complicated, and there are no known corresponding "with high probability" results. The same time bounds hold for worst-case analysis of the set operations for the other three implementations below.
+So we can’t hope to do better than this. Fortunately, the generic version of union, when used with the specific join for treaps, takes $\mathcal{O}(m \log(\sfrac{n}{m}+1))$ expected time. The analysis is quite complicated, and there are no known corresponding "with high probability" results. The same time bounds hold for worst-case analysis of the set operations for the other three implementations below.
 
-If we just take the elements of the smaller treap and insert them one at a time into the larger treap, we could achieve $\mathcal{O}(m \log n)$ time. But when $m$ is about equal to $n$, $O(m \log(\frac{n}{m}+1))$ is better, as it is linear in the number of keys. At the other extreme, when $m$ is one, this analysis suggests that generic union takes $\mathcal{O}(\log n)$ time, which is comparable to generic `insert`.
+If we just take the elements of the smaller treap and insert them one at a time into the larger treap, we could achieve $\mathcal{O}(m \log n)$ time. But when $m$ is about equal to $n$, $O(m \log(\sfrac{n}{m}+1))$ is better, as it is linear in the number of keys. At the other extreme, when $m$ is one, this analysis suggests that generic union takes $\mathcal{O}(\log n)$ time, which is comparable to generic `insert`.
 
 Although the analysis of `union` is too complicated to be done completely here, I can sketch the intuition behind it.
 
-`union` takes the root of the second tree and uses its key to split the first tree. The recursive calls to `union` then split the left and right pieces of the first tree with the left and right children of the root of the second tree. Eventually all keys of the second tree are used to split the first tree. If the second tree is smaller, then the splitting produces $m+1$ pieces. Let’s assume that the second tree is perfect and the pieces have size $n{i} \gt 1$. If we assume that the cost of one split is $\log n_{i}$, then the total cost is $\sum_{i} \log n_{i}$. Since $\log n_{i}+\log n_{j} leq \log \frac{n_{i}+n_{j}}{2}$ (you should be able to prove this), this sum is greatest when the $n_{i}$ are equal, that is, when they are about $\frac{n}{m}$, making the total cost something like $O(m \log \frac{n}{m})$.
+`union` takes the root of the second tree and uses its key to split the first tree. The recursive calls to `union` then split the left and right pieces of the first tree with the left and right children of the root of the second tree. Eventually all keys of the second tree are used to split the first tree. If the second tree is smaller, then the splitting produces $m+1$ pieces. Let’s assume that the second tree is perfect and the pieces have size $n{i} > 1$. If we assume that the cost of one split is $\log n_{i}$, then the total cost is $\sum_{i} \log n_{i}$. Since $\log n_{i}+\log n_{j} \leq \log \frac{n_{i}+n_{j}}{2}$ (you should be able to prove this), this sum is greatest when the $n_{i}$ are equal, that is, when they are about $\sfrac{n}{m}$, making the total cost something like $O(m \log \sfrac{n}{m})$.
 
 But the cost of one split is not $\log n_{i}$. It is one more than this for the splits done with the leaves of the second tree, two more for their parents, and so on. The cost we neglected is like the cost of linear-time heapify on Braun heaps or array-based heaps. If we heapify $m$ elements, there is one meld costing $\log m$, two costing $(\log m)−1$, and so on, and the sum is $\mathcal{O}(m)$. The same idea shows that the cost we neglected was $\mathcal{O}(m)$.
 
 The first tree is not necessarily going to be perfect, but it will have height $\mathcal{O}(\log m)$ with high probability, and the analysis above can be extended to that situation, with a bottom-up definition of layers to be added in the imperfect but balanced tree. We need the size of layers to be geometrically decreasing as we move up the tree, while the cost associated with a node in a layer is linearly increasing, as above. If the first tree is larger, there once again will be $m$ splits, because the smaller tree cannot be split more than that, and the recursion on the larger tree will be halted because of empty splits. So once again we have a sum like the one above.
 
-A similar analysis works for the cost of the joins done by **_union_**. By phrasing the accounting method in sufficiently general terms, the analysis can be made to work in expectation for treaps (because expectations add) and in the worst case for the other three implementations (because they guarantee logarithmic tree height, and we substitute height for logarithm of size in the above sketch). If you are interested in the details, you can consult the 2016 paper by Blelloch, Ferizovic, and Sun.
+A similar analysis works for the cost of the joins done by `union`. By phrasing the accounting method in sufficiently general terms, the analysis can be made to work in expectation for treaps (because expectations add) and in the worst case for the other three implementations (because they guarantee logarithmic tree height, and we substitute height for logarithm of size in the above sketch). If you are interested in the details, you can consult the 2016 paper by Blelloch, Ferizovic, and Sun.
 
 
 
@@ -263,7 +270,7 @@ let ex1 = qsort compare [3; 1; 2; 5; 4]
 ```
 
 
-Quicksort (1959), named by its author Tony Hoare, is not really quick. Its worst-case running time on $n$ elements is $\mathcal{O}(n^{2})$, and embarrassingly, one bad case is already-sorted data. But it is a sort that is easy to code, and for arrays it can be made to operate without any additional data storage. The name is somewhat redeemed by the facts that if the data is random (all permutations equally likely, as above), the running time is $O(\log n)$ with high probability, and this is also true of the running time on a fixed input if the pivot element is chosen uniformly at random from all possibilities, instead of always using the first element. We can derive both of these two facts from our treap analysis.
+Quicksort (1959), named by its author Tony Hoare, is not really quick. Its worst-case running time on $n$ elements is $\mathcal{O}(n^{2})$, and embarrassingly, one bad case is already-sorted data. But it is a sort that is easy to code, and for arrays it can be made to operate without any additional data storage. The name is somewhat redeemed by the facts that if the data is random (all permutations equally likely, as above), the running time is $\mathcal{O}(n \log n)$ with high probability, and this is also true of the running time on a fixed input if the pivot element is chosen uniformly at random from all possibilities, instead of always using the first element. We can derive both of these two facts from our treap analysis.
 
 Given data for quicksort, we can form the tree of recursive applications on nonempty data, where a node is labelled with the pivot element. If we form a random permutation of the elements as above, by assigning an independent random priority to each element in the treap manner and then sorting by increasing priority, the tree of recursive applications is exactly the treap (or the BST formed by insertions in order of priority). If we charge each element with its share of the cost needed to figure out where it goes in the partition, then the total cost assigned to an element is the depth in the treap. We know the height of the tree is $\mathcal{O}(\log n)$
 with high probability, so the sum of the depths is $\mathcal{O}(n \log n)$ with high probability, and the total cost of quicksort has the same bound. Alternately, if we pick the pivot element to be the element of minimum priority, then at each recursive application, the pivot is equally likely to be any element in the set under consideration (since the fact that some previously-chosen pivots had smaller priority than any element in the set does not favour one element over another), so this models the random-pivot idea, and again the running time has the same bound.
@@ -284,7 +291,7 @@ We saw in Chapter 2 that computing the height of a tree with $n$ nodes takes $\m
 
 We need to implement `join` for AVL trees, and analyze its running time. If the arguments to the join are $L$,$k$,$R$, and $L$ and $R$ have height within one of each other, then we just use the `Node` constructor. If this is not the case, then there is nontrivial work to do. In what follows, it will help while reading to draw some diagrams of your own. I will provide the most complicated ones.
 
-Assume $L$ is higher (the other case is symmetric). That is, $h(L) \gt h(R)+1$. We’re going to try to splice $k$ and $R$ in at a descendant of the root of $L$.
+Assume $L$ is higher (the other case is symmetric). That is, $h(L) > h(R)+1$. We’re going to try to splice $k$ and $R$ in at a descendant of the root of $L$.
 
 Where can that descendant be? $k$ and all the keys in $R$ are bigger than all the keys in $L$. So if we attach them "further down in $L$", it has to be all the way to the right. Using a recursive helper function, we descend rightward in $L$ until we reach a subtree $L′$ with $h(L′) \leq h(R)+1$.
 
@@ -320,21 +327,21 @@ Replacement followed by a double rotation gives a resulting tree where the new p
 
 To summarize the helper function: we head right in $L$ until we find a right subtree that can be paired with $R$ in an AVL tree (in the case where $L$ has greater height). That might cause a double rotation, in which case the work is done, or it might just increase the height when the right subtree is replaced. The increase in height might propagate up the tree and then disappear, or it might require a left single rotation to fix. That might propagate the height increase to the parent, and eventually it might reach the root (in which case the whole tree has grown in height).
 
-The cost of a join on $L$ and $R$ is $\mathcal{ O }(\max{h(L),h(R)})$. If the result has $n$ nodes, this is $\mathcal{O}(\log n)$. However, this analysis will not let us conclude that `split` takes logarithmic time. It sufficed for treaps because we could show that the joins done by `split` were all constant time. But this may not be the case for AVL trees. We need to be more careful about the cost of a join.
+The cost of a join on $L$ and $R$ is $\mathcal{O}(\max{h(L),h(R)})$. If the result has $n$ nodes, this is $\mathcal{O}(\log n)$. However, this analysis will not let us conclude that `split` takes logarithmic time. It sufficed for treaps because we could show that the joins done by `split` were all constant time. But this may not be the case for AVL trees. We need to be more careful about the cost of a join.
 
-The more careful statement, which should be clear from the above discussion is this: The cost of a join on $L$ and $R$ is $\mathcal{ O }(max{|1,h(L)−h(R)|})$, and the resulting tree either has height $\max{h(L),h(R)}$ or one more than this. This statement will also be true for the remaining two implementations (with a suitable redefinition of $h$), allowing us to reuse this analysis later on. For simplicity, we’ll take off the $\mathcal{ O }()$ brackets in the cost of a join (instead of carrying along the hidden constant in our calculations).
+The more careful statement, which should be clear from the above discussion is this: The cost of a join on $L$ and $R$ is $\mathcal{O}(max{ \lvert 1,h(L)−h(R) \rvert })$, and the resulting tree either has height $\max{h(L),h(R)}$ or one more than this. This statement will also be true for the remaining two implementations (with a suitable redefinition of $h$), allowing us to reuse this analysis later on. For simplicity, we’ll take off the $\mathcal{O}()$ brackets in the cost of a join (instead of carrying along the hidden constant in our calculations).
 
 Now we can analyze `split`. Recall that this operation splits a tree $T$ into $L$ and $R$ given a key $k$ (which may or may not be in the tree). It recursively splits the left or right subtree (depending on the comparison of $k$ and the root key) and then joins the appropriate part of the result with the subtree not recursed upon. We need to bound the work done by the joins. We can show by induction on the height of the tree that the cost is bounded above by $h(L)+h(R)+h(T)$, and that both $h(L)$ and $h(R)$ are bounded by $h(T)$. This gives us time $\mathcal{O}(\log n)$ to split a tree with $n$ nodes.
 
-Consider a recursive split on the left subtree T_{ L }. It produces $L′$ and $R′$ with cost bounded above by $h(L′)+h(R′)+h(T_{ L })$ and $h(L′) \leq h(T_{ L })$ and $h(R′) \leq h(T_{ L })$ by the inductive hypothesis. The result $L$ is $L′$, and the result $R$ is the join of $R′$ and T_{ R }, at cost $\mathcal{ O }(\max{ \mid 1,h(R′)−h(T_{ R }) \mid })$.
+Consider a recursive split on the left subtree T_{L}. It produces $L′$ and $R′$ with cost bounded above by $h(L′)+h(R′)+h(T_{L})$ and $h(L′) \leq h(T_{L})$ and $h(R′) \leq h(T_{L})$ by the inductive hypothesis. The result $L$ is $L′$, and the result $R$ is the join of $R′$ and T_{R}, at cost $\mathcal{O}(\max{ \lvert 1,h(R′)−h(T_{R}) \rvert })$.
 
-If the cost of the join is the 1 term in the maximum, then $h(R′)=h(T_{ R })$, and $h(R)$ is either the same or one more. Thus the total cost is $h(L′)+h(R′)+h(T_{ L })+1 \leq h(L)+h(R)+h(T)$.
+If the cost of the join is the 1 term in the maximum, then $h(R′)=h(T_{R})$, and $h(R)$ is either the same or one more. Thus the total cost is $h(L′)+h(R′)+h(T_{L})+1 \leq h(L)+h(R)+h(T)$.
 
-If the cost of the join is $h(R′)−h(T_{ R })$, then since $h(R′) \leq h(T_{ L })$ by the induction hypothesis, and $h(T_{L})−h(T_{R}) \leq 1$ because this is an AVL tree. So the cost of the join is 1 and $h(R)$ is either $h(R′)$ or one more. Thus the total cost is $h(L′)+h(R′)+h(T_{L})+1 \leq h(L)+h(R)+h(T)$.
+If the cost of the join is $h(R′)−h(T_{R})$, then since $h(R′) \leq h(T_{L})$ by the induction hypothesis, and $h(T_{L})−h(T_{R}) \leq 1$ because this is an AVL tree. So the cost of the join is 1 and $h(R)$ is either $h(R′)$ or one more. Thus the total cost is $h(L′)+h(R′)+h(T_{L})+1 \leq h(L)+h(R)+h(T)$.
 
 If the cost of the join is $h(T_{R})−h(R′)$, then $h(R)$ is either $h(T_{R})$ or one more. Thus the total cost is $h(L′)+h(R′)+h(T_{L})+h(T_{R})−h(R′) \leq h(L)+h(T_{R})+h(T_{L})≤h(L)+h(R)+h(T)$.
 
-That concludes the inductive step for a left recursion; the right recursion is symmetric, giving us our desired cost bound. This same analysis will work for the next two versions of balanced BSTs, so we have less to cover as we proceed. We can also reuse the analysis of set operations for treaps, which I sketched above, to get worst-case running times of $\mathcal{O}(m \log(\frac{ n }{ m }+1))$.
+That concludes the inductive step for a left recursion; the right recursion is symmetric, giving us our desired cost bound. This same analysis will work for the next two versions of balanced BSTs, so we have less to cover as we proceed. We can also reuse the analysis of set operations for treaps, which I sketched above, to get worst-case running times of $\mathcal{O}(m \log(\frac{n}{m}+1))$.
 
 A conventional presentation of AVL trees focussing on `insert` and `delete` can use the same rebalancing function for both (making use of single and double rotations as we have done here), which is not the case for the next two variations. This, combined with a relatively intuitive balance condition that is easy to reason about, makes it a popular choice for data structures courses.
 
@@ -357,11 +364,11 @@ As before, write a is_avl function that runs in linear time. You might wish to u
 
 ### Weight-balanced trees
 
-I will just sketch the ideas in this section, for reasons that will become evident. Weight-balanced trees (WBTs) can be thought of as relaxing the Braun tree condition that the two subtrees have size differing by at most one. Intuitively, think of the weight as the size. The WBT invariant or balance condition is that each subtree has weight no more than $\delta$ times the weight of its sibling tree, for a fixed constant $\delta \gt 1$ to be chosen later.
+I will just sketch the ideas in this section, for reasons that will become evident. Weight-balanced trees (WBTs) can be thought of as relaxing the Braun tree condition that the two subtrees have size differing by at most one. Intuitively, think of the weight as the size. The WBT invariant or balance condition is that each subtree has weight no more than $\delta$ times the weight of its sibling tree, for a fixed constant $\delta > 1$ to be chosen later.
 
 The case of trees of size 2 (with one empty subtree) is awkward; one solution is to take the weight to be the size plus one, and another is to handle an empty subtree as a special case. Both solutions complicate the correctness proof.
 
-The recurrence for the maximum height of a WBT as a function of size resembles $\mathbb{T}(n)=\mathbb{ T }((1− \frac{ 1 }{\delta})n)+1$, which for $\delta \gt 1$ has the solution \mathbb{T}(n)=\mathcal{O}(\log n).
+The recurrence for the maximum height of a WBT as a function of size resembles ${T}(n)={ T }((1− \frac{1}{\delta})n)+1$, which for $\delta > 1$ has the solution $T(n)=\mathcal{O}(\log n)$.
 
 The balance condition for AVL trees is that the heights of the two subtrees are within 1 of each other. The WBT balance condition is expressed in terms of weight, but if we take logarithms, the logarithms of the weights of the two subtrees are within a constant additive factor of each other.
 
@@ -390,14 +397,14 @@ Bayer worked in this setting around 1970, both with small bounds on the number o
 A **3-node** contains two keys and has three children.
 
 
-![](assets/3-node.png)
+![A 3-node 2-3-4 tree.](assets/3-node.png){ height=100px }
 
 
 The left subtree of a 3-node contains keys less than the first root key; the middle subtree contains keys between the first and second root keys; and the right subtree contains keys greater than the second root key.
 
 A **4-node** contains three keys and has four children, with the same sort of relationship among keys and children.
 
-![](assets/4-node.png)
+![A 4-node 2-3-4 tree.](assets/4-node.png){ height=100px }
 
 
 Since all leaves are at the same depth and every internal node has at least two children, it is not hard to show that the height of a 2-3-4 tree with $n$ keys is $\mathcal{O}(\log n)$ (the worst case is a perfect tree). The lookup procedure for 2-3-4 trees is messier than for binary trees, but there are no new ideas, just more cases.
@@ -407,13 +414,13 @@ Naive insertion into a binary search tree replaces an empty leaf with a node con
 This sounds nice, but actually coding it results in a number of annoying special cases, and deletion is worse. It gets better with an encoding, described by Guibas and Sedgewick, that simulates a 2-3-4 tree by a binary search tree with additional information. In a **red-black** binary search tree, each node is coloured either red or black. Here is the translation from a 3-node into a black node with a red child.
 
 
-![](assets/3-node-translation.png)
+![Translation from a 3‐node into a black node with a red child.](assets/3-node-translation.png){ height=125px }
 
 
 A symmetric translation is also possible, allowing us more flexibility. Here is the translation of a 4-node.
 
 
-![](assets/4-node-translation.png)
+![Translation from a 4‐node into a black node with red child nodes.](assets/4-node-translation.png){ height=125px }
 
 
 We see that in such a translation, no red node has a red child. It is also the case that the root is black, but we will relax this requirement, as it is not essential for correctness, and the flexibility helps to extend the previous analysis for union in this framework to this variant.
@@ -429,13 +436,13 @@ In the remaining cases, one tree has greater black height. As before, we assume 
 But the root of $R$ could be coloured red, or the parent $p$ of the replacement could be red. If the parent $p$ of the replacement is black but the root of $R$ is red, we recolour the root of $R$ black and do a single left rotation. This does not change the black depth of any node.
 
 
-![](assets/RB-single.png)
+![Single Left Rotation.](assets/RB-single.png){ height=125px }
 
 
 If $p$ is red, then its parent $g$ must be black. We recolour $k$ as black and do a single left rotation. Again, this does not change the black depth of any node.
 
 
-![](assets/RB-single2.png)
+![Single Left Rotation.](assets/RB-single2.png){ height=125px }
 
 
 The rotation results in the new parent being red, so the same logic needs to be used higher up. In other words, when a result is produced by the recursion down the right spine, we are replacing the left subtree recursed upon with the result of the recursion, but if the right child of the result of the recursion is red and its right child is also red, we recolour the second of these two black and do a single left rotation. There is nothing to rotate with when we reach the top, but in this case, if there is a red root with a red right child, we just colour the root black.
@@ -452,7 +459,7 @@ Red-black trees are the basis of the Map and Set implementations in the C++ STL 
 
 **Exercise 38**: Implement `join` for red-black trees, using the following datatype.
 
-```
+```ocaml
 type colour = Red | Black
 
 type 'a rb_tree =
@@ -469,7 +476,7 @@ $\blacksquare$
 
 **Extended Exercise 39**: The simplest non-binary tree is a one-two tree (OTT). It uses a definition like the following:
 
-```
+```ocaml
 type 'a ott =
   | Empty
   | One of 'a ott
@@ -485,7 +492,7 @@ Your task is to implement `insert` for OTTs, working out all the details of the 
 
 To facilitate implementation, we will add to the above datatype definition. Two constructors can be added for temporary use, `New` and `Three`. You don’t have to use either or both of them, but using them properly can reduce cases, and can be convenient when dealing with intermediate results which otherwise would have to be put into a tuple or added parameters.
 
-```
+```ocaml
 type 'a ott =
   | Empty
   | New of 'a
@@ -520,13 +527,13 @@ For simplicity, let’s consider the keys to be natural numbers, and once again 
 If you have been exposed to material on computer architecture, you know that memory addresses are treated as sequences of bits to be decomposed by hardware, and the size of memory means that memory accesses are much more expensive than other primitive machine operations. This suggests that we might ourselves consider decomposing keys into sequences of bits, as we did for an index into a sequence in Chapter 2. Let’s start with perfect binary trees with "yes" and "no" stored at the leaves, with navigation on the key in standard binary notation, least significant bit first. Here’s what the tree for the set ${1,4,5}$ would look like. (This set will be our running example.)
 
 
-![](assets/noyes.png)
+![Perfect binary trees with "yes" and "no" stored at the leaves.](assets/noyes.png)
 
 
 The number of leaves is between $M$ and $2M−1$, so the total size of the data structure is still $\mathcal{O}(M)$, and the lookup time is now $\mathcal{O}(\log M)$. We are going to try to preserve the lookup time while reducing the space cost. One obvious optimization is to get rid of trees full of "no". Every subtree with only "no" leaves can be replaced with a single "no" leaf. Here’s what our example set looks like with this optimization.
 
 
-![](assets/yes-nono.png)
+![Every subtree with only "no" leaves can be replaced with a single "no" leaf.](assets/yes-nono.png)
 
 
 The worst-case lookup time has not changed, but the space requirement has decreased. By how much? For a nonempty set, every "no" is the child of a node whose other child contains at least one "yes". In this fashion, we can associate every "no" with some "yes". How many "no"es can be associated with a given "yes"? At most one for each ancestor of that "yes". So the total space cost is now $\mathcal{O}(n \log M)$, where $n$ is the number of elements of the set.
@@ -534,7 +541,7 @@ The worst-case lookup time has not changed, but the space requirement has decrea
 The space used by the balanced binary search trees earlier in this chapter was $\mathcal{O}(n)$, so it would be nice if we could achieve that. We no longer have internal nodes all of whose associated leaves are "no". The new worst case is that all leaves are "no" except for one. When doing a lookup, if we reach a subtree with only one "yes" leaf, we can finish things off with a direct equality comparison of the search key and the leaf key. So we replace such a tree with a "yes" leaf containing the key value it represents. For our example set:
 
 
-![](assets/yes-and-key.png)
+![We replace such a tree with a "yes" leaf containing the key value it represents.](assets/yes-and-key.png)
 
 
 We would have to keep a copy of the original key in the lookup, rather than discarding low-order bits as we move down the tree. Alternately, we can store at the "yes" leaf the key value it represents with the appropriate low-order bits removed.
@@ -542,7 +549,7 @@ We would have to keep a copy of the original key in the lookup, rather than disc
 While this can result in some space improvement, the worst-case space cost is the same as before. It’s not hard to construct a tree with $\Omega(n)$ long paths to "yes" leaves that uses $\Omega(n \log M)$ space. The final optimization gets rid of those paths, which have many internal nodes with one "no" child. Since we are doing a final equality comparison at a "yes" leaf, we can afford to skip the navigation at these internal nodes even though it might let a failed lookup stop early. We store at each internal node the bit that is used for navigation at that node (represented as a power of 2). Here is the result for our example set.
 
 
-![](assets/only-keys.png)
+![We store at each internal node the bit that is used for navigation at that node (represented as a power of 2).](assets/only-keys.png)
 
 
 Now each leaf contains a unique key, so the space cost is $\mathcal{O}(n)$, while lookup is still $\mathcal{O}(\log M)$.

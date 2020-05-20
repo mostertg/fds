@@ -2,7 +2,7 @@
 # Tools and Techniques
 
 
-> ""*Why stay in college?* / *Why go to night school?* / *Gonna be different this time*"
+> *"Why stay in college? / Why go to night school? / Gonna be different this time"*
 >
 > Talking Heads, "Life During Wartime", Fear of Music, 1979
 
@@ -84,12 +84,11 @@ To be fair, this example is brought up to point out the abuse of notation, but t
 
 It’s not hard to figure out the correct formalism in this case. The term $\mathcal{O}(n)$ as used in this particular informal statement really means "$f(n)$, where $f$ is a function that is $\mathcal{O}(n)$". We know what it means to add two functions (pointwise addition), and the following theorem (whose proof is not difficult) can be used to give a formal meaning to the informal expression $\mathcal{O}(1)+\mathcal{O}(n)$ (for example).
 
-<!-- \begin{sum_th} -->
-<!-- \begin{theorem}[Sum Theorem] -->
+
 > **Sum Theorem**
-> If $\mathbb{T}_1(n)$ is $\mathcal{O}(f(n))$ and $\mathbb{T}_2(n)$ is $\mathcal{O}(g(n))$, then $T(n)=\mathbb{T}_1(n)+\mathbb{T}_2(n)$ is $\mathcal{O}(\max \{f(n),g(n) \})$.
-<!-- \end{sum_th} -->
-<!-- \end{theorem} -->
+>
+> If $T_1(n)$ is $\mathcal{O}(f(n))$ and $T_2(n)$ is $\mathcal{O}(g(n))$, then $T(n)=T_1(n)+T_2(n)$ is $\mathcal{O}(\max \{f(n),g(n) \})$.
+
 
 Note that the last expression applies max to two functions; as with addition, this is done pointwise. The conclusion of the informal statement can be justified by two applications of this theorem.
 
@@ -97,22 +96,20 @@ Why didn’t we just say $T(n)=\mathcal{O}(1+2n+3n^2)$? This statement is techni
 
 By convention, we don’t write leading constants inside $\mathcal{O}()$ brackets. We don’t write $\mathcal{O}(3n^2)$, we write $\mathcal{O}(n^2)$. This is justified by the following theorem.
 
-<!-- \begin{lead_const_th} -->
-<!-- \begin{theorem}[Leading Constant Theorem] -->
+
 > **Leading Constant Theorem** 
+>
 > For all constants $k$, if $T(n)$ is $\mathcal{O}(k f(n))$, \\
 > then $T(n)$ is $\mathcal{O}(f(n))$.
-<!-- \end{lead_const_th} -->
-<!-- \end{theorem} -->
+
 
 Also, by convention, we don’t write "small" terms inside $\mathcal{O}()$ brackets. We don’t write $\mathcal{O}(n^2+2n)$, we write $\mathcal{O}(n^2)$. The definition of "small", and the justification for this, is provided by the following theorem:
 
-<!-- \begin{small_stuff_th} -->
-<!-- \begin{theorem}[Small Stuff Theorem] -->
+
 > **Small Stuff Theorem**
+>
 > If $\lim\limits_{n \to \infty}\frac{f(n)}{g(n)}=0$ and $h(n)$ is $\mathcal{O}(f(n)+g(n))$, then $h(n)$ is $\mathcal{O}(g(n))$.
-<!-- \end{small_stuff_th} -->
-<!-- \end{theorem} -->
+
 
 Again, the proofs of these two theorems are relatively simple, provided you remember the definition of limit (which, conveniently, is similar to the definition of order notation). Limit notation makes it more clear that we are interested in what happens as $n$ gets large. We sometimes use the phrases "asymptotic behaviour" or "asymptotic analysis" to emphasize this.
 
@@ -167,23 +164,21 @@ The running time of algorithm $A$ is $\mathcal{O}(f(n))$ if and only if there ex
 
 It’s good to keep this definition in mind, but we don’t invoke it directly in doing algorithm analysis. Instead, we view imperative pseudocode as being composed of blocks of statements which are combined sequentially, or repeated using loops. Sequential execution can be dealt with by the following generalization of the sum theorem:
 
-<!-- \begin{seq_th} -->
-<!-- \begin{theorem}[Sequential Theorem] -->
-> ** Sequential Theorem**
+
+> **Sequential Theorem**
+>
 > If block $B_1$ has running time $\mathcal{O}(f(n))$, and block $B_2$ has running time $\mathcal{O}(g(n))$, then the program consisting of block $B_1$ followed by block $B_2$ has running time $\mathcal{O}(\max{f(n),g(n)})$.
-<!-- \end{seq_th} -->
-<!-- \end{theorem} -->
+
 
 The proof of this theorem is not difficult.
 
 What about loops? We can usually make do with the following:
 
-<!-- \begin{prod_th} -->
-<!-- \begin{theorem}[Product Theorem] -->
+
 > **Product Theorem**
+>
 > If block $B$ has running time $\mathcal{O}(f(n))$, then the program consisting of a loop with body $B$ has running time $\mathcal{O}(f(n)g(n))$, where the loop is executed $\mathcal{O}(g(n))$ times.
-<!-- \end{prod_th} -->
-<!-- \end{theorem} -->
+
 
 In some cases this overestimates the running time. For example, the loop may have only one expensive iteration and many cheap ones. In this case, we might want to be a little more careful about the analysis, expressing it in terms of adding up the cost of each iteration rather than multiplying the most expensive cost. Stating a general theorem to cover this case can be tricky because of the ordering of logical quantifiers. For example, the theorem above ensures a single constant $c$ in the expansion of $\mathcal{O}(f(n))$ for every iteration of the loop; we need something similar in the more general theorem. To avoid this awkwardness, we will avoid trying to state such a theorem, and instead (when such addition is needed) try to add things up carefully so as to not arrive at invalid conclusions.
 
@@ -199,7 +194,7 @@ I hope my point is clear. Algorithm analysis is not a tool for making definitive
 
 I would like to briefly introduce some notation related to $O$ -notation,which will be occasionally useful. Again, this may be review, depending on your past exposure. The definition of $\Omega$-notation looks a lot like the definition of $O$-notation, but with the inequality at the heart reversed:
 
-> *A function $f(n)$ is $\Omega(g(n))$ if there exist constants $c$ and $n_0$ such that for all $n \geq n_0$, $f(n) \geq c \cdot g(n)$.*
+> A function $f(n)$ is $\Omega(g(n))$ if there exist constants $c$ and $n_0$ such that for all $n \geq n_0$, $f(n) \geq c \cdot g(n)$.
 
 Informally, this means $f$ grows at least as fast as $g$, neglecting constants and small terms. As with $O$-notation, we will typically have $f$ be the worst-case running time of some algorithm. Since $\max_{I \in I_n}R(A,I) \geq m$ if and only there exists $I^{\prime} \in I_n$ such that $R(A,I^{\prime}) \geq m$, we arrive at the following definition:
 
@@ -229,7 +224,7 @@ We will rarely need pseudocode (it might show up for algorithms that are more im
 
 The idea behind insertion sort is that if we are given an already-sorted list, it is simple to insert an additional element. A list is either empty or it consists of a head element followed by the tail of the list (which is itself a list). This recursive definition of list can be used as a guide to writing code for insertion. Insertion into an empty list gives a one-element list. Insertion into a non-empty list has two subcases: when the head of the list is larger than the element being inserted, and when it is not. This leads to the following code.
 
-```{ocaml}
+```ocaml
 (* insertion into a sorted list *)
 
 let rec insert elem lst =
@@ -263,7 +258,7 @@ Whitespace is not significant the way it is in languages like Python and Haskell
 
 Now that we can insert into an already-sorted list, we can use the fact that the empty list is sorted, and repeatedly insert all the elements we wish to sort. Once again, we use structural recursion to do this.
 
-```{ocaml}
+```ocaml
 let rec isort lst =
   match lst with
   | [] -> []
@@ -273,14 +268,14 @@ let rec isort lst =
 
 We can add a line of code that applies isort to an example (which also serves to illustrate the syntax for list literals):
 
-```{ocaml}
+```ocaml
 let example1 = isort [2; 1; 3]
 
 ```
 
 In both our function, the body expression is a match on the last argument. This is common enough that OCaml provides special syntax for this situation. Here is an alternative phrasing of isort.
 
-```{ocaml}
+```ocaml
 let rec isort = function
   | [] -> []
   | hd :: tl -> insert hd (isort tl)
@@ -293,7 +288,7 @@ The OCaml installation includes a command-line interpreter (ocaml) and a couple 
 
 Loading the above code into the interpreter results in the following being displayed:
 
-```{ocaml}
+```ocaml
 val insert : 'a -> 'a list -> 'a list = <fun>
 val isort : 'a list -> 'a list = <fun>
 val example1 : int list = [1; 2; 3]
@@ -308,7 +303,7 @@ There were no explicit type annotations in our code. The interpreter computed th
 
 OCaml allows optional type annotations on any expression, on any function argument, and on the return type of a function. This can be useful in dealing with type errors (by forcing earlier and more accurate error messages) and as documentation. We could have written the first line of insert like this:
 
-```{ocaml}
+```ocaml
 let rec insert (elem : 'a) (lst : 'a list) : 'a list = ...
 
 ```
@@ -329,7 +324,7 @@ The idea of rewriting extends to user-defined functions. An application of such 
 
 As an example, consider the expression `insert 3 []`. It is rewritten in one step to:
 
-```{ocaml}
+```ocaml
 match[] with
 | [] -> [3]
 | hd :: tl -> if 3 < hd then 3 :: []
@@ -343,43 +338,43 @@ Counting steps in this model (imprecisely, using order notation) is a reasonable
 
 Now consider the expression `insert 4 [1; 2; 3]`. This is matched by the second pattern; the test in the `if` expression fails, and we arrive at the expression `1 :: insert 4 [2; 3]` in a constant number of steps. This would have been the case regardless of how long the list being inserted into was.
 
-We now have enough information to construct a recurrence relation describing the running time. If $\mathbb{T}_{insert}(n)$ is the running time for inserting into a list of length $n$, then:
+We now have enough information to construct a recurrence relation describing the running time. If $T_{insert}(n)$ is the running time for inserting into a list of length $n$, then:
 
 
 \begin{align*}
-\mathbb{T}_{insert}(0)&= c_0 \\
-\mathbb{T}_{insert}(n)&= \mathbb{T}_{insert}(n-1)+c_1
+T_{insert}(0)&= c_0 \\
+T_{insert}(n)&= T_{insert}(n-1)+c_1
 \end{align*}
 
 
-where $c_0$ and $c_1$ are the constants we discovered in the above reasoning (their exact value depends on the exact rewriting rules). Although there is a case where insert does not do a recursive application even though the second argument is nonempty, we pessimistically ("worst-case") assume that does not happen; this only increases $\mathbb{T}_{insert}$.
+where $c_0$ and $c_1$ are the constants we discovered in the above reasoning (their exact value depends on the exact rewriting rules). Although there is a case where insert does not do a recursive application even though the second argument is nonempty, we pessimistically ("worst-case") assume that does not happen; this only increases $T_{insert}$.
 
-It’s not hard to see that this recurrence has the solution $\mathbb{T}_{insert}(n)=c_{1}n+c_0$, and to prove it by induction on $n$ if anyone doubts it. Consequently, $\mathbb{T}_{insert}(n)=\mathcal{O}(n)$.
+It’s not hard to see that this recurrence has the solution $T_{insert}(n)=c_{1}n+c_0$, and to prove it by induction on $n$ if anyone doubts it. Consequently, $T_{insert}(n)=\mathcal{O}(n)$.
 
 There’s no need to name the constants and solve the recurrence only to bury the constants in order notation. We will instead, in further abuse of notation, write the recurrence this way:
 
 \begin{align*}
-\mathbb{T}_{insert}(0)&=\mathcal{O}(1) \\
-\mathbb{T}_{insert}(n)&=\mathbb{T}_{insert}(n-1)+\mathcal{O}(1)
+T_{insert}(0)&=\mathcal{O}(1) \\
+T_{insert}(n)&=T_{insert}(n-1)+\mathcal{O}(1)
 \end{align*}
 
-and assert the "solution" $\mathbb{T}_{insert}(n)=\mathcal{O}(n)$. As with the vagueness surrounding analysis of imperative code, we can fill in all the details if we need to.
+and assert the "solution" $T_{insert}(n)=\mathcal{O}(n)$. As with the vagueness surrounding analysis of imperative code, we can fill in all the details if we need to.
 
-I na similar fashion, we can define $\mathbb{T}_{isort}(n)$ as the running time for sorting a list of length $n$, and get this recurrence:
+I na similar fashion, we can define $T_{isort}(n)$ as the running time for sorting a list of length $n$, and get this recurrence:
 
 \begin{align*}
-\mathbb{T}_{isort}(0)&=\mathcal{O}(1) \\
-\mathbb{T}_{isort}(n)&=\mathbb{T}_{isort}(n-1)+\mathbb{T}_{insert}(n-1)
+T_{isort}(0)&=\mathcal{O}(1) \\
+T_{isort}(n)&=T_{isort}(n-1)+T_{insert}(n-1)
 \end{align*}
 
-Since we know $\mathbb{T}_{insert}(n)=\mathcal{O}(n)$, the following also holds:
+Since we know $T_{insert}(n)=\mathcal{O}(n)$, the following also holds:
 
 \begin{align*}
-\mathbb{T}_{isort}(0)&=\mathcal{O}(1) \\
-\mathbb{T}_{isort}(n)&=\mathbb{T}_{isort}(n-1)+\mathcal{O}(n)
+T_{isort}(0)&=\mathcal{O}(1) \\
+T_{isort}(n)&=T_{isort}(n-1)+\mathcal{O}(n)
 \end{align*}
 
-The solution to this recurrence is $\mathbb{T}_{isort}(n)=\mathcal{O}(n^2)$. This can be proved by induction on $n$ once the order notation has been replaced by explicit constants, as we saw with insert.
+The solution to this recurrence is $T_{isort}(n)=\mathcal{O}(n^2)$. This can be proved by induction on $n$ once the order notation has been replaced by explicit constants, as we saw with insert.
 
 Since there is an inequality at the heart of order notation, the statement "Insertion sort has running time $\mathcal{O}(n^3)$" is technically correct, though obviously misleading. It’s easy to see that the worst case for insert is when the element being inserted is greater than every element in the sorted list, and so the running time of insert is $\Omega(n)$ and therefore $\Theta(n)$. It’s not always as easy to prove an assertion about the worst case, but we don’t need the absolute worst case; we just need a bad enough case.
 
@@ -405,7 +400,7 @@ Sorting is a good source of examples when learning about algorithm analysis beca
 But since we are learning about algorithm analysis, let’s look at another sorting algorithm, namely mergesort. With insertion sort, we used a helper function that inserts one new element into an already sorted list. Mergesort generalizes this idea to use a helper function that merges two already sorted lists. If one of the lists is empty, the other is produced. If both are nonempty, their first elements are compared; the smaller one is the first element of the result, and the rest of the result is computed by recursively merging what remains. Here is the code.
 
 
-```{ocaml}
+```ocaml
 (* merging two sorted lists *)
 
 let rec merge lst1 lst2 =
@@ -431,7 +426,7 @@ As with lists, the syntax for constructing a pair coincides with the syntax for 
 
 Mergesort uses the `merge` helper function to sort by splitting its argument list into two lists of roughly equal length, recursively sorting both lists, and then merging the sorted results. The `split` helper function below produces the two lists in a pair by distributing the elements of its argument list as if dealing out a deck of cards between two players.
 
-```{ocaml}
+```ocaml
 (* splitting a list roughly in half *)
 
 let rec split = function
@@ -446,14 +441,14 @@ let rec split = function
 
 Here we see for the first time a `let-in` expression for local name binding. The general form is
 
-```{ocaml}
+```ocaml
 let pattern = expression in expression
 
 ```
 
 and the pattern can be as simple as a single name, which is bound to the value of the first expression and can be used in the second one. A let without an in-expression can be used at the `toplevel`, as we have been using `let rec`, to bind a name to a value without using recursion (that is, the name being bound is not in scope of the expression after the `=` sign).
 
-```{ocaml}
+```ocaml
 (* mergesort *)
 
 let rec msort = function
@@ -473,50 +468,50 @@ I could have replaced the last four lines of code with
 
 There is a slight technical problem in analyzing this algorithm. The running time of merge is a function of two variables, namely the size (length) of the two list arguments. But order notation deals with functions of one variable. Fortunately, the generalization is not difficult:
 
-> *A function $f(n,m)$ is $\mathcal{O}(g(n,m))$ if there exist constants $c$, $n_0$, and $m_0$ such that for all $n \geq n_0$ and $m \geq m_0$, $f(n,m) \leq c \cdot g(n,m)$.*
+> A function $f(n,m)$ is $\mathcal{O}(g(n,m))$ if there exist constants $c$, $n_0$, and $m_0$ such that for all $n \geq n_0$ and $m \geq m_0$, $f(n,m) \leq c \cdot g(n,m)$.
 
-If $\mathbb{T}_{merge}(n,m)$ is the running time of merge applied to lists of length $n$, $m$ respectively, then the code yields the following recurrence relation:
+If $T_{merge}(n,m)$ is the running time of merge applied to lists of length $n$, $m$ respectively, then the code yields the following recurrence relation:
 
 \begin{align*}
-\mathbb{T}_{merge}(0,m)&= \mathcal{O}(1) \\
-\mathbb{T}_{merge}(n,0)&= \mathcal{O}(1) \\
-\mathbb{T}_{merge}(n,m)&= \max \{T(n-1,m),T(n,m-1) \}+\mathcal{O}(1)
+T_{merge}(0,m)&= \mathcal{O}(1) \\
+T_{merge}(n,0)&= \mathcal{O}(1) \\
+T_{merge}(n,m)&= \max \{T(n-1,m),T(n,m-1) \}+\mathcal{O}(1)
 \end{align*}
 
-We can prove $\mathbb{T}_{merge}(n,m)$ is $\mathcal{O}(n+m)$. Intuitively, we are moving from the point $(n,m)$ to the x-axis $(n=0)$ or the y-axis $(m=0)$ by stepping either down or to the left, and each step costs us a constant amount. Formally, an induction on $s=n+m$ will work, after exposing constants.
+We can prove $T_{merge}(n,m)$ is $\mathcal{O}(n+m)$. Intuitively, we are moving from the point $(n,m)$ to the x-axis $(n=0)$ or the y-axis $(m=0)$ by stepping either down or to the left, and each step costs us a constant amount. Formally, an induction on $s=n+m$ will work, after exposing constants.
 
 We continue the analysis with `split`.
 
 \begin{align*}
-\mathbb{T}_{split}(0)&= \mathcal{O}(1) \\
-\mathbb{T}_{split}(1)&= \mathcal{O}(1) \\
-\mathbb{T}_{split}(n)&= \mathbb{T}_{split}(n-2)+\mathcal{O}(1)
+T_{split}(0)&= \mathcal{O}(1) \\
+T_{split}(1)&= \mathcal{O}(1) \\
+T_{split}(n)&= T_{split}(n-2)+\mathcal{O}(1)
 \end{align*}
 
 
-We can prove using induction on $n$ that $\mathbb{T}_{split}(n)$ is $\mathcal{O}(n)$. We can use strong induction, where to prove a property holds for $n$ for $n > 0$, the inductive hypothesis assumed is that the property holds for all $i < n$. The other form of induction, where the assumption is that the property holds for $n-1$, is called weak induction, and it is not a good fit for this recurrence.
+We can prove using induction on $n$ that $T_{split}(n)$ is $\mathcal{O}(n)$. We can use strong induction, where to prove a property holds for $n$ for $n > 0$, the inductive hypothesis assumed is that the property holds for all $i < n$. The other form of induction, where the assumption is that the property holds for $n-1$, is called weak induction, and it is not a good fit for this recurrence.
 
 Finally, for the main function, we are tempted to write:
 
 \begin{align*}
-\mathbb{T}_{msort}(0)&= \mathcal{O}(1) \\
-\mathbb{T}_{msort}(1)&= \mathcal{O}(1) \\
-\mathbb{T}_{msort}(n)&= 2\mathbb{T}_{msort}(n/2)+\mathcal{O}(n)
+T_{msort}(0)&= \mathcal{O}(1) \\
+T_{msort}(1)&= \mathcal{O}(1) \\
+T_{msort}(n)&= 2T_{msort}(n/2)+\mathcal{O}(n)
 \end{align*}
 
-This, however, assumes that when we split a list, we get two equal-sized pieces. This assumption only holds if $n$ is a power of 2, that is, $n=2^k$ for some natural number $k$. In this case, we can prove by weak induction on $k$ that $\mathbb{T}_{msort}(2^k)$ is $\mathcal{O}(k2^k)$. In terms of $n$, this is saying that $\mathbb{T}_{msort}(n)$ is $\mathcal{O}(n \log n)$. Intuitively, if we consider the tree of computations, there are $k$ levels (one node at the top, two nodes just below, four below that, and so on), and we are doing $\mathcal{O}(2^k)$ work on each level (the number of nodes doubles when we move down a level, but the instances are halved in size, so the total work remains about the same).
+This, however, assumes that when we split a list, we get two equal-sized pieces. This assumption only holds if $n$ is a power of 2, that is, $n=2^k$ for some natural number $k$. In this case, we can prove by weak induction on $k$ that $T_{msort}(2^k)$ is $\mathcal{O}(k2^k)$. In terms of $n$, this is saying that $T_{msort}(n)$ is $\mathcal{O}(n \log n)$. Intuitively, if we consider the tree of computations, there are $k$ levels (one node at the top, two nodes just below, four below that, and so on), and we are doing $\mathcal{O}(2^k)$ work on each level (the number of nodes doubles when we move down a level, but the instances are halved in size, so the total work remains about the same).
 
 However, when $n$ is not a power of 2, the code still works, but the recurrence is incorrect. If $n$ is odd, then splitting a list of length $n$ does not yield two lists of length $n/2$. We have to round up for one list and round down for the other. We can use the ceiling function ( $\lceil x \rceil$ is the smallest integer greater than or equal to $x$) and the floor function ($\lfloor x \rfloor$ is the largest integer less than or equal to $x$) for this.
 
 The correct recurrence is:
 
 \begin{align*}
-\mathbb{T}_{msort}(0)&= \mathcal{O}(1) \\
-\mathbb{T}_{msort}(1)&= \mathcal{O}(1) \\
-\mathbb{T}_{msort}(n)&= \mathbb{T}_{msort}(\lfloor n/2 \rfloor)+\mathbb{T}_{msort}(\lceil n/2 \rceil)+\mathcal{O}(n)
+T_{msort}(0)&= \mathcal{O}(1) \\
+T_{msort}(1)&= \mathcal{O}(1) \\
+T_{msort}(n)&= T_{msort}(\lfloor n/2 \rfloor)+T_{msort}(\lceil n/2 \rceil)+\mathcal{O}(n)
 \end{align*}
 
-This is trickier to deal with, for several reasons. Trying to prove that $\mathbb{T}_{msort}(n)$ is $\mathcal{O}(n \log n)$ by strong induction on $n$ requires us to prove an upper bound on expressions involving terms such as $log \lceil n/2 \rceil$. The ceiling function and the floor function do not have good algebraic properties, but we deal with integral quantities a lot in computer science, so these functions keep coming up. Replacing $\lceil x \rceil$ with $x+1$ (the easiest thing to do) is often too much of an increase and the upper bound cannot be proved. With more careful work, the proof can be made to go through, but it is discouraging to think of doing this for every new recurrence.
+This is trickier to deal with, for several reasons. Trying to prove that $T_{msort}(n)$ is $\mathcal{O}(n \log n)$ by strong induction on $n$ requires us to prove an upper bound on expressions involving terms such as $log \lceil n/2 \rceil$. The ceiling function and the floor function do not have good algebraic properties, but we deal with integral quantities a lot in computer science, so these functions keep coming up. Replacing $\lceil x \rceil$ with $x+1$ (the easiest thing to do) is often too much of an increase and the upper bound cannot be proved. With more careful work, the proof can be made to go through, but it is discouraging to think of doing this for every new recurrence.
 
 Many references describe a "Master Theorem" for the kind of recurrences that arise in algorithm analysis, but do not attempt to prove the theorem with floors and ceilings in place. One popular textbook that tries to take floors and ceilings more seriously in places still glosses over the details. The simplest reference I have seen that actually does the work properly is the Akra-Bazzi method, first described in a paper by Akra and Bazzi from 1998. There are good expositions available on the Web, written by Tom Leighton and Kurt Mehlhorn.
 
@@ -536,7 +531,7 @@ OCaml provides special syntax for lists, but also a more general method of const
 
 We have already seen how to define tuples, such as (3, "Three"). This tuple has type int * string. This is a product type (for Cartesian product). The other type constructor we need is for sum types. These are a principled version of C’s tagged unions. The alternatives are separated by a vertical bar, and tagged with a constructor name. The example below, implementing a version of lists, should make this clearer.
 
-```{ocaml}
+```ocaml
 type 'a mylist =
     Empty
   | Cons of 'a * 'a mylist
@@ -561,25 +556,25 @@ Constructor names must start with a capital letter (other names cannot), and we 
 
 An abstract data type (ADT) is a description of some type of data using mathematical notations, together with operations on that type. Lists can be thought of as the implementation of a Sequence ADT. Since our list implementations are immutable, so is the ADT, which makes it easier to describe, as mathematics typically works that way.
 
-We usually write a sequence of $k$ elements as $s_0,s_1, \dots, s_{k-1}$. We can define the Sequence ADT with the following operations.
+We usually write a sequence of $k$ elements as $s_0, s_1, \dots, s_{k-1}$. We can define the Sequence ADT with the following operations.
 
 _empty_ is a constant representing the empty sequence.
 
 _isEmpty_ is a Boolean function that consumes a sequence and produces true if and only if the sequence is empty.
 
-_extend_ consumes an element $e$ and a sequence $S$, and produces the sequence $e,S$.
+_extend_ consumes an element $e$ and a sequence $S$, and produces the sequence $e, S$.
 
-_first_ consumes a non-empty sequence $s_0,s_1, \dots s_{k-1}$ (thatis, $k \geq 1$), and produces the element $s_0$.
+_first_ consumes a non-empty sequence $s_0, s_1, \dots s_{k-1}$ (thatis, $k \geq 1$), and produces the element $s_0$.
 
-_rest_consumes a non-empty sequence $s0,s1, \dots, s_{k-1}$ (that is, $k \geq 1$), and produces the sequence $s_1, \dots s_{k-1}$.
+_rest_ consumes a non-empty sequence $s_0, s_1, \dots, s_{k-1}$ (that is, $k \geq 1$), and produces the sequence $s_1, \dots s_{k-1}$.
 
-_index_ consumes a natural number $i$ and a sequence $s_0,s_1,\dots s_{k-1}$ where $i < k$, and produces the element $s_i$.
+_index_ consumes a natural number $i$ and a sequence $s_0, s_1,\dots s_{k-1}$ where $i < k$, and produces the element $s_i$.
 
 The last three of these operations have preconditions on their use. What happens when the conditions are violated? We could raise an error, using OCaml exceptions, which work much as they do in other languages. But the compiler does not enforce the catching of exceptions.
 
 A simpler solution is to use an **option type**, which puts the type system to work for us. This is a principled alternative to the use of null in languages like Java and C++. The type `’a option` has two constructors: `None`, to indicate a value could not be provided, and `Some`, wrapping a value of type `’a`. This type is predefined, but could be constructed if it weren’t:
 
-```{ocaml}
+```ocaml
 type 'a option =
   | None
   | Some of 'a
@@ -594,7 +589,7 @@ To implement abstract data types, we will make use of OCaml’s module system, w
 
 If we wish to hide some bindings in a file, we can create an interface file (with extension `.mli`) which specifies the bindings that are exported. The interface permits abstraction to further hide some details of exported bindings. Here is a specification for an implementation of the Sequence ADT, which we can put in `sequence.mli`. In this specification, the type sequence is abstract.
 
-```{ocaml}
+```ocaml
 (* sequence.mli *)
 
 type 'a sequence
@@ -610,7 +605,7 @@ val index : int -> 'a sequence -> 'a option
 
 We can then write `sequence.ml` as follows:
 
-```{ocaml}
+```ocaml
 (* sequence.ml *)
 
 type 'a mylist =
@@ -648,7 +643,7 @@ Although empty has type `’a mylist` within this file, it has type `’a` seque
 
 So far, a module has been one whole file, and an interface another whole file. OCaml permits finer granularity than this. Several modules and several interfaces can be defined within a single source file. The specification of an interface is called a **signature**. A signature can be created with sig ... end delimiters, and bound to a name using a module type declaration. The implementation of an interface is called a **structure** (this is just any collection of definitions). A structure can be created with struct ... end delimiters, and bound to a name using a module declaration. Here is how we could implement the Sequence ADT within a file.
 
-```{ocaml}
+```ocaml
 module type Sequence = sig
 
   type 'a sequence
@@ -737,7 +732,7 @@ One further advantage is in the design of large-scale concurrent or parallel app
 
 ### Improving the index operation for Sequence
 
-The main advantage of the array implementation is efficiency. All operations take $\mathcal{O}(1)$ time (at least in our model of computation which ignores factors like caches and virtual memory), and the constants are small, because array operations are usually directly supported by hardware. This is not the case for the list implementations. extend, first, and rest take constant time (again, the constants are small, because pointer operations are also supported by hardware), but index takes time $\mathcal{O}(\min \{i,n\})$, where $i$ is the index and $n$ the length of the sequence.
+The main advantage of the array implementation is efficiency. All operations take $\mathcal{O}(1)$ time (at least in our model of computation which ignores factors like caches and virtual memory), and the constants are small, because array operations are usually directly supported by hardware. This is not the case for the list implementations. extend, first, and rest take constant time (again, the constants are small, because pointer operations are also supported by hardware), but index takes time $\mathcal{O}(\min \{i, n\})$, where $i$ is the index and $n$ the length of the sequence.
 
 Can we do better than the list implementations, while preserving purity and/or persistence? The problem with the list is that it is a linear structure. That suggests that using trees might improve access.
 
@@ -749,7 +744,6 @@ A **perfect binary tree** of height $k$ has $2^k$ leaves, all at depth $k$, and 
 (In a drawing, the depth of a node is the number of edges in a path from the root to that node, and the height of a tree is the maximum depth over all nodes.) If we store values of the sequence at the leaves and use the internal nodes for navigation, we can get to any value in $\mathcal{O}(k)$ time, which is $\mathcal{O}(\log n)$ time if $n=2^k$.
 
 We can represent an index as a $k$-bit binary number and use the bits of an index from most significant (leftmost) to least significant (rightmost) to indicate left child or right child. For example, if $k=3$:
-
 
 0 is represented by 000 since $0 =0 \cdot 2^2+0 \cdot 2^1+0 \cdot 2^0$.  
 1 is represented by 001 since $1 =0 \cdot 2^2+0 \cdot 2^1+1 \cdot 2^0$.  
@@ -767,7 +761,7 @@ Here are some drawings of perfect trees, where instead of labelling leaves with 
 
 Here is an OCaml data type for such leaf-labelled trees, where the values can be of some arbitrary type. I have also shown the OCaml expressions for the three perfect trees drawn above. The definition does not enforce perfection; the code that manipulates trees has to do that.
 
-```{ocaml}
+```ocaml
 type'a l_bintree =
     Leaf of 'a
   | Node of 'a l_bintree * 'a l_bintree
@@ -782,7 +776,7 @@ let bad = Node (Node (Leaf 8, Leaf 3), Leaf 12)
 
 The tree called bad is not perfect, since it has some leaves at depth 2 (the ones storing values 8 and 3) and one leaf at depth 1 (the one storing 12). Before we start using perfect trees to try to improve the running time of an implementation of the Sequence ADT, let’s consider the task of determining whether an `l_bintree` value is perfect or not. Here is a possible solution utilizing the `&&` operator, which is logical OR (does not evaluate right argument if left one is true).
 
-```{ocaml}
+```ocaml
 let rec is_perf (t : 'a l_bintree) : bool =
   match t with
   | Leaf _ -> true
@@ -792,7 +786,7 @@ let rec is_perf (t : 'a l_bintree) : bool =
 
 This is an incorrect solution, though, as `is_perf` bad evaluates to `true`. A perfect tree has two perfect subtrees, but they have to be the same height. That observation yields a recursive characterization of perfect trees: a tree is perfect if and only if it is a leaf or if it has two perfect subtrees of the same height. This can be turned directly into code with the aid of a function that calculates height using structural recursion.
 
-```{ocaml}
+```ocaml
 let rec height = function
   | Leaf _ -> 0
   | Node (l, r) -> 1 + max (height l) (height r)
@@ -806,31 +800,31 @@ let rec is_perf = function
 
 This code is correct, and quite readable, but what is its running time? The running time of `is_perf` depends on the running time of height. Both of these functions can be applied to arbitrary trees which may not be perfect.
 
-`height` applied to a tree recursively computes the height of the left and right subtrees. Intuitively, the code does constant work at each node, so the total work should be linear in the number of nodes. Formally, if we define $\mathbb{T}_{height}(n)$ to be the running time of height on a tree with $n$ constructors, we get a recurrence that looks like this:
+`height` applied to a tree recursively computes the height of the left and right subtrees. Intuitively, the code does constant work at each node, so the total work should be linear in the number of nodes. Formally, if we define $T_{height}(n)$ to be the running time of height on a tree with $n$ constructors, we get a recurrence that looks like this:
 
 \begin{align*}
-\mathbb{T}_{height}(1)&= \mathcal{O}(1) \\
-\mathbb{T}_{height}(n)&= \max_{0<i<n}\{\ \mathbb{T}_{height}(i)+\mathbb{T}_{height}(n-i-1)\ \}+\mathcal{O}(1)
+T_{height}(1)&= \mathcal{O}(1) \\
+T_{height}(n)&= \max_{0<i<n}\{\ T_{height}(i)+T_{height}(n-i-1)\ \}+\mathcal{O}(1)
 \end{align*}
 
-We have to use max here because we don’t know the number of nodes $i$ in the left subtree, but we are using worst-case analysis. By strong induction on n, we can show that $\mathbb{T}_{height}(n)$ is $\mathcal{O}(n)$. (The worst case is a tree where each left subtree is a leaf.)
+We have to use max here because we don’t know the number of nodes $i$ in the left subtree, but we are using worst-case analysis. By strong induction on n, we can show that $T_{height}(n)$ is $\mathcal{O}(n)$. (The worst case is a tree where each left subtree is a leaf.)
 
 Although we derived this recurrence for specific code, it is quite general. It will show up whenever code does recursion on both subtrees of a binary tree and the two results can be combined in constant time. Sometimes we know something about the shape of the tree (for example, that it is perfect), but that does not change the solution.
 
-Now we can analyze `is_perf.` If $\mathbb{T}_{is\_perf}(n)$ is the running time of is_perf on a tree with $n$ constructors, we get this recurrence:
+Now we can analyze `is_perf.` If $T_{is\_perf}(n)$ is the running time of is_perf on a tree with $n$ constructors, we get this recurrence:
 
 \begin{align*}
 \begin{split}
-\mathbb{T}_{is\_perf}(1)&= \mathcal{O}(1) \\
-\mathbb{T}_{is\_perf}(n)&= \max_{0<i<n}\{\ \mathbb{T}_{is\_perf}(i) + \mathbb{T}_{is\_perf}(n-i-1) \\ &+ \mathbb{T}_{height}(i) + \mathbb{T}_{height}(n-i-1)\ \}+\mathcal{O}(1)
+T_{is\_perf}(1)&= \mathcal{O}(1) \\
+T_{is\_perf}(n)&= \max_{0<i<n}\{\ T_{is\_perf}(i) + T_{is\_perf}(n-i-1) \\ &+ T_{height}(i) + T_{height}(n-i-1)\ \}+\mathcal{O}(1)
 \end{split}
 \end{align*}
 
 Substituting the solution for height, we get:
 
 \begin{align*}
-\mathbb{T}_{is\_perf}(1)&= \mathcal{O}(1) \\
-\mathbb{T}_{is\_perf}(n)&= \max_{0<i<n}\{\ \mathbb{T}_{is\_perf}(i)+\mathbb{T}_{is\_perf}(n-i-1)\ \}+\mathcal{O}(n)
+T_{is\_perf}(1)&= \mathcal{O}(1) \\
+T_{is\_perf}(n)&= \max_{0<i<n}\{\ T_{is\_perf}(i)+T_{is\_perf}(n-i-1)\ \}+\mathcal{O}(n)
 \end{align*}
 
 If the max always occurs at $i=1$ (again, when each left subtree is a leaf), then we can see that the solution would be $\mathcal{O}(n^2)$. This is in fact the general solution, which can be proved by strong induction on $n$. This recurrence will also show up a lot, but sometimes we can get a better solution, for example, if the tree is perfect. That doesn’t help us this time, because is_perf can be applied to non-perfect trees.
@@ -839,7 +833,7 @@ It shouldn’t take quadratic time to check perfection. The problem is that we a
 
 We will have `is_perf` produce an option type which is either `Some h` when the tree is a perfect tree of height $h$, or `None` if it is not perfect.
 
-```{ocaml}
+```ocaml
 let rec is_perf (t : 'a l_bintree) : int option =
   match t with
   | Leaf _ -> Some 0
@@ -854,11 +848,11 @@ let rec is_perf (t : 'a l_bintree) : int option =
 Now the recurrence is:
 
 \begin{align*}
-\mathbb{T}_{is\_perf}(1)&= \mathcal{O}(1) \\
-\mathbb{T}_{is\_perf}(n)&= \max_{0<i<n}\{\ \mathbb{T}_{is\_perf}(i)+\mathbb{T}_{is\_perf}(n-i-1)\ \}+\mathcal{O}(1)
+T_{is\_perf}(1)&= \mathcal{O}(1) \\
+T_{is\_perf}(n)&= \max_{0<i<n}\{\ T_{is\_perf}(i)+T_{is\_perf}(n-i-1)\ \}+\mathcal{O}(1)
 \end{align*}
 
-and the solution is that $\mathbb{T}_{is\_perf}(n)$ is $\mathcal{O}(n)$.
+and the solution is that $T_{is\_perf}(n)$ is $\mathcal{O}(n)$.
 
 That was more complicated than you might have guessed at the start. Recursive code can be easy to write, but here, we are always concerned with efficiency, and it is also easy to write beautiful but inefficient recursive code. Please keep in mind our primary goal, and examine your code carefully to detect such inefficiencies. Now let’s get back to using perfect trees for sequences.
 
@@ -866,7 +860,7 @@ The perfect binary tree representation only works to store a sequence of length 
 
 In a perfect binary tree of height $k$ with values stored only at leaves, it takes $\mathcal{O}(k)$ time to access any value, even the one of index 0, so this does not work as well as the list implementations for small indices. We can do better for some values by storing values at internal nodes also. In this case, the following type for node-labelled trees is a little cleaner.
 
-```{ocaml}
+```ocaml
 type'a bintree =
     Empty
   | Node of 'a * 'a bintree * 'a bintree
@@ -934,29 +928,29 @@ What we have discovered is that the code for extend makes one recursive call, on
 
 **Exercise 4**: Write the OCaml code for `extend`. $\blacksquare$
 
-If $\mathbb{T}_{extend}(n)$ is the running time for applying extend to the representation of a sequence of length $n$, then we get the following recurrence:
+If $T_{extend}(n)$ is the running time for applying extend to the representation of a sequence of length $n$, then we get the following recurrence:
 
 \begin{align*}
-\mathbb{T}_{extend}(0)&= \mathcal{O}(1) \\
-\mathbb{T}_{extend}(2k+1)&= \mathbb{T}_{extend}(k)+\mathcal{O}(1) \\
-\mathbb{T}_{extend}(2k+2)&= \mathbb{T}_{extend}(k+1)+\mathcal{O}(1)
+T_{extend}(0)&= \mathcal{O}(1) \\
+T_{extend}(2k+1)&= T_{extend}(k)+\mathcal{O}(1) \\
+T_{extend}(2k+2)&= T_{extend}(k+1)+\mathcal{O}(1)
 \end{align*}
 
 It is possible to come up with an exact solution for this recurrence, but if we first express the recurrence this way:
 
 \begin{align*}
-\mathbb{T}_{extend}(0)&= \mathcal{O}(1) \\
-\mathbb{T}_{extend}(n)&= \mathbb{T}_{extend}(\lfloor n/2 \rfloor)+\mathcal{O}(1)
+T_{extend}(0)&= \mathcal{O}(1) \\
+T_{extend}(n)&= T_{extend}(\lfloor n/2 \rfloor)+\mathcal{O}(1)
 \end{align*}
 
 and then remove the use of the floor function, we can come up with a simpler recurrence whose solution for powers of 2 is obvious:
 
 \begin{align*}
-\mathbb{T}_{extend}(0)&= \mathcal{O}(1) \\
-\mathbb{T}_{extend}(n)&= \mathbb{T}_{extend}(n/2)+\mathcal{O}(1)
+T_{extend}(0)&= \mathcal{O}(1) \\
+T_{extend}(n)&= T_{extend}(n/2)+\mathcal{O}(1)
 \end{align*}
 
-Applying Akra-Bazzi, the solution to the general recurrence is that $\mathbb{T}_{extend}(n)$ is $\mathcal{O}(\log n)$. We could also argue that the running time of extend is $\mathcal{O}(k)$, where $k$ is the height of the tree representing the sequence argument, and $k=O(\log n)$ where $n$ is the length of the sequence. But each of these are just imprecise versions of the (itself imprecise) above recurrence relation.
+Applying Akra-Bazzi, the solution to the general recurrence is that $T_{extend}(n)$ is $\mathcal{O}(\log n)$. We could also argue that the running time of extend is $\mathcal{O}(k)$, where $k$ is the height of the tree representing the sequence argument, and $k=O(\log n)$ where $n$ is the length of the sequence. But each of these are just imprecise versions of the (itself imprecise) above recurrence relation.
 
 **Exercise 5**: Complete the implementation of Sequence using Braun trees. Show that the analysis of `rest` involves a recurrence similar to that of `extend`, and that the solution is also $\mathcal{O}(\log n)$, where $n$ is the length of the sequence. $\blacksquare$
 
@@ -968,15 +962,15 @@ A Braun tree with $2k+1$ nodes has two subtrees with $k$ nodes (the ones of odd 
 
 **Exercise 7**: Write OCaml code to check whether or not a tree is a Braun tree. Your code should run in linear time. $\blacksquare$
 
-If we define $\mathbb{T}_{index}(i,n)$ to be the running time of index with index argument $i$ and sequence argument of length $n$, we have the following recurrence (again neglecting floors and ceilings):
+If we define $T_{index}(i,n)$ to be the running time of index with index argument $i$ and sequence argument of length $n$, we have the following recurrence (again neglecting floors and ceilings):
 
 \begin{align*}
-\mathbb{T}_{index}(i,0)&= \mathcal{O}(1) \\
-\mathbb{T}_{index}(0,n)&= \mathcal{O}(1) \\
-\mathbb{T}_{index}(i,n)&= \mathbb{T}_{index}(i/2,n/2)+\mathcal{O}(1)
+T_{index}(i,0)&= \mathcal{O}(1) \\
+T_{index}(0,n)&= \mathcal{O}(1) \\
+T_{index}(i,n)&= T_{index}(\frac{i}{2}, \frac{n}{2})+\mathcal{O}(1)
 \end{align*}
 
-The solution to this is $\mathbb{T}_{index}(i,n)=O(\min \{\log i, \log n \})$. Intuitively, each parameter is reduced by a factor of 2 at a constant cost, so the total cost is proportional to the logarithm of the first parameter to reach 0, that is, the smaller parameter. This is a considerable improvement over the list-based implementation, which was our original motivation.
+The solution to this is $T_{index}(i,n)=O(\min \{\log i, \log n \})$. Intuitively, each parameter is reduced by a factor of 2 at a constant cost, so the total cost is proportional to the logarithm of the first parameter to reach 0, that is, the smaller parameter. This is a considerable improvement over the list-based implementation, which was our original motivation.
 
 We can see that the Braun tree implementation of sequences is not better in all cases than the list implementation. Lists have $\mathcal{O}(1)$ implementations of `rest` and `extend`, while Braun trees take $\mathcal{O}(\log n)$ time. But Braun trees do better on `index.` It is possible, with a different idea, to lower the cost of `rest` and `extend` to $\mathcal{O}(1)$, while preserving the $\mathcal{O}(\log n)$ part of the cost of `index`.
 
@@ -990,7 +984,7 @@ The Braun tree is not a data structure that is widely used in practice. It is, h
 
 **Exercise 9**: Write OCaml code that uses a list of binary digits in order from least significant to most significant to represent a natural number, with the following interface, where inc and dec add one and subtract one respectively.
 
-```{ocaml}
+```ocaml
 type digit = Zero | One
 type nat = digit list
 
@@ -1008,7 +1002,7 @@ Using the fact that every number has a unique representation as a sum of distinc
 
 Complete an OCaml implementation of the Sequence ADT using PBLTs, conforming to the following signature.
 
-```{ocaml}
+```ocaml
 type 'a tree = Leaf of 'a | Node of int * 'a tree * 'a tree
 type 'a digit = Zero | One of 'a tree
 type 'a sequence = 'a digit list
@@ -1021,7 +1015,7 @@ Analyze your implementation. You should find that PBLTs come close to Braun tree
 
 **Exercise 11**: Redo the earlier binary digit implementation exercise, but with bijective binary numbering instead.
 
-```{ocaml}
+```ocaml
 type digit = One | Two
 type nat = digit list
 
@@ -1035,7 +1029,7 @@ $\blacksquare$
 
 **Exercise12**: Redo the earlier implementation of the Sequence ADT using PBLTs, but using bijective binary numbering instead.
 
-```{ocaml}
+```ocaml
 type 'a tree = Leaf of 'a | Node of int * 'a tree * 'a tree
 type 'a digit = One of 'a tree | Two of 'a tree * 'a tree
 type 'a sequence = 'a digit list
@@ -1043,3 +1037,4 @@ type 'a sequence = 'a digit list
 ```
 
 Analyze your implementation. You should find that none of the operations gets worse in $O$-notation terms, compared to the earlier implementation, and at least one gets better. $\blacksquare$
+
